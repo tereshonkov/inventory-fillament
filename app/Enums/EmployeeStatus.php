@@ -22,7 +22,7 @@ enum EmployeeStatus: string implements HasLabel, HasColor
     {
         return match ($this) {
             self::ACTIVE => 'success',
-            self::DISMISSED => 'gray',
+            self::DISMISSED => 'danger',
         };
     }
 }

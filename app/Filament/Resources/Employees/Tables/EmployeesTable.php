@@ -2,12 +2,14 @@
 
 namespace App\Filament\Resources\Employees\Tables;
 
+use App\Enums\EmployeeStatus;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Filament\Tables\Filters\SelectFilter;
 
 class EmployeesTable
 {
@@ -33,7 +35,9 @@ class EmployeesTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('status')
+                    ->options(EmployeeStatus::class)
+                    ->default(EmployeeStatus::ACTIVE)
             ])
             ->recordActions([
                 ViewAction::make(),
