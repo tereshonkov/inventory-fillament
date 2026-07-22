@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 #[Fillable(['name', 'inventory_number', 'serial_number', 'notes', 'year', 'location_id', 'type_id', 'custodian_id', 'holder_id', 'status'])]
 class Asset extends Model
 {
-    // Не забыть исправить нормальное отображение даты через миграцию!
     protected function casts(): array
     {
         return [
