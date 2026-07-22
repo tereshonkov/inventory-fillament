@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Assets;
 
+use App\Enums\UserRole;
 use App\Filament\Resources\Assets\Pages\CreateAsset;
 use App\Filament\Resources\Assets\Pages\EditAsset;
 use App\Filament\Resources\Assets\Pages\ListAssets;
@@ -15,6 +16,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class AssetResource extends Resource
 {
@@ -54,5 +56,16 @@ class AssetResource extends Resource
             'view' => ViewAsset::route('/{record}'),
             'edit' => EditAsset::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $user = auth()->user();
+        $query = parent::getEloquentQuery();
+
+        return match ($user->role) {
+            UserRole::EDITOR => $query->where('custodian_id', $user->employee_id),
+            default => $query,
+        };
     }
 }
