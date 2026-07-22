@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('inventory_number')->nullable();
             $table->string('serial_number')->nullable();
             $table->text('notes')->nullable();
-            $table->integer('year')->nullable();
+            $table->year('year')->nullable();
             $table->foreignId('location_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('type_id')->nullable()->constrained('asset_types')->nullOnDelete();
             $table->foreignId('custodian_id')->constrained('employees');
