@@ -27,10 +27,10 @@ class AssetForm
                 Select::make('type_id')
                     ->relationship('type', 'name'),
                 Select::make('custodian_id')
-                    ->relationship('custodian', 'id')
+                    ->relationship('custodian', 'full_name')
                     ->required(),
                 Select::make('holder_id')
-                    ->relationship('holder', 'id'),
+                    ->relationship('holder', 'full_name'),
                 Select::make('status')
                     ->options(AssetStatus::class)
                     ->default('balance')

@@ -32,7 +32,7 @@ class UsersTable
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('employee.id')
+                TextColumn::make('employee.full_name')
                     ->searchable(),
             ])
             ->filters([

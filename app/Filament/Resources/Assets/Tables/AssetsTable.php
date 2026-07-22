@@ -28,9 +28,9 @@ class AssetsTable
                     ->searchable(),
                 TextColumn::make('type.name')
                     ->searchable(),
-                TextColumn::make('custodian.id')
+                TextColumn::make('custodian.full_name')
                     ->searchable(),
-                TextColumn::make('holder.id')
+                TextColumn::make('holder.full_name')
                     ->searchable(),
                 TextColumn::make('status')
                     ->badge(),
