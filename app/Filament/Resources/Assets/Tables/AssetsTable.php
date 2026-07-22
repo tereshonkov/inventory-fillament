@@ -2,12 +2,14 @@
 
 namespace App\Filament\Resources\Assets\Tables;
 
+use App\Enums\AssetStatus;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Filament\Tables\Filters\SelectFilter;
 
 class AssetsTable
 {
@@ -44,7 +46,10 @@ class AssetsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('status')->options(AssetStatus::class),
+                SelectFilter::make('location')->relationship('location', 'name'),
+                SelectFilter::make('type')->relationship('type', 'name'),
+                SelectFilter::make('holder')->relationship('holder', 'full_name'),
             ])
             ->recordActions([
                 ViewAction::make(),
