@@ -13,8 +13,8 @@ enum EmployeeStatus: string implements HasLabel, HasColor
     public function getLabel(): ?string
     {
         return match ($this) {
-            self::ACTIVE => 'Активен',
-            self::DISMISSED => 'Уволен',
+            self::ACTIVE => 'Працює',
+            self::DISMISSED => 'Звільнено',
         };
     }
 
