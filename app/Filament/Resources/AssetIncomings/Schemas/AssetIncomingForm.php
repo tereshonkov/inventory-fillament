@@ -4,6 +4,7 @@ namespace App\Filament\Resources\AssetIncomings\Schemas;
 
 use App\Enums\AssetStatus;
 use App\Enums\IncomingType;
+use App\Enums\UserRole;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -27,6 +28,7 @@ class AssetIncomingForm
                         Select::make('status')->options(AssetStatus::class)->default('capitalize'),
                         Select::make('custodian_id')
                             ->relationship('custodian', 'full_name')
+                            ->default(fn() => auth()->user()->role === UserRole::EDITOR ? auth()->user()->employee_id : null)
                             ->required(),
                     ]),
                 Select::make('incoming_type')
