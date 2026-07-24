@@ -42,8 +42,8 @@ enum AssetStatus: string implements HasLabel, HasColor
             self::WRITTEN_OFF => 'gray',
             self::NOT_PUT_IN_TO_OPERATION => 'info',
             self::WRITING_OFF => 'warning',
-            self::CAPITALIZE => 'warning',
-            self::REPAIR => 'warning',
+            self::CAPITALIZE => 'info',
+            self::REPAIR => 'danger',
         };
     }
 }

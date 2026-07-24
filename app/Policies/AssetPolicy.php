@@ -31,7 +31,7 @@ class AssetPolicy
      */
     public function create(User $user): bool
     {
-        return in_array($user->role, [UserRole::ADMIN, UserRole::EDITOR], true);
+        return in_array($user->role, [UserRole::ADMIN], true);
     }
 
     /**
