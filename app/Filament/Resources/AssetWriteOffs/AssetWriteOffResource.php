@@ -15,12 +15,19 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use UnitEnum;
 
 class AssetWriteOffResource extends Resource
 {
     protected static ?string $model = AssetWriteOff::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTrash;
+
+    protected static string|UnitEnum|null $navigationGroup = 'Облік майна';
+
+    protected static ?string $navigationLabel = 'Списання';
+
+    protected static ?int $navigationSort = 4;
 
     protected static ?string $recordTitleAttribute = 'document_number';
 
