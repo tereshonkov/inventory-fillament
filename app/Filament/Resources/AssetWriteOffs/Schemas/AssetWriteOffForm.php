@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\AssetTransfers\Schemas;
+namespace App\Filament\Resources\AssetWriteOffs\Schemas;
 
 use App\Enums\AssetStatus;
 use Filament\Forms\Components\DatePicker;
@@ -9,7 +9,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Schema;
 
-class AssetTransferForm
+class AssetWriteOffForm
 {
     public static function configure(Schema $schema): Schema
     {
@@ -25,12 +25,10 @@ class AssetTransferForm
                     )
                     ->searchable(['name', 'inventory_number', 'serial_number'])
                     ->required(),
-                Select::make('department_id')
-                    ->relationship('department', 'name')
-                    ->preload()
-                    ->required(),
+                Textarea::make('reason')
+                    ->columnSpanFull(),
                 TextInput::make('document_number'),
-                DatePicker::make('transferred_at')
+                DatePicker::make('written_off_at')
                     ->required(),
                 DatePicker::make('completed_at'),
                 Textarea::make('notes')

@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\AssetTransfers;
+namespace App\Filament\Resources\AssetWriteOffs;
 
 use App\Enums\UserRole;
-use App\Filament\Resources\AssetTransfers\Pages\CreateAssetTransfer;
-use App\Filament\Resources\AssetTransfers\Pages\EditAssetTransfer;
-use App\Filament\Resources\AssetTransfers\Pages\ListAssetTransfers;
-use App\Filament\Resources\AssetTransfers\Schemas\AssetTransferForm;
-use App\Filament\Resources\AssetTransfers\Tables\AssetTransfersTable;
-use App\Models\AssetTransfer;
+use App\Filament\Resources\AssetWriteOffs\Pages\CreateAssetWriteOff;
+use App\Filament\Resources\AssetWriteOffs\Pages\EditAssetWriteOff;
+use App\Filament\Resources\AssetWriteOffs\Pages\ListAssetWriteOffs;
+use App\Filament\Resources\AssetWriteOffs\Schemas\AssetWriteOffForm;
+use App\Filament\Resources\AssetWriteOffs\Tables\AssetWriteOffsTable;
+use App\Models\AssetWriteOff;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -16,9 +16,9 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
-class AssetTransferResource extends Resource
+class AssetWriteOffResource extends Resource
 {
-    protected static ?string $model = AssetTransfer::class;
+    protected static ?string $model = AssetWriteOff::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
@@ -26,12 +26,12 @@ class AssetTransferResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return AssetTransferForm::configure($schema);
+        return AssetWriteOffForm::configure($schema);
     }
 
     public static function table(Table $table): Table
     {
-        return AssetTransfersTable::configure($table);
+        return AssetWriteOffsTable::configure($table);
     }
 
     public static function getRelations(): array
@@ -44,9 +44,9 @@ class AssetTransferResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListAssetTransfers::route('/'),
-            'create' => CreateAssetTransfer::route('/create'),
-            'edit' => EditAssetTransfer::route('/{record}/edit'),
+            'index' => ListAssetWriteOffs::route('/'),
+            'create' => CreateAssetWriteOff::route('/create'),
+            'edit' => EditAssetWriteOff::route('/{record}/edit'),
         ];
     }
 
