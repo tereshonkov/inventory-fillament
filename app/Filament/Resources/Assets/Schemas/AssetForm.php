@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Assets\Schemas;
 
 use App\Enums\AssetStatus;
+use App\Enums\UserRole;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
@@ -32,8 +33,19 @@ class AssetForm
                 Select::make('holder_id')
                     ->relationship('holder', 'full_name'),
                 Select::make('status')
-                    ->options(AssetStatus::class)
-                    ->default('balance')
+                    ->options(function () {
+                        if (auth()->user()->role === UserRole::ADMIN) {
+                            return collect(AssetStatus::cases())
+                                ->mapWithKeys(fn(AssetStatus $status) => [$status->value => $status->getLabel()]);
+                        }
+
+                        return [
+                            AssetStatus::BALANCE->value => AssetStatus::BALANCE->getLabel(),
+                            AssetStatus::NOT_PUT_IN_TO_OPERATION->value => AssetStatus::NOT_PUT_IN_TO_OPERATION->getLabel(),
+                            AssetStatus::REPAIR->value => AssetStatus::REPAIR->getLabel(),
+                            AssetStatus::LOST->value => AssetStatus::LOST->getLabel(),
+                        ];
+                    })
                     ->required(),
             ]);
     }
