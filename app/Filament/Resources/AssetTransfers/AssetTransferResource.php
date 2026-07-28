@@ -21,6 +21,10 @@ class AssetTransferResource extends Resource
 {
     protected static ?string $model = AssetTransfer::class;
 
+    protected static ?string $modelLabel = 'Передача активу';
+
+    protected static ?string $pluralModelLabel = 'Передача активів';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTruck;
 
     protected static string|UnitEnum|null $navigationGroup = 'Облік майна';

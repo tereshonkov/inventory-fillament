@@ -20,10 +20,14 @@ class AssetForm
                     ->columns(2)
                     ->schema([
                         TextInput::make('name')
+                            ->label('Назва')
                             ->required(),
-                        TextInput::make('inventory_number'),
-                        TextInput::make('serial_number'),
+                        TextInput::make('inventory_number')
+                            ->label('Інвентарний номер'),
+                        TextInput::make('serial_number')
+                            ->label('Серійний номер'),
                         TextInput::make('year')
+                            ->label('Рік')
                             ->numeric(),
                     ]),
 
@@ -31,13 +35,17 @@ class AssetForm
                     ->columns(2)
                     ->schema([
                         Select::make('location_id')
+                            ->label('Місцезнаходження')
                             ->relationship('location', 'name'),
                         Select::make('type_id')
+                            ->label('Тип майна')
                             ->relationship('type', 'name'),
                         Select::make('custodian_id')
+                            ->label('МВО')
                             ->relationship('custodian', 'full_name')
                             ->required(),
                         Select::make('holder_id')
+                            ->label('Користувач')
                             ->relationship('holder', 'full_name'),
                     ]),
 
@@ -45,6 +53,7 @@ class AssetForm
                     ->columns(2)
                     ->schema([
                         Select::make('status')
+                            ->label('Статус')
                             ->options(function () {
                                 if (auth()->user()->role === UserRole::ADMIN) {
                                     return collect(AssetStatus::cases())
@@ -60,6 +69,7 @@ class AssetForm
                             })
                             ->required(),
                         Textarea::make('notes')
+                            ->label('Нотатки')
                             ->columnSpanFull(),
                     ]),
             ]);

@@ -19,6 +19,10 @@ class DepartmentResource extends Resource
 {
     protected static ?string $model = Department::class;
 
+    protected static ?string $modelLabel = 'Підрозділ';
+
+    protected static ?string $pluralModelLabel = 'Підрозділи';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingOffice2;
 
     protected static string|UnitEnum|null $navigationGroup = 'Довідники';

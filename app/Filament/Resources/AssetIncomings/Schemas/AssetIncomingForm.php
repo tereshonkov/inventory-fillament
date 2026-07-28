@@ -21,40 +21,55 @@ class AssetIncomingForm
     {
         return $schema
             ->components([
-                Section::make('Incoming Fileds')
+                Section::make('Інформація про отримання')
                     ->schema([
                         Select::make('incoming_type')
+                            ->label('Тип надходження')
                             ->options(IncomingType::class)
                             ->default('new')
                             ->required(),
-                        TextInput::make('source'),
-                        TextInput::make('document_number'),
+                        TextInput::make('source')
+                            ->label('Джерело надходження'),
+                        TextInput::make('document_number')
+                            ->label('Номер документу'),
                         DatePicker::make('received_at')
+                            ->label('Розпочато отримання')
                             ->required(),
-                        DatePicker::make('completed_at'),
+                        DatePicker::make('completed_at')
+                            ->label('Отримано'),
                         Textarea::make('notes')
+                            ->label('Нотатки')
                             ->columnSpanFull(),
                     ]),
-                Section::make('Asset Fileds')
+                Section::make('Заповнення майна')
                     ->columns(2)
                     ->schema([
                         TextInput::make('name')
+                            ->label('Назва')
                             ->required(),
-                        TextInput::make('inventory_number'),
-                        TextInput::make('serial_number'),
+                        TextInput::make('inventory_number')
+                            ->label('Інвентарний номер'),
+                        TextInput::make('serial_number')
+                            ->label('Серійний номер'),
                         Textarea::make('asset_notes')
+                            ->label('Нотатки')
                             ->columnSpanFull(),
                         TextInput::make('year')
+                            ->label('Рік')
                             ->numeric(),
                         Select::make('location_id')
+                            ->label('Місцезнаходження')
                             ->options(fn() => Location::pluck('name', 'id')),
                         Select::make('type_id')
+                            ->label('Тип майна')
                             ->options(fn() => AssetType::pluck('name', 'id')),
                         Select::make('custodian_id')
+                            ->label('МВО')
                             ->options(fn() => Employee::pluck('full_name', 'id'))
                             ->default(fn() => auth()->user()->role === UserRole::EDITOR ? auth()->user()->employee_id : null)
                             ->required(),
                         Select::make('holder_id')
+                            ->label('Користувач')
                             ->options(fn() => Employee::pluck('full_name', 'id')),
                         Hidden::make('status')->default('capitalize'),
                     ])

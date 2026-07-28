@@ -26,6 +26,10 @@ class AssetResource extends Resource
 {
     protected static ?string $model = Asset::class;
 
+    protected static ?string $modelLabel = 'Актив';
+
+    protected static ?string $pluralModelLabel = 'Активи';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCube;
 
     protected static string|UnitEnum|null $navigationGroup = 'Облік майна';

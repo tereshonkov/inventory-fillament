@@ -19,6 +19,10 @@ class LocationResource extends Resource
 {
     protected static ?string $model = Location::class;
 
+    protected static ?string $modelLabel = 'Місцезнаходження';
+
+    protected static ?string $pluralModelLabel = 'Місцезнаходження';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedMapPin;
 
     protected static string|UnitEnum|null $navigationGroup = 'Довідники';

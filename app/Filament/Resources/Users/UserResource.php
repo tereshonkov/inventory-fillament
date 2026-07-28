@@ -19,6 +19,10 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
+    protected static ?string $modelLabel = 'Користувач системи';
+
+    protected static ?string $pluralModelLabel = 'Користувачі системи';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedShieldCheck;
 
     protected static string|UnitEnum|null $navigationGroup = 'Адміністрування';

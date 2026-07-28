@@ -19,6 +19,10 @@ class AssetTypeResource extends Resource
 {
     protected static ?string $model = AssetType::class;
 
+    protected static ?string $modelLabel = 'Тип активу';
+
+    protected static ?string $pluralModelLabel = 'Типи активів';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTag;
 
     protected static string|UnitEnum|null $navigationGroup = 'Довідники';

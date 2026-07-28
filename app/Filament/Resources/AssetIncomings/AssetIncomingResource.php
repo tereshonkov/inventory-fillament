@@ -21,6 +21,10 @@ class AssetIncomingResource extends Resource
 {
     protected static ?string $model = AssetIncoming::class;
 
+    protected static ?string $modelLabel = 'Надходження активу';
+
+    protected static ?string $pluralModelLabel = 'Надходження активів';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedInboxArrowDown;
 
     protected static string|UnitEnum|null $navigationGroup = 'Облік майна';

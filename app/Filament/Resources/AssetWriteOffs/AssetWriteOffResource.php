@@ -21,6 +21,10 @@ class AssetWriteOffResource extends Resource
 {
     protected static ?string $model = AssetWriteOff::class;
 
+    protected static ?string $modelLabel = 'Списання активу';
+
+    protected static ?string $pluralModelLabel = 'Списання активів';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTrash;
 
     protected static string|UnitEnum|null $navigationGroup = 'Облік майна';
