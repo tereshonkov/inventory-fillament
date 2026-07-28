@@ -18,25 +18,34 @@ class AssetsTable
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label('Назва')
                     ->searchable(),
                 TextColumn::make('inventory_number')
+                    ->label('Інвентарний номер')
                     ->searchable(),
                 TextColumn::make('serial_number')
+                    ->label('Серійний номер')
                     ->searchable(),
                 TextColumn::make('year')
+                    ->label('Рік надходження')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('location.name')
+                    ->label('Місцезнаходження')
                     ->searchable(),
                 TextColumn::make('type.name')
+                    ->label('Тип майна')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('custodian.full_name')
+                    ->label('МВО')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('holder.full_name')
+                    ->label('Користувач')
                     ->searchable(),
                 TextColumn::make('status')
+                    ->label('Статус')
                     ->badge(),
                 TextColumn::make('created_at')
                     ->dateTime()
@@ -48,10 +57,10 @@ class AssetsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('status')->options(AssetStatus::class),
-                SelectFilter::make('location')->relationship('location', 'name'),
-                SelectFilter::make('type')->relationship('type', 'name'),
-                SelectFilter::make('holder')->relationship('holder', 'full_name'),
+                SelectFilter::make('status')->label('Статус')->options(AssetStatus::class),
+                SelectFilter::make('location')->label('Місцезнаходження')->relationship('location', 'name'),
+                SelectFilter::make('type')->label('Тип майна')->relationship('type', 'name'),
+                SelectFilter::make('holder')->label('Користувач')->relationship('holder', 'full_name'),
             ])
             ->recordActions([
                 // ViewAction::make(),
