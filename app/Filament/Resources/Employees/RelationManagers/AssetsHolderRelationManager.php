@@ -40,7 +40,7 @@ class AssetsHolderRelationManager extends RelationManager
                 Select::make('type_id')
                     ->relationship('type', 'name'),
                 Select::make('custodian_id')
-                    ->relationship('custodian', 'id')
+                    ->relationship('custodian', 'full_name')
                     ->required(),
                 Select::make('status')
                     ->options(AssetStatus::class)
@@ -67,7 +67,7 @@ class AssetsHolderRelationManager extends RelationManager
                     ->searchable(),
                 TextColumn::make('type.name')
                     ->searchable(),
-                TextColumn::make('custodian.id')
+                TextColumn::make('custodian.full_name')
                     ->searchable(),
                 TextColumn::make('status')
                     ->badge(),
@@ -84,7 +84,7 @@ class AssetsHolderRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                CreateAction::make(),
+                // CreateAction::make(),
                 AssociateAction::make()
                     ->recordSelectSearchColumns(['name', 'inventory_number', 'serial_number'])
                     ->recordSelect(
@@ -94,14 +94,14 @@ class AssetsHolderRelationManager extends RelationManager
                     ),
             ])
             ->recordActions([
-                EditAction::make(),
+                // EditAction::make(),
                 DissociateAction::make(),
-                DeleteAction::make(),
+                // DeleteAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
                     DissociateBulkAction::make(),
-                    DeleteBulkAction::make(),
+                    // DeleteBulkAction::make(),
                 ]),
             ]);
     }
