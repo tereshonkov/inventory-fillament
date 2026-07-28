@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Assets\Schemas;
 
 use Filament\Infolists\Components\TextEntry;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 class AssetInfolist
@@ -11,36 +12,61 @@ class AssetInfolist
     {
         return $schema
             ->components([
-                TextEntry::make('name'),
-                TextEntry::make('inventory_number')
-                    ->placeholder('-'),
-                TextEntry::make('serial_number')
-                    ->placeholder('-'),
-                TextEntry::make('notes')
-                    ->placeholder('-')
-                    ->columnSpanFull(),
-                TextEntry::make('year')
-                    ->numeric()
-                    ->placeholder('-'),
-                TextEntry::make('location.name')
-                    ->label('Location')
-                    ->placeholder('-'),
-                TextEntry::make('type.name')
-                    ->label('Type')
-                    ->placeholder('-'),
-                TextEntry::make('custodian.id')
-                    ->label('Custodian'),
-                TextEntry::make('holder.id')
-                    ->label('Holder')
-                    ->placeholder('-'),
-                TextEntry::make('status')
-                    ->badge(),
-                TextEntry::make('created_at')
-                    ->dateTime()
-                    ->placeholder('-'),
-                TextEntry::make('updated_at')
-                    ->dateTime()
-                    ->placeholder('-'),
+                Section::make('Основна інформація')
+                    ->columns(1)
+                    ->schema([
+                        TextEntry::make('name')
+                            ->label('Назва'),
+                        TextEntry::make('inventory_number')
+                            ->label('Інвентарний номер')
+                            ->placeholder('-'),
+                        TextEntry::make('serial_number')
+                            ->label('Серійний номер')
+                            ->placeholder('-'),
+                        TextEntry::make('year')
+                            ->label('Рік')
+                            ->numeric()
+                            ->placeholder('-'),
+                    ]),
+
+                Section::make('Розміщення та відповідальність')
+                    ->columns(1)
+                    ->schema([
+                        TextEntry::make('location.name')
+                            ->label('Локація')
+                            ->placeholder('-'),
+                        TextEntry::make('type.name')
+                            ->label('Тип')
+                            ->placeholder('-'),
+                        TextEntry::make('custodian.full_name')
+                            ->label('МВО')
+                            ->placeholder('-'),
+                        TextEntry::make('holder.full_name')
+                            ->label('Держатель')
+                            ->placeholder('-'),
+                    ]),
+
+
+                Section::make('Статус та примітки')
+                    ->columns(3)
+                    ->columnSpanFull()
+                    ->schema([
+                        TextEntry::make('status')
+                            ->label('Статус')
+                            ->badge(),
+                        TextEntry::make('notes')
+                            ->label('Примітки')
+                            ->placeholder('-')
+                            ->columnSpanFull(),
+                        TextEntry::make('created_at')
+                            ->label('Створено')
+                            ->dateTime()
+                            ->placeholder('-'),
+                        TextEntry::make('updated_at')
+                            ->label('Оновлено')
+                            ->dateTime()
+                            ->placeholder('-'),
+                    ]),
             ]);
     }
 }
