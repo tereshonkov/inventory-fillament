@@ -66,9 +66,11 @@ class AssetsHolderRelationManager extends RelationManager
                 TextColumn::make('location.name')
                     ->searchable(),
                 TextColumn::make('type.name')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('custodian.full_name')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('status')
                     ->badge(),
                 TextColumn::make('created_at')
@@ -95,7 +97,8 @@ class AssetsHolderRelationManager extends RelationManager
             ])
             ->recordActions([
                 // EditAction::make(),
-                DissociateAction::make(),
+                DissociateAction::make()
+                    ->label('Відкріпити'),
                 // DeleteAction::make(),
             ])
             ->toolbarActions([

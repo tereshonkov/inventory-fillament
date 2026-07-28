@@ -29,9 +29,11 @@ class AssetsTable
                 TextColumn::make('location.name')
                     ->searchable(),
                 TextColumn::make('type.name')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('custodian.full_name')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('holder.full_name')
                     ->searchable(),
                 TextColumn::make('status')
@@ -52,8 +54,8 @@ class AssetsTable
                 SelectFilter::make('holder')->relationship('holder', 'full_name'),
             ])
             ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
+                // ViewAction::make(),
+                // EditAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
