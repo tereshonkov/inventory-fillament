@@ -12,6 +12,8 @@ class LocationForm
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label('Назва локації')
+                    ->placeholder('Наприклад: ХМУ')
                     ->required(),
             ]);
     }

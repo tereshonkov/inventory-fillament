@@ -12,6 +12,8 @@ class DepartmentForm
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label('Назва підрозділу')
+                    ->placeholder('Наприклад: ХРУП №3 ГУНП в Харківській області')
                     ->required(),
             ]);
     }

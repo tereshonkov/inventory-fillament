@@ -12,6 +12,8 @@ class AssetTypeForm
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label('Тип майна')
+                    ->placeholder('Наприклад: Клавіатура')
                     ->required(),
             ]);
     }

@@ -15,17 +15,23 @@ class AssetIncomingsTable
         return $table
             ->columns([
                 TextColumn::make('asset.name')
+                    ->label('Назва майна')
                     ->searchable(),
                 TextColumn::make('incoming_type')
+                    ->label('Тип надходження')
                     ->badge(),
                 TextColumn::make('source')
+                    ->label('Джерело надходження')
                     ->searchable(),
                 TextColumn::make('document_number')
+                    ->label('Номер документу')
                     ->searchable(),
                 TextColumn::make('received_at')
+                    ->label('Розпочато отримання')
                     ->date()
                     ->sortable(),
                 TextColumn::make('completed_at')
+                    ->label('Отримано')
                     ->date()
                     ->sortable(),
                 TextColumn::make('created_at')
@@ -41,7 +47,7 @@ class AssetIncomingsTable
                 //
             ])
             ->recordActions([
-                EditAction::make(),
+                // EditAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

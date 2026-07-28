@@ -40,8 +40,8 @@ class EmployeesTable
                     ->default(EmployeeStatus::ACTIVE)
             ])
             ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
+                // ViewAction::make(),
+                // EditAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
