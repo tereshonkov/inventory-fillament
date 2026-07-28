@@ -10,6 +10,7 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
+use Filament\Resources\Pages\CreateRecord;
 use Filament\Support\Colors\Color;
 use Filament\Widgets\AccountWidget;
 use Filament\Widgets\FilamentInfoWidget;
@@ -27,6 +28,7 @@ class AdminPanelProvider extends PanelProvider
         DatePicker::configureUsing(function (DatePicker $component) {
             $component->native(false)->locale('uk');
         });
+        CreateRecord::disableCreateAnother();
     }
 
     public function panel(Panel $panel): Panel

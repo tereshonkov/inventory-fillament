@@ -44,7 +44,8 @@ class AssetIncomingForm
                 Section::make('Заповнення майна')
                     ->columns(2)
                     ->schema([
-                        TextInput::make('name')
+                        TextArea::make('name')
+                            ->columnSpanFull()
                             ->label('Назва')
                             ->required(),
                         TextInput::make('inventory_number')

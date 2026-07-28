@@ -19,7 +19,7 @@ class AssetForm
                 Section::make('Основна інформація')
                     ->columns(2)
                     ->schema([
-                        TextInput::make('name')
+                        TextArea::make('name')
                             ->label('Назва')
                             ->required(),
                         TextInput::make('inventory_number')
