@@ -15,13 +15,17 @@ class AssetWriteOffsTable
         return $table
             ->columns([
                 TextColumn::make('asset.name')
+                    ->label('Назва')
                     ->searchable(),
                 TextColumn::make('document_number')
+                    ->label('Номер документу')
                     ->searchable(),
                 TextColumn::make('written_off_at')
+                    ->label('Розпочато списання')
                     ->date()
                     ->sortable(),
                 TextColumn::make('completed_at')
+                    ->label('Списано')
                     ->date()
                     ->sortable(),
                 TextColumn::make('created_at')

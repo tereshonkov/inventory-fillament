@@ -18,12 +18,16 @@ class EmployeesTable
         return $table
             ->columns([
                 TextColumn::make('full_name')
+                    ->label('ПІБ')
                     ->searchable(),
                 TextColumn::make('position')
+                    ->label('Посада')
                     ->searchable(),
                 TextColumn::make('phone')
+                    ->label('Телефон')
                     ->searchable(),
                 TextColumn::make('status')
+                    ->label('Статус')
                     ->badge(),
                 TextColumn::make('created_at')
                     ->dateTime()

@@ -15,6 +15,7 @@ class DepartmentsTable
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label('Назва підрозділу')
                     ->searchable(),
                 TextColumn::make('created_at')
                     ->dateTime()

@@ -15,6 +15,7 @@ class AssetTypesTable
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label('Назва техніки')
                     ->searchable(),
                 TextColumn::make('created_at')
                     ->dateTime()

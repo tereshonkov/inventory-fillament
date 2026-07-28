@@ -15,15 +15,20 @@ class AssetTransfersTable
         return $table
             ->columns([
                 TextColumn::make('asset.name')
+                    ->label('Назва')
                     ->searchable(),
                 TextColumn::make('department.name')
+                    ->label('Підрозділ')
                     ->searchable(),
                 TextColumn::make('document_number')
+                    ->label('Номер документу')
                     ->searchable(),
                 TextColumn::make('transferred_at')
+                    ->label('Розпочату передачу')
                     ->date()
                     ->sortable(),
                 TextColumn::make('completed_at')
+                    ->label('Передано')
                     ->date()
                     ->sortable(),
                 TextColumn::make('created_at')
