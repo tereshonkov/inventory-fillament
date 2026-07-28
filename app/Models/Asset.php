@@ -6,7 +6,7 @@ use App\Enums\AssetStatus;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable(['name', 'inventory_number', 'serial_number', 'notes', 'year', 'location_id', 'type_id', 'custodian_id', 'holder_id', 'status'])]
 class Asset extends Model
@@ -36,5 +36,20 @@ class Asset extends Model
     public function holder(): BelongsTo
     {
         return $this->belongsTo(Employee::class);
+    }
+
+    public function incomings(): HasMany
+    {
+        return $this->hasMany(AssetIncoming::class);
+    }
+
+    public function transfers(): HasMany
+    {
+        return $this->hasMany(AssetTransfer::class);
+    }
+
+    public function writeOffs(): HasMany
+    {
+        return $this->hasMany(AssetWriteOff::class);
     }
 }
