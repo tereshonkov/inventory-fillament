@@ -38,6 +38,8 @@ class AdminPanelProvider extends PanelProvider
             ->brandName('МВО')
             ->id('admin')
             ->path('admin')
+            ->databaseNotifications()
+            ->databaseNotificationsPolling('30s')
             ->login()
             ->colors([
                 'primary' => Color::Blue,
