@@ -5,9 +5,6 @@ namespace App\Filament\Resources\Assets\Tables;
 use App\Enums\AssetStatus;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\ViewAction;
-use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Tables\Filters\SelectFilter;
@@ -20,7 +17,7 @@ class AssetsTable
             ->columns([
                 TextColumn::make('name')
                     ->label('Назва')
-                    ->limit(20)
+                    ->limit(30)
                     ->tooltip(function (TextColumn $column): ?string {
                         $state = $column->getState();
 

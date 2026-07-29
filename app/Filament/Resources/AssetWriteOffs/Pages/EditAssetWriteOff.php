@@ -3,12 +3,15 @@
 namespace App\Filament\Resources\AssetWriteOffs\Pages;
 
 use App\Enums\AssetStatus;
+use App\Filament\Concerns\RedirectsAfterSave;
 use App\Filament\Resources\AssetWriteOffs\AssetWriteOffResource;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditAssetWriteOff extends EditRecord
 {
+    use RedirectsAfterSave;
+
     protected static string $resource = AssetWriteOffResource::class;
 
     protected function getHeaderActions(): array

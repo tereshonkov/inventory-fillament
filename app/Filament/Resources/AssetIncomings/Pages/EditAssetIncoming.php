@@ -4,6 +4,7 @@ namespace App\Filament\Resources\AssetIncomings\Pages;
 
 use App\Enums\AssetStatus;
 use App\Enums\IncomingType;
+use App\Filament\Concerns\RedirectsAfterSave;
 use App\Filament\Resources\AssetIncomings\AssetIncomingResource;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
@@ -14,6 +15,8 @@ use Filament\Schemas\Schema;
 
 class EditAssetIncoming extends EditRecord
 {
+    use RedirectsAfterSave;
+
     protected static string $resource = AssetIncomingResource::class;
 
     public function form(Schema $schema): Schema
