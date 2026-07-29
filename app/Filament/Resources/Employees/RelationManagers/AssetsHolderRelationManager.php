@@ -21,6 +21,11 @@ class AssetsHolderRelationManager extends RelationManager
 
     protected static ?string $title = 'Майно у користуванні';
 
+    public function isReadOnly(): bool
+    {
+        return false;
+    }
+
     public function form(Schema $schema): Schema
     {
         return $schema
