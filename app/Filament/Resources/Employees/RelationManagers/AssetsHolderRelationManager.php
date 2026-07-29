@@ -62,6 +62,16 @@ class AssetsHolderRelationManager extends RelationManager
             ->recordTitleAttribute('name')
             ->columns([
                 TextColumn::make('name')
+                    ->limit(30)
+                    ->tooltip(function (TextColumn $column): ?string {
+                        $state = $column->getState();
+
+                        if (strlen($state) <= $column->getCharacterLimit()) {
+                            return null;
+                        }
+
+                        return $state;
+                    })
                     ->label('Назва')
                     ->searchable(),
                 TextColumn::make('inventory_number')
