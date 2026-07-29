@@ -16,6 +16,16 @@ class AssetTransfersTable
             ->columns([
                 TextColumn::make('asset.name')
                     ->label('Назва')
+                    ->limit(20)
+                    ->tooltip(function (TextColumn $column): ?string {
+                        $state = $column->getState();
+
+                        if (strlen($state) <= $column->getCharacterLimit()) {
+                            return null;
+                        }
+
+                        return $state;
+                    })
                     ->searchable(),
                 TextColumn::make('department.name')
                     ->label('Підрозділ')

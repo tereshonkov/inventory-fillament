@@ -17,6 +17,7 @@ class AssetIncomingsTable
             ->columns([
                 TextColumn::make('asset.name')
                     ->label('Назва майна')
+                    ->limit(20)
                     ->searchable(),
                 TextColumn::make('incoming_type')
                     ->label('Тип надходження')

@@ -20,6 +20,16 @@ class AssetsTable
             ->columns([
                 TextColumn::make('name')
                     ->label('Назва')
+                    ->limit(20)
+                    ->tooltip(function (TextColumn $column): ?string {
+                        $state = $column->getState();
+
+                        if (strlen($state) <= $column->getCharacterLimit()) {
+                            return null;
+                        }
+
+                        return $state;
+                    })
                     ->searchable(),
                 TextColumn::make('inventory_number')
                     ->label('Інвентарний номер')
