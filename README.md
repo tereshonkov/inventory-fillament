@@ -269,6 +269,118 @@ class EditAsset extends EditRecord
 
 ---
 
+## 9. Асинхронный экспорт в Excel + database-уведомления
+
+**Задача:** экспорт отфильтрованного списка Assets в Excel, без блокировки других пользователей — при синхронном выполнении (`QUEUE_CONNECTION=sync`) экспорт занимает PHP-воркер на всё время генерации файла; при нескольких одновременных запросах это создаёт задержки для всех остальных, кто просто открывает страницы панели.
+
+### Команды — фундамент (очередь + служебные таблицы)
+
+```
+php artisan make:queue-batches-table   # часто уже есть в свежих проектах (объединена с create_jobs_table)
+php artisan make:notifications-table
+php artisan vendor:publish --tag=filament-actions-migrations
+php artisan migrate
+```
+
+`vendor:publish` с этим тегом публикует не одну таблицу, а три разом — `exports`, `imports`, `failed_import_rows` (пакет `filament/actions` несёт связанную пару функциональности, экспорт и импорт, одним набором миграций). Лишние сейчас не используются, но ничем не мешают.
+
+### `.env`
+
+```
+QUEUE_CONNECTION=database
+```
+
+Вместо выполнения задачи немедленно внутри запроса — складывает в таблицу `jobs`, откуда её забирает отдельный процесс:
+
+```
+php artisan queue:work
+```
+
+На локальной разработке держится в отдельном терминале; на реальном сервере — через Supervisor, чтобы переживал перезапуски.
+
+### Включение уведомлений — `AdminPanelProvider.php`
+
+```php
+->databaseNotifications()
+->databaseNotificationsPolling('30s')
+```
+
+Уведомления **тоже** идут через очередь — без запущенного `queue:work` они будут тихо копиться в таблице `notifications`, не отправляясь колокольчику.
+
+### Генерация экспортёра
+
+```
+php artisan make:filament-exporter Asset
+```
+
+### Готовый `AssetExporter.php` — с двумя нетривиальными местами
+
+```php
+class AssetExporter extends Exporter
+{
+    protected static ?string $model = Asset::class;
+
+    public static function getColumns(): array
+    {
+        return [
+            ExportColumn::make('name')->label('Назва'),
+            ExportColumn::make('inventory_number')->label('Інвентарний номер'),
+            ExportColumn::make('location.name')->label('Місцезнаходження'),
+            ExportColumn::make('custodian.full_name')->label('МВО'), // не custodian.id!
+            ExportColumn::make('status')
+                ->label('Статус')
+                ->formatStateUsing(fn ($state) => $state->getLabel()), // обязательно для enum-полей
+        ];
+    }
+
+    public static function getCompletedNotificationBody(Export $export): string
+    {
+        $body = "Експорт активів завершено. Експортовано {$export->successful_rows} "
+            . self::pluralizeRows($export->successful_rows) . '.';
+
+        if ($failedRowsCount = $export->getFailedRowsCount()) {
+            $body .= " Не вдалося експортувати {$failedRowsCount} "
+                . self::pluralizeRows($failedRowsCount) . '.';
+        }
+
+        return $body;
+    }
+
+    private static function pluralizeRows(int $count): string
+    {
+        return match (true) {
+            $count % 10 === 1 && $count % 100 !== 11 => 'рядок',
+            in_array($count % 10, [2, 3, 4]) && ! in_array($count % 100, [12, 13, 14]) => 'рядки',
+            default => 'рядків',
+        };
+    }
+}
+```
+
+### Подключение кнопки — `AssetsTable.php`
+
+```php
+use App\Filament\Exports\AssetExporter;
+use Filament\Actions\ExportAction;
+use Filament\Actions\Exports\Enums\ExportFormat;
+
+->headerActions([
+    ExportAction::make()
+        ->label('Експортувати')
+        ->exporter(AssetExporter::class)
+        ->formats([ExportFormat::Xlsx]),
+])
+```
+
+**Почему так:**
+
+- **`ExportAction` по умолчанию уважает текущие фильтры/сортировку таблицы** — отфильтровал список, нажал "Експортувати", в файле именно то, что видно на экране, а не вся таблица целиком.
+- **Enum-поля не резолвятся в `ExportColumn` автоматически**, в отличие от `TextColumn`/`Select` в форме — без `->formatStateUsing()` попытка экспорта падает с ошибкой `Return value must be of type ?string, App\Enums\AssetStatus returned`. Известный, стабильно воспроизводимый нюанс пакета на разных его версиях.
+- **Своя функция плюрализации** вместо `Str::of('row')->counted()` — украинский язык (как и русский) требует трёх форм числительных в зависимости от последней цифры и от того, попадает ли число в диапазон 11-14, а не двух, как в английском. Встроенный Laravel-хелпер `counted()` сделан под двухвариантную (en) логику и даёт грамматически неверный результат на славянских языках.
+- **Импорт `ExportFormat` — частая ловушка автодополнения IDE.** Правильный путь `Filament\Actions\Exports\Enums\ExportFormat`; в IDE легко случайно выбрать похожий класс из `Filament\Actions\Exports\Enums\Contracts\ExportFormat`, который не тот — приводит к ошибке `Undefined constant`.
+
+---
+
 ## Статус проекту
 
 **Ядро:** Employee/User з ролями, row-level scoping, Policy — повністю готово й протестовано.
@@ -280,6 +392,8 @@ class EditAsset extends EditRecord
 **Relation Manager'и:** три вкладки історії на Asset, одна на Employee — готово, включно з `isReadOnly()` на View-сторінках.
 
 **Візуал:** меню, секції на формах/інфолистах, переклад, редіректи, UserForm, Location/AssetType/Department — готово.
+
+**Інфраструктура:** черга (`database`), database-уведомлення, асинхронний експорт Assets в Excel — готово й перевірено наскрізно (клік → черга → файл → сповіщення).
 
 **Свідомо не робимо:**
 
