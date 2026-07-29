@@ -25,14 +25,20 @@ class IncomingsRelationManager extends RelationManager
             ->components([
                 Select::make('incoming_type')
                     ->options(IncomingType::class)
+                    ->label('Тип отримання')
                     ->default('new')
                     ->required(),
-                TextInput::make('source'),
-                TextInput::make('document_number'),
+                TextInput::make('source')
+                    ->label('Джерело отримання'),
+                TextInput::make('document_number')
+                    ->label('Документ отримання'),
                 DatePicker::make('received_at')
+                    ->label('Розпочати отримання')
                     ->required(),
-                DatePicker::make('completed_at'),
+                DatePicker::make('completed_at')
+                    ->label('Отримано'),
                 Textarea::make('notes')
+                    ->label('Нотатки')
                     ->columnSpanFull(),
             ]);
     }
@@ -43,15 +49,20 @@ class IncomingsRelationManager extends RelationManager
             ->recordTitleAttribute('document_number')
             ->columns([
                 TextColumn::make('incoming_type')
+                    ->label('Тип отримання')
                     ->badge(),
-                TextColumn::make('source'),
+                TextColumn::make('source')
+                    ->label('Джерело отримання'),
                 // ->searchable(),
-                TextColumn::make('document_number'),
+                TextColumn::make('document_number')
+                    ->label('Документ отримання'),
                 // ->searchable(),
                 TextColumn::make('received_at')
+                    ->label('Розпочати отримання')
                     ->date()
                     ->sortable(),
                 TextColumn::make('completed_at')
+                    ->label('Отримано')
                     ->date()
                     ->sortable(),
                 TextColumn::make('created_at')

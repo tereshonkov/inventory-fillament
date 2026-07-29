@@ -24,13 +24,18 @@ class TransfersRelationManager extends RelationManager
         return $schema
             ->components([
                 Select::make('department_id')
+                    ->label('Підрозділ')
                     ->relationship('department', 'name')
                     ->required(),
-                TextInput::make('document_number'),
+                TextInput::make('document_number')
+                    ->label('Номер документа'),
                 DatePicker::make('transferred_at')
+                    ->label('Розпочато передачу')
                     ->required(),
-                DatePicker::make('completed_at'),
+                DatePicker::make('completed_at')
+                    ->label('Передано'),
                 Textarea::make('notes')
+                    ->label('Нотатки')
                     ->columnSpanFull(),
             ]);
     }
@@ -40,14 +45,18 @@ class TransfersRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('document_number')
             ->columns([
-                TextColumn::make('department.name'),
+                TextColumn::make('department.name')
+                    ->label('Підрозділ'),
                 // ->searchable(),
-                TextColumn::make('document_number'),
+                TextColumn::make('document_number')
+                    ->label('Номер документа'),
                 // ->searchable(),
                 TextColumn::make('transferred_at')
+                    ->label('Розпочато передачу')
                     ->date()
                     ->sortable(),
                 TextColumn::make('completed_at')
+                    ->label('Передано')
                     ->date()
                     ->sortable(),
                 TextColumn::make('created_at')

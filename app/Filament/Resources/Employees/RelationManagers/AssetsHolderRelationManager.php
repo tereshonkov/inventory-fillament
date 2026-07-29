@@ -5,12 +5,8 @@ namespace App\Filament\Resources\Employees\RelationManagers;
 use App\Enums\AssetStatus;
 use Filament\Actions\AssociateAction;
 use Filament\Actions\BulkActionGroup;
-use Filament\Actions\CreateAction;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\DissociateAction;
 use Filament\Actions\DissociateBulkAction;
-use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
@@ -23,26 +19,37 @@ class AssetsHolderRelationManager extends RelationManager
 {
     protected static string $relationship = 'assetsHolder';
 
+    protected static ?string $title = 'Майно у користуванні';
+
     public function form(Schema $schema): Schema
     {
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label('Назва')
                     ->required(),
-                TextInput::make('inventory_number'),
-                TextInput::make('serial_number'),
+                TextInput::make('inventory_number')
+                    ->label('Інвентарний номер'),
+                TextInput::make('serial_number')
+                    ->label('Серійний номер'),
                 Textarea::make('notes')
+                    ->label('Нотатки')
                     ->columnSpanFull(),
                 TextInput::make('year')
+                    ->label('Рік')
                     ->numeric(),
                 Select::make('location_id')
+                    ->label('Місцезнаходження')
                     ->relationship('location', 'name'),
                 Select::make('type_id')
+                    ->label('Тип активу')
                     ->relationship('type', 'name'),
                 Select::make('custodian_id')
+                    ->label('МВО')
                     ->relationship('custodian', 'full_name')
                     ->required(),
                 Select::make('status')
+                    ->label('Статус')
                     ->options(AssetStatus::class)
                     ->default('balance')
                     ->required(),
@@ -55,23 +62,31 @@ class AssetsHolderRelationManager extends RelationManager
             ->recordTitleAttribute('name')
             ->columns([
                 TextColumn::make('name')
+                    ->label('Назва')
                     ->searchable(),
                 TextColumn::make('inventory_number')
+                    ->label('Інвентарний номер')
                     ->searchable(),
                 TextColumn::make('serial_number')
+                    ->label('Серійний номер')
                     ->searchable(),
                 TextColumn::make('year')
+                    ->label('Рік')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('location.name')
+                    ->label('Місцезнаходження')
                     ->searchable(),
                 TextColumn::make('type.name')
+                    ->label('Тип активу')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('custodian.full_name')
                     ->searchable()
+                    ->label('МВО')
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('status')
+                    ->label('Статус')
                     ->badge(),
                 TextColumn::make('created_at')
                     ->dateTime()

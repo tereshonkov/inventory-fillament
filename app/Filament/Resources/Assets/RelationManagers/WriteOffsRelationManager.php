@@ -22,12 +22,17 @@ class WriteOffsRelationManager extends RelationManager
         return $schema
             ->components([
                 Textarea::make('reason')
+                    ->label('Причина списання')
                     ->columnSpanFull(),
-                TextInput::make('document_number'),
+                TextInput::make('document_number')
+                    ->label('Номер документа'),
                 DatePicker::make('written_off_at')
+                    ->label('Розпочато списання')
                     ->required(),
-                DatePicker::make('completed_at'),
+                DatePicker::make('completed_at')
+                    ->label('Списано'),
                 Textarea::make('notes')
+                    ->label('Нотатки')
                     ->columnSpanFull(),
             ]);
     }
@@ -37,12 +42,15 @@ class WriteOffsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('document_number')
             ->columns([
-                TextColumn::make('document_number'),
+                TextColumn::make('document_number')
+                    ->label('Номер документу'),
                 // ->searchable(),
                 TextColumn::make('written_off_at')
+                    ->label('Розпочато списання')
                     ->date()
                     ->sortable(),
                 TextColumn::make('completed_at')
+                    ->label('Списано')
                     ->date()
                     ->sortable(),
                 TextColumn::make('created_at')
