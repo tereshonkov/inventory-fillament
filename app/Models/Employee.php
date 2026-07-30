@@ -6,6 +6,7 @@ use App\Enums\EmployeeStatus;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 #[Fillable(['full_name', 'position', 'phone', 'status'])]
 class Employee extends Model
@@ -20,5 +21,10 @@ class Employee extends Model
     public function assetsHolder(): HasMany
     {
         return $this->hasMany(Asset::class, 'holder_id');
+    }
+
+    public function user(): HasOne
+    {
+        return $this->hasOne(User::class);
     }
 }
