@@ -5,7 +5,9 @@ namespace App\Filament\Imports;
 use App\Enums\AssetStatus;
 use App\Enums\UserRole;
 use App\Models\Asset;
+use App\Models\AssetType;
 use App\Models\Employee;
+use App\Models\Location;
 use Filament\Actions\Imports\Exceptions\RowImportFailedException;
 use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Importer;
@@ -54,12 +56,13 @@ class AssetImporter extends Importer
         $name = trim($this->data['name'] ?? '');
         $inventoryNumber = trim($this->data['inventory_number'] ?? '');
         $serialNumber = trim($this->data['serial_number'] ?? '');
-        $notesText = trim($this->data['notes'] ?? '');
-        $locations = trim($this->data['location'] ?? '');
+        $notes = trim($this->data['notes'] ?? '');
+        $locationsText = trim($this->data['location'] ?? '');
         $typeText = trim($this->data['type'] ?? '');
         $holderText = trim($this->data['holder'] ?? '');
         $statusText = trim($this->data['status'] ?? '');
 
+        //status row
         $status = collect(AssetStatus::cases())
             ->first(fn(AssetStatus $case) => $case->getLabel() === $statusText);
 
@@ -67,8 +70,49 @@ class AssetImporter extends Importer
             throw new RowImportFailedException("Невідомий статус: «{$statusText}»");
         }
 
+        //locations and notes rows
+        $locationId = null;
+
+        if ($locationsText !== '') {
+            $firstLocation = trim(explode(',', $locationsText)[0]);
+            $locationId = Location::where('name', $firstLocation)->value('id');
+
+            if (str_contains($locationsText, ',')) {
+                $notes = trim(($notes ? $notes . "\n\n" : '') . "[З імпорту, локація: {$locationsText}]");
+            }
+        }
+
+        //type
+        $typeId = null;
+
+        if ($typeText !== '') {
+            $firstType = trim(explode(',', $typeText)[0]);
+            $typeId = AssetType::where('name', $firstType)->value('id');
+
+            if (str_contains($typeText, ',')) {
+                $notes = trim(($notes ? $notes . "\n\n" : '') . "[З імпорту, тип техніки: {$typeText}]");
+            }
+        }
+
+        //holder
+
+        $holderId = null;
+
+        if ($holderText !== '') {
+            $firstHolder = trim(explode(',', $holderText)[0]);
+            $holderId = Employee::where('full_name', $firstHolder)->value('id');
+        }
+
         return new Asset([
+            'name' => $name,
+            'inventory_number' => $inventoryNumber,
+            'serial_number' => $serialNumber,
             'status' => $status,
+            'notes' => $notes,
+            'location_id' => $locationId,
+            'type_id' => $typeId,
+            'holder_id' => $holderId,
+            'custodian_id' => $this->options['custodian_id'],
         ]);
     }
 

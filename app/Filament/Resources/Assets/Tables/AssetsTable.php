@@ -3,11 +3,14 @@
 namespace App\Filament\Resources\Assets\Tables;
 
 use App\Enums\AssetStatus;
+use App\Enums\UserRole;
 use App\Filament\Exports\AssetExporter;
+use App\Filament\Imports\AssetImporter;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\ExportAction;
 use Filament\Actions\Exports\Enums\ExportFormat;
+use Filament\Actions\ImportAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Tables\Filters\SelectFilter;
@@ -87,6 +90,10 @@ class AssetsTable
                     ->label('Експортувати')
                     ->exporter(AssetExporter::class)
                     ->formats([ExportFormat::Xlsx]),
+                ImportAction::make()
+                    ->label('Імпортувати')
+                    ->importer(AssetImporter::class)
+                    ->visible(fn() => auth()->user()->role === UserRole::ADMIN),
             ]);
     }
 }
