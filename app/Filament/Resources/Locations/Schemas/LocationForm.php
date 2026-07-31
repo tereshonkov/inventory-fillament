@@ -14,7 +14,8 @@ class LocationForm
                 TextInput::make('name')
                     ->label('Назва локації')
                     ->placeholder('Наприклад: ХМУ')
-                    ->required(),
+                    ->required()
+                    ->unique(ignoreRecord: true),
             ]);
     }
 }

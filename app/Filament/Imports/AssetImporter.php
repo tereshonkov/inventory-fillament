@@ -126,4 +126,9 @@ class AssetImporter extends Importer
 
         return $body;
     }
+
+    public function fillRecord(): void
+    {
+        // Пусто — resolveRecord() вже повністю зібрав запис зі всіма полями
+    }
 }

@@ -22,7 +22,8 @@ class UserForm
                     ->schema([
                         TextInput::make('name')
                             ->label('ПІБ')
-                            ->required(),
+                            ->required()
+                            ->unique(ignoreRecord: true),
                         TextInput::make('email')
                             ->label('Email')
                             ->email()

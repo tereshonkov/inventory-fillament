@@ -14,7 +14,8 @@ class DepartmentForm
                 TextInput::make('name')
                     ->label('Назва підрозділу')
                     ->placeholder('Наприклад: ХРУП №3 ГУНП в Харківській області')
-                    ->required(),
+                    ->required()
+                    ->unique(ignoreRecord: true),
             ]);
     }
 }

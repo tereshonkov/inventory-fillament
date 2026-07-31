@@ -14,7 +14,8 @@ class AssetTypeForm
                 TextInput::make('name')
                     ->label('Тип майна')
                     ->placeholder('Наприклад: Клавіатура')
-                    ->required(),
+                    ->required()
+                    ->unique(ignoreRecord: true),
             ]);
     }
 }

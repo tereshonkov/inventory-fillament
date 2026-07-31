@@ -27,7 +27,7 @@ enum AssetStatus: string implements HasLabel, HasColor
             self::WRITTEN_OFF => 'списано',
             self::NOT_PUT_IN_TO_OPERATION => 'не введено',
             self::WRITING_OFF => 'проводиться списання',
-            self::CAPITALIZE => 'надходить на баланс',
+            self::CAPITALIZE => 'поступає на баланс',
             self::REPAIR => 'ремонт',
         };
     }
