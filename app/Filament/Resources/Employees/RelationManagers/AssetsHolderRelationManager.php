@@ -14,10 +14,13 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class AssetsHolderRelationManager extends RelationManager
 {
     protected static string $relationship = 'assetsHolder';
+
+    protected static ?string $inverseRelationship = 'holder';
 
     protected static ?string $title = 'Майно у користуванні';
 
@@ -119,11 +122,7 @@ class AssetsHolderRelationManager extends RelationManager
                 // CreateAction::make(),
                 AssociateAction::make()
                     ->recordSelectSearchColumns(['name', 'inventory_number', 'serial_number'])
-                    ->recordSelect(
-                        fn(Select $select) => $select->modifyQueryUsing(
-                            fn($query) => $query->where('status', AssetStatus::BALANCE->value)
-                        )
-                    ),
+                    ->recordSelectOptionsQuery(fn(Builder $query) => $query->where('status', AssetStatus::BALANCE->value))
             ])
             ->recordActions([
                 // EditAction::make(),
