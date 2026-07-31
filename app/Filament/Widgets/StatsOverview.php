@@ -16,7 +16,7 @@ class StatsOverview extends StatsOverviewWidget
             Stat::make('Не введено в експлуатацію', Asset::where('status', AssetStatus::NOT_PUT_IN_TO_OPERATION)->count() . ' шт'),
         ];
 
-        foreach (AssetType::whereIn('name', ['ПК', 'Ноутбук', 'Робоча станція', 'Робоча станція, Ноутбук', 'Монітор'])->get() as $type) {
+        foreach (AssetType::whereIn('name', ['ПК', 'Ноутбук', 'Робоча станція', 'Монітор'])->get() as $type) {
             $stats[] = Stat::make(
                 $type->name,
                 Asset::where('type_id', $type->id)
