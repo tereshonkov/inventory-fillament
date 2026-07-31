@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Widgets\NotIntroducedAssets;
 use App\Filament\Widgets\StatsOverview;
 use Filament\Forms\Components\DatePicker;
 use Filament\Http\Middleware\Authenticate;
@@ -64,6 +65,7 @@ class AdminPanelProvider extends PanelProvider
                 // AccountWidget::class,
                 // FilamentInfoWidget::class,
                 StatsOverview::class,
+                NotIntroducedAssets::class,
             ])
             ->middleware([
                 EncryptCookies::class,

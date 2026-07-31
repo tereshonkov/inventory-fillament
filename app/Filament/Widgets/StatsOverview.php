@@ -10,11 +10,11 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class StatsOverview extends StatsOverviewWidget
 {
+    protected static ?int $sort = 1;
+    
     protected function getStats(): array
     {
-        $stats = [
-            Stat::make('Не введено в експлуатацію', Asset::where('status', AssetStatus::NOT_PUT_IN_TO_OPERATION)->count() . ' шт'),
-        ];
+        $stats = [];
 
         foreach (AssetType::whereIn('name', ['ПК', 'Ноутбук', 'Робоча станція', 'Монітор'])->get() as $type) {
             $stats[] = Stat::make(
