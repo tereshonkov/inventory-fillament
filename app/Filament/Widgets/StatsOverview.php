@@ -21,7 +21,7 @@ class StatsOverview extends StatsOverviewWidget
                 $type->name,
                 Asset::where('type_id', $type->id)
                     ->where('status', AssetStatus::BALANCE)
-                    ->whereHas('location', fn($q) => $q->where('name', ['Склад-327', 'склад-915']))
+                    ->whereHas('location', fn($q) => $q->whereIn('name', ['Склад-327', 'склад-915']))
                     ->count() . ' шт'
             );
         }
