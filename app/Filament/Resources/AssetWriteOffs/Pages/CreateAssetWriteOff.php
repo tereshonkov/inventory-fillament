@@ -3,11 +3,14 @@
 namespace App\Filament\Resources\AssetWriteOffs\Pages;
 
 use App\Enums\AssetStatus;
+use App\Filament\Concerns\RedirectsAfterSave;
 use App\Filament\Resources\AssetWriteOffs\AssetWriteOffResource;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateAssetWriteOff extends CreateRecord
 {
+    use RedirectsAfterSave;
+
     protected static string $resource = AssetWriteOffResource::class;
 
     protected function afterCreate(): void

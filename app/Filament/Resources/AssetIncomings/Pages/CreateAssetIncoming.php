@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\AssetIncomings\Pages;
 
+use App\Filament\Concerns\RedirectsAfterSave;
 use App\Filament\Resources\AssetIncomings\AssetIncomingResource;
 use App\Models\Asset;
 use App\Models\AssetIncoming;
@@ -11,6 +12,8 @@ use Illuminate\Support\Facades\DB;
 
 class CreateAssetIncoming extends CreateRecord
 {
+    use RedirectsAfterSave;
+
     protected static string $resource = AssetIncomingResource::class;
 
     protected function handleRecordCreation(array $data): Model
