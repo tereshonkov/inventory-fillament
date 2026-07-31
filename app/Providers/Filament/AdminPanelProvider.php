@@ -35,7 +35,8 @@ class AdminPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
-            ->brandName('МВО')
+            ->brandName('MVO')
+            ->favicon(asset('favicon.png'))
             ->id('admin')
             ->path('admin')
             ->databaseNotifications()
