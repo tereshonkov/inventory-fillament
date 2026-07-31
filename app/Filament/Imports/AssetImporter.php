@@ -34,9 +34,7 @@ class AssetImporter extends Importer
             ImportColumn::make('location'),
             ImportColumn::make('type'),
             ImportColumn::make('holder'),
-            ImportColumn::make('status')
-                ->requiredMapping()
-                ->rules(['required']),
+            ImportColumn::make('status'),
         ];
     }
 
@@ -63,11 +61,15 @@ class AssetImporter extends Importer
         $statusText = trim($this->data['status'] ?? '');
 
         //status row
-        $status = collect(AssetStatus::cases())
-            ->first(fn(AssetStatus $case) => $case->getLabel() === $statusText);
+        if ($statusText === '') {
+            $status = AssetStatus::BALANCE;
+        } else {
+            $status = collect(AssetStatus::cases())
+                ->first(fn(AssetStatus $case) => $case->getLabel() === $statusText);
 
-        if (! $status) {
-            throw new RowImportFailedException("Невідомий статус: «{$statusText}»");
+            if (! $status) {
+                throw new RowImportFailedException("Невідомий статус: «{$statusText}»");
+            }
         }
 
         //locations and notes rows
