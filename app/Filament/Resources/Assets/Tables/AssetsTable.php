@@ -6,6 +6,7 @@ use App\Enums\AssetStatus;
 use App\Enums\UserRole;
 use App\Filament\Exports\AssetExporter;
 use App\Filament\Imports\AssetImporter;
+use App\Models\Asset;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\ExportAction;
@@ -20,6 +21,7 @@ class AssetsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->defaultSort('created_at', 'desc')
             ->columns([
                 TextColumn::make('name')
                     ->label('Назва')
@@ -43,6 +45,12 @@ class AssetsTable
                 TextColumn::make('year')
                     ->label('Рік надходження')
                     ->numeric()
+                    ->options(fn() => Asset::query()
+                        ->whereNotNull('year')
+                        ->distinct()
+                        ->orderByDesc('year')
+                        ->pluck('year', 'year'))
+                    ->multiple()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
                 TextColumn::make('location.name')
@@ -72,10 +80,13 @@ class AssetsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('status')->label('Статус')->options(AssetStatus::class),
-                SelectFilter::make('location')->label('Місцезнаходження')->relationship('location', 'name'),
-                SelectFilter::make('type')->label('Тип майна')->relationship('type', 'name'),
-                SelectFilter::make('holder')->label('Користувач')->relationship('holder', 'full_name'),
+                SelectFilter::make('status')->label('Статус')->options(AssetStatus::class)->multiple(),
+                SelectFilter::make('location')->label('Місцезнаходження')->relationship('location', 'name')->multiple(),
+                SelectFilter::make('type')->label('Тип майна')->relationship('type', 'name')->multiple(),
+                SelectFilter::make('holder')->label('Користувач')->relationship('holder', 'full_name')->multiple(),
+                SelectFilter::make('year')
+                    ->options(fn() => Asset::query()->whereNotNull('year')->distinct()->orderByDesc('year')->pluck('year', 'year'))
+                    ->multiple(),
             ])
             ->recordActions([
                 // ViewAction::make(),

@@ -13,6 +13,7 @@ class AssetWriteOffsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->defaultSort('created_at', 'desc')
             ->columns([
                 TextColumn::make('asset.name')
                     ->label('Назва')
