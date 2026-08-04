@@ -45,12 +45,6 @@ class AssetsTable
                 TextColumn::make('year')
                     ->label('Рік надходження')
                     ->numeric()
-                    ->options(fn() => Asset::query()
-                        ->whereNotNull('year')
-                        ->distinct()
-                        ->orderByDesc('year')
-                        ->pluck('year', 'year'))
-                    ->multiple()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
                 TextColumn::make('location.name')
@@ -85,6 +79,7 @@ class AssetsTable
                 SelectFilter::make('type')->label('Тип майна')->relationship('type', 'name')->multiple(),
                 SelectFilter::make('holder')->label('Користувач')->relationship('holder', 'full_name')->multiple(),
                 SelectFilter::make('year')
+                    ->label('Рік надходження')
                     ->options(fn() => Asset::query()->whereNotNull('year')->distinct()->orderByDesc('year')->pluck('year', 'year'))
                     ->multiple(),
             ])
