@@ -25,7 +25,8 @@ class AssetsTable
             ->columns([
                 TextColumn::make('name')
                     ->label('Назва')
-                    ->limit(30)
+                    ->wrap()
+                    ->lineClamp(2)
                     ->tooltip(function (TextColumn $column): ?string {
                         $state = $column->getState();
 
