@@ -2,3 +2,36 @@
 
 @source '../../../../app/Filament/**/*';
 @source '../../../../resources/views/filament/**/*';
+
+/* Слияние вкладок и таблицы в единую карточку на страницах списка */
+.fi-grid.fi-sc.fi-sc-has-gap:has(.fi-sc-tabs) {
+    gap: 0;
+}
+
+.fi-grid-col:has(.fi-sc-tabs) .fi-sc-tabs {
+    background-color: #fff;
+    border: 1px solid #e5e7eb;
+    border-bottom: none;
+    border-radius: 0.75rem 0.75rem 0 0;
+    padding-inline: 1.5rem;
+}
+
+.dark .fi-grid-col:has(.fi-sc-tabs) .fi-sc-tabs {
+    background-color: rgb(24 24 27);
+    border-color: rgb(63 63 70);
+}
+
+.fi-grid-col:has(.fi-sc-tabs) + .fi-grid-col .fi-ta-ctn {
+    border-top: none;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+/* Граница справа у сайдбара */
+.fi-sidebar {
+    border-right: 1px solid #e5e7eb;
+}
+
+.dark .fi-sidebar {
+    border-right-color: rgb(63 63 70);
+}
