@@ -3,15 +3,16 @@
 @source '../../../../app/Filament/**/*';
 @source '../../../../resources/views/filament/**/*';
 
-/* Вкладки без рамки, впритик к карточке таблицы снизу */
-.fi-grid.fi-sc.fi-sc-has-gap:has(.fi-sc-tabs) {
-    gap: 0;
+/* Вкладки — прибираємо box-shadow (це імітація рамки через ring, не border) */
+.fi-tabs {
+    box-shadow: none !important;
+    background-color: transparent !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
 }
 
-.fi-sc-tabs {
-    border: none !important;
-    box-shadow: none !important;
-    padding-inline: 0.25rem;
+.fi-grid.fi-sc.fi-sc-has-gap:has(.fi-sc-tabs) {
+    gap: 0 !important;
 }
 
 .fi-grid-col:has(.fi-sc-tabs) + .fi-grid-col .fi-ta-ctn {
@@ -20,7 +21,7 @@
     border-top-right-radius: 0;
 }
 
-/* Граница справа у сайдбара */
+/* Границя справа у сайдбара */
 .fi-sidebar {
     border-right: 1px solid #e5e7eb;
 }
