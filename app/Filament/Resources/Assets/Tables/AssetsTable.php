@@ -43,7 +43,7 @@ class AssetsTable
                     ->searchable(),
                 TextColumn::make('serial_number')
                     ->label('Серійний номер')
-                    ->width('400px')
+                    ->width('250px')
                     ->wrap()
                     ->lineClamp(2)
                     ->searchable(),
