@@ -45,7 +45,7 @@ class AdminPanelProvider extends PanelProvider
             ->databaseNotificationsPolling('30s')
             ->sidebarCollapsibleOnDesktop()
             ->login()
-            ->colors(['primary' => Color::Slate])
+            ->colors(['primary' => Color::Zinc])
             ->navigationGroups([
                 'Облік майна',
                 'Довідники',
