@@ -21,7 +21,7 @@
 .fi-tabs:not(.fi-contained) {
     box-shadow: none !important;
     background-color: transparent !important;
-    padding: 0 1.5rem !important;
+    padding: 0.75rem 1.5rem !important;
     border-radius: 0 !important;
     margin-inline: 0 !important;
     border-bottom: 1px solid #e5e7eb !important;
