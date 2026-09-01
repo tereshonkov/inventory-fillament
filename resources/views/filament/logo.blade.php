@@ -3,7 +3,7 @@
         MVO
     </div>
     <div class="flex flex-col leading-tight">
-        <span class="text-sm font-semibold text-gray-950 dark:text-white">Твой текст</span>
-        <span class="text-xs text-gray-500">Твоя подпись</span>
+        <span class="text-sm font-semibold text-gray-950 dark:text-white">Облік активів</span>
+        <span class="text-xs text-gray-500">УІАП</span>
     </div>
 </div>
