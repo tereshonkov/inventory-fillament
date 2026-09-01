@@ -37,7 +37,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->brandName('MVO')
             ->favicon(asset('favicon-bg-2.png'))
-            ->brandLogo(asset('favicon-bg-2.png'))
+            ->brandLogo(fn () => view('filament.logo'))
             ->brandLogoHeight('3.5rem')
             ->id('admin')
             ->path('admin')
