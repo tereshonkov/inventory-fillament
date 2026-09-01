@@ -83,6 +83,7 @@
             padding: 120px 24px 160px;
             text-align: center;
             max-height: 100vh;
+            height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
