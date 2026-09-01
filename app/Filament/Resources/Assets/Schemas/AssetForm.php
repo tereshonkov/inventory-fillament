@@ -36,17 +36,21 @@ class AssetForm
                     ->schema([
                         Select::make('location_id')
                             ->label('Місцезнаходження')
-                            ->relationship('location', 'name'),
+                            ->relationship('location', 'name')
+                            ->preload(),
                         Select::make('type_id')
                             ->label('Тип майна')
-                            ->relationship('type', 'name'),
+                            ->relationship('type', 'name')
+                            ->preload(),
                         Select::make('custodian_id')
                             ->label('МВО')
                             ->relationship('custodian', 'full_name')
-                            ->required(),
+                            ->required()
+                            ->preload(),
                         Select::make('holder_id')
                             ->label('Користувач')
-                            ->relationship('holder', 'full_name'),
+                            ->relationship('holder', 'full_name')
+                            ->preload(),
                     ]),
 
                 Section::make('Статус та примітки')
