@@ -15,6 +15,8 @@ use Filament\Actions\ImportAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Columns\TextColumn\TextColumnSize;
+use Filament\Support\Enums\FontWeight;
 
 class AssetsTable
 {
@@ -74,7 +76,9 @@ class AssetsTable
                     ->searchable(),
                 TextColumn::make('status')
                     ->label('Статус')
-                    ->badge(),
+                    ->badge()
+                    ->size(TextColumnSize::Medium)
+                    ->weight(FontWeight::Bold),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
