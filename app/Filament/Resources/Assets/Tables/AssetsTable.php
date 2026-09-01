@@ -95,16 +95,16 @@ class AssetsTable
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
-            ])
-            ->headerActions([
-                ExportAction::make()
-                    ->label('Експортувати')
-                    ->exporter(AssetExporter::class)
-                    ->formats([ExportFormat::Xlsx]),
-                ImportAction::make()
-                    ->label('Імпортувати')
-                    ->importer(AssetImporter::class)
-                    ->visible(fn() => auth()->user()->role === UserRole::ADMIN),
             ]);
+        // ->headerActions([
+        //     ExportAction::make()
+        //         ->label('Експортувати')
+        //         ->exporter(AssetExporter::class)
+        //         ->formats([ExportFormat::Xlsx]),
+        //     ImportAction::make()
+        //         ->label('Імпортувати')
+        //         ->importer(AssetImporter::class)
+        //         ->visible(fn() => auth()->user()->role === UserRole::ADMIN),
+        // ]);
     }
 }

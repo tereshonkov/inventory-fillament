@@ -9,6 +9,12 @@ use Filament\Resources\Pages\ListRecords;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Support\Enums\Width;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Actions\ImportAction;
+use Filament\Actions\ExportAction;
+use App\Enums\UserRole;
+use App\Filament\Exports\AssetExporter;
+use App\Filament\Imports\AssetImporter;
+use Filament\Actions\Exports\Enums\ExportFormat;
 
 class ListAssets extends ListRecords
 {
@@ -19,6 +25,14 @@ class ListAssets extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
+            ExportAction::make()
+                ->label('Експортувати')
+                ->exporter(AssetExporter::class)
+                ->formats([ExportFormat::Xlsx]),
+            ImportAction::make()
+                ->label('Імпортувати')
+                ->importer(AssetImporter::class)
+                ->visible(fn() => auth()->user()->role === UserRole::ADMIN),
             CreateAction::make(),
         ];
     }
