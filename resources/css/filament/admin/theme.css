@@ -74,3 +74,17 @@
 .fi-ta-search-field {
     width: 550px !important;
 }
+/* Контейнер панели инструментов над таблицей */
+.fi-ta-actions {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+/* Сдвигаем поиск в самое начало (влево) */
+.fi-ta-header-search {
+    order: -1;
+    margin-right: auto; /* Отодвигает все остальные элементы вправо */
+    max-width: 400px;  /* Задает нужную вам увеличенную ширину */
+    width: 100%;
+}
