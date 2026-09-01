@@ -43,6 +43,9 @@ class AssetsTable
                     ->searchable(),
                 TextColumn::make('serial_number')
                     ->label('Серійний номер')
+                    ->width('400px')
+                    ->wrap()
+                    ->lineClamp(2)
                     ->searchable(),
                 TextColumn::make('year')
                     ->label('Рік надходження')
