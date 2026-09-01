@@ -14,6 +14,7 @@ use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Support\Colors\Color;
+use Filament\Support\Facades\FilamentColor;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
@@ -29,6 +30,22 @@ class AdminPanelProvider extends PanelProvider
             $component->native(false)->locale('uk');
         });
         CreateRecord::disableCreateAnother();
+
+        FilamentColor::register([
+            'primary' => [
+                50 => '245, 245, 245',
+                100 => '229, 229, 229',
+                200 => '212, 212, 212',
+                300 => '163, 163, 163',
+                400 => '115, 115, 115',
+                500 => '82, 82, 82',
+                600 => '38, 38, 38',
+                700 => '23, 23, 23',
+                800 => '13, 13, 13',
+                900 => '8, 8, 8',
+                950 => '3, 3, 3',
+            ],
+        ]);
     }
 
     public function panel(Panel $panel): Panel
@@ -37,7 +54,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->brandName('MVO')
             ->favicon(asset('favicon.svg'))
-            ->brandLogo(fn () => view('filament.logo'))
+            ->brandLogo(fn() => view('filament.logo'))
             ->brandLogoHeight('3.5rem')
             ->id('admin')
             ->path('admin')
@@ -46,7 +63,6 @@ class AdminPanelProvider extends PanelProvider
             ->databaseNotificationsPolling('30s')
             ->sidebarCollapsibleOnDesktop()
             ->login()
-            ->colors(['primary' => Color::Zinc])
             ->navigationGroups([
                 'Облік майна',
                 'Довідники',
