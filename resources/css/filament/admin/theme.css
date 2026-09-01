@@ -74,3 +74,7 @@
 .fi-ta-search-field {
     width: 450px !important;
 }
+
+.fi-ac:not(.fi-width-full).fi-align-start, .fi-ac:not(.fi-width-full).fi-align-left {
+    padding-left: 1rem;
+}
