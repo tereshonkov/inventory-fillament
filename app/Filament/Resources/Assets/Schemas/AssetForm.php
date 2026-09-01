@@ -37,19 +37,23 @@ class AssetForm
                         Select::make('location_id')
                             ->label('Місцезнаходження')
                             ->relationship('location', 'name')
+                            ->searchable()
                             ->preload(),
                         Select::make('type_id')
                             ->label('Тип майна')
                             ->relationship('type', 'name')
+                            ->searchable()
                             ->preload(),
                         Select::make('custodian_id')
                             ->label('МВО')
                             ->relationship('custodian', 'full_name')
+                            ->searchable()
                             ->required()
                             ->preload(),
                         Select::make('holder_id')
                             ->label('Користувач')
                             ->relationship('holder', 'full_name')
+                            ->searchable()
                             ->preload(),
                     ]),
 
