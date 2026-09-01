@@ -46,3 +46,13 @@
 .dark .fi-sidebar {
     border-right-color: rgb(63 63 70);
 }
+
+/* Розташування поля пошуку зліва + ширше */
+.fi-ta-header-toolbar > div:has(> .fi-ta-search-field) {
+    display: contents;
+}
+
+.fi-ta-search-field {
+    order: -1;
+    max-width: 24rem !important;
+}
