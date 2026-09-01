@@ -151,10 +151,10 @@
     <div class="glow"></div>
     <div class="grid-overlay"></div>
 
-    <nav>
+    {{-- <nav>
         <div class="logo-box">MVO</div>
         <span>Облік активів</span>
-    </nav>
+    </nav> --}}
 
     <main>
         <div class="badge">
