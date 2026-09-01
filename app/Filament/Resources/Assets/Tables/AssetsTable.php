@@ -40,7 +40,7 @@ class AssetsTable
                     ->searchable(),
                 TextColumn::make('inventory_number')
                     ->label('Інвентарний номер')
-                    ->searchable()
+                    ->searchable(['inventory_number', 'serial_number'])
                     ->description(fn ($record) => $record->serial_number),
                 // TextColumn::make('serial_number')
                 //     ->label('Серійний номер')
@@ -54,7 +54,7 @@ class AssetsTable
                     ->sortable(),
                 TextColumn::make('location.name')
                     ->label('Місцезнаходження')
-                    ->searchable()
+                    ->searchable(['location.name', 'holder.full_name'])
                     ->description(fn($record) => $record->holder?->full_name),
                 TextColumn::make('type.name')
                     ->label('Тип майна')
