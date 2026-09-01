@@ -81,10 +81,13 @@
 
 /* Полоса в хедері на рівні сайдбару, перед логотипом */
 .fi-topbar-start {
-    border-left: 1px solid #e5e7eb;
-    width: auto;
+    border-left: none !important;
 }
 
-.dark .fi-topbar-start {
-    border-left-color: rgb(63 63 70);
+.fi-topbar > div:first-child {
+    border-right: 1px solid #e5e7eb;
+}
+
+.dark .fi-topbar > div:first-child {
+    border-right-color: rgb(63 63 70);
 }
