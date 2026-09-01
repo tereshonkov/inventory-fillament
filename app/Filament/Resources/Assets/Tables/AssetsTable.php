@@ -40,21 +40,22 @@ class AssetsTable
                     ->searchable(),
                 TextColumn::make('inventory_number')
                     ->label('Інвентарний номер')
-                    ->searchable(['inventory_number', 'serial_number'])
+                    ->searchable()
                     ->description(fn ($record) => $record->serial_number),
-                // TextColumn::make('serial_number')
-                //     ->label('Серійний номер')
-                //     ->width('250px')
-                //     ->wrap()
-                //     ->lineClamp(2)
-                //     ->searchable(),
+                TextColumn::make('serial_number')
+                    ->label('Серійний номер')
+                    ->width('250px')
+                    ->wrap()
+                    ->lineClamp(2)
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->searchable(),
                 TextColumn::make('year')
                     ->label('Рік надходження')
                     // ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
                 TextColumn::make('location.name')
                     ->label('Місцезнаходження')
-                    ->searchable(['location.name', 'holder.full_name'])
+                    ->searchable([)
                     ->description(fn($record) => $record->holder?->full_name),
                 TextColumn::make('type.name')
                     ->label('Тип майна')
@@ -64,9 +65,10 @@ class AssetsTable
                     ->label('МВО')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                // TextColumn::make('holder.full_name')
-                //     ->label('Користувач')
-                //     ->searchable(),
+                TextColumn::make('holder.full_name')
+                    ->label('Користувач')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->searchable(),
                 TextColumn::make('status')
                     ->label('Статус')
                     ->badge(),
