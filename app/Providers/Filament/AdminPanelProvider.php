@@ -45,6 +45,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->databaseNotifications()
             ->databaseNotificationsPolling('30s')
+            ->sidebarCollapsibleOnDesktop()
             ->login()
             ->colors([
                 'primary' => Color::Blue,
