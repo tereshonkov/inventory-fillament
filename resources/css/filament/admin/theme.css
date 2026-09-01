@@ -46,3 +46,22 @@
 .dark .fi-sidebar {
     border-right-color: rgb(63 63 70);
 }
+
+/* Активна вкладка — підкреслення, жирний текст, бейдж кольором теми */
+.fi-tabs-item.fi-active {
+    border-bottom: 2px solid var(--primary-600) !important;
+    font-weight: 600 !important;
+}
+
+.fi-tabs-item:not(.fi-active) {
+    border-bottom: 2px solid transparent !important;
+}
+
+.fi-tabs-item.fi-active .fi-tabs-item-label {
+    color: var(--gray-950) !important;
+}
+
+.fi-tabs-item.fi-active .fi-badge {
+    background-color: var(--primary-600) !important;
+    color: #fff !important;
+}
