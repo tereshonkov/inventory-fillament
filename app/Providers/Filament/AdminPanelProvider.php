@@ -14,8 +14,6 @@ use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Support\Colors\Color;
-use Filament\Widgets\AccountWidget;
-use Filament\Widgets\FilamentInfoWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
@@ -47,7 +45,7 @@ class AdminPanelProvider extends PanelProvider
             ->databaseNotificationsPolling('30s')
             ->sidebarCollapsibleOnDesktop()
             ->login()
-            ->colors(['primary' => Color::hex('#111827')])
+            ->colors(['primary' => Color::Slate])
             ->navigationGroups([
                 'Облік майна',
                 'Довідники',
