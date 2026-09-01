@@ -82,7 +82,7 @@
             margin: 0 auto;
             padding: 120px 24px 160px;
             text-align: center;
-            height: 100vh;
+            max-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
