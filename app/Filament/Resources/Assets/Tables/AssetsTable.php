@@ -53,7 +53,8 @@ class AssetsTable
                     ->sortable(),
                 TextColumn::make('location.name')
                     ->label('Місцезнаходження')
-                    ->searchable(),
+                    ->searchable()
+                    ->description(fn($record) => $record->holder?->full_name),
                 TextColumn::make('type.name')
                     ->label('Тип майна')
                     ->searchable()
@@ -62,9 +63,9 @@ class AssetsTable
                     ->label('МВО')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('holder.full_name')
-                    ->label('Користувач')
-                    ->searchable(),
+                // TextColumn::make('holder.full_name')
+                //     ->label('Користувач')
+                //     ->searchable(),
                 TextColumn::make('status')
                     ->label('Статус')
                     ->badge(),
