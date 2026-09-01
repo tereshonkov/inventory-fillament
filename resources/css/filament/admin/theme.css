@@ -3,22 +3,15 @@
 @source '../../../../app/Filament/**/*';
 @source '../../../../resources/views/filament/**/*';
 
-/* Слияние вкладок и таблицы в единую карточку на страницах списка */
+/* Вкладки без рамки, впритик к карточке таблицы снизу */
 .fi-grid.fi-sc.fi-sc-has-gap:has(.fi-sc-tabs) {
     gap: 0;
 }
 
-.fi-grid-col:has(.fi-sc-tabs) .fi-sc-tabs {
-    background-color: #fff;
-    border: 1px solid #e5e7eb;
-    border-bottom: none;
-    border-radius: 0.75rem 0.75rem 0 0;
-    padding-inline: 1.5rem;
-}
-
-.dark .fi-grid-col:has(.fi-sc-tabs) .fi-sc-tabs {
-    background-color: rgb(24 24 27);
-    border-color: rgb(63 63 70);
+.fi-sc-tabs {
+    border: none !important;
+    box-shadow: none !important;
+    padding-inline: 0.25rem;
 }
 
 .fi-grid-col:has(.fi-sc-tabs) + .fi-grid-col .fi-ta-ctn {
