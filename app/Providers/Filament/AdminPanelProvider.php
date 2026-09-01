@@ -41,6 +41,7 @@ class AdminPanelProvider extends PanelProvider
             ->brandLogoHeight('3.5rem')
             ->id('admin')
             ->path('admin')
+            ->viteTheme('resources/css/filament/admin/theme.css')
             ->databaseNotifications()
             ->databaseNotificationsPolling('30s')
             ->sidebarCollapsibleOnDesktop()
