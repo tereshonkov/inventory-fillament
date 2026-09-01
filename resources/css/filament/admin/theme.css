@@ -4,11 +4,12 @@
 @source '../../../../resources/views/filament/**/*';
 
 /* Вкладки — прибираємо box-shadow (це імітація рамки через ring, не border) */
-.fi-tabs {
+.fi-tabs:not(.fi-contained) {
     box-shadow: none !important;
     background-color: transparent !important;
     padding: 0 !important;
     border-radius: 0 !important;
+    margin-inline: 0 !important;
 }
 
 .fi-grid.fi-sc.fi-sc-has-gap:has(.fi-sc-tabs) {
