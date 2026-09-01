@@ -3,23 +3,39 @@
 @source '../../../../app/Filament/**/*';
 @source '../../../../resources/views/filament/**/*';
 
-/* Вкладки — прибираємо box-shadow (це імітація рамки через ring, не border) */
+/* Єдина рамка на зовнішньому контейнері — і вкладки, і таблиця всередині неї */
+.fi-grid.fi-sc.fi-sc-has-gap:has(.fi-sc-tabs) {
+    gap: 0 !important;
+    background-color: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    overflow: hidden;
+}
+
+.dark .fi-grid.fi-sc.fi-sc-has-gap:has(.fi-sc-tabs) {
+    background-color: rgb(24 24 27);
+    border-color: rgb(63 63 70);
+}
+
+/* Вкладки — без власної рамки, тільки лінія-роздільник знизу */
 .fi-tabs:not(.fi-contained) {
     box-shadow: none !important;
     background-color: transparent !important;
-    padding: 0 !important;
+    padding: 0 1.5rem !important;
     border-radius: 0 !important;
     margin-inline: 0 !important;
+    border-bottom: 1px solid #e5e7eb !important;
 }
 
-.fi-grid.fi-sc.fi-sc-has-gap:has(.fi-sc-tabs) {
-    gap: 0 !important;
+.dark .fi-tabs:not(.fi-contained) {
+    border-bottom-color: rgb(63 63 70) !important;
 }
 
+/* Таблиця — повністю без власної рамки, її дає зовнішній контейнер */
 .fi-grid-col:has(.fi-sc-tabs) + .fi-grid-col .fi-ta-ctn {
-    border-top: none;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
 }
 
 /* Границя справа у сайдбара */
