@@ -25,7 +25,7 @@ class AssetsTable
             ->columns([
                 TextColumn::make('name')
                     ->label('Назва')
-                    ->width('400px')
+                    ->width('600px')
                     ->wrap()
                     ->lineClamp(4)
                     ->tooltip(function (TextColumn $column): ?string {
