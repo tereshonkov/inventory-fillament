@@ -83,9 +83,14 @@
 .fi-topbar-start {
     border-right: 1px solid #e5e7eb;
     width: var(--collapsed-sidebar-width);
-    overflow: hidden;
+    overflow: visible;
 }
 
 .dark .fi-topbar-start {
     border-right-color: rgb(63 63 70);
+}
+
+.fi-topbar-start a:has(.fi-logo) {
+    position: absolute;
+    left: calc(var(--collapsed-sidebar-width) + 1rem);
 }
