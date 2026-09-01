@@ -82,7 +82,7 @@
 /* Полоса в хедері на рівні сайдбару, перед логотипом */
 .fi-topbar-start {
     border-left: 1px solid #e5e7eb;
-    width: var(--sidebar-width);
+    width: auto;
 }
 
 .dark .fi-topbar-start {
