@@ -40,8 +40,11 @@ class AssetsTable
                     ->searchable(),
                 TextColumn::make('inventory_number')
                     ->label('Інвентарний номер')
+                    ->width('250px')
+                    ->wrap()
+                    ->lineClamp(2)
                     ->searchable()
-                    ->description(fn ($record) => $record->serial_number),
+                    ->description(fn($record) => $record->serial_number),
                 TextColumn::make('serial_number')
                     ->label('Серійний номер')
                     ->width('250px')
