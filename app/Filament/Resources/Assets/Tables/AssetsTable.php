@@ -49,7 +49,6 @@ class AssetsTable
                     ->searchable(),
                 TextColumn::make('year')
                     ->label('Рік надходження')
-                    ->numeric()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
                 TextColumn::make('location.name')
