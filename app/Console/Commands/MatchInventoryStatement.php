@@ -23,7 +23,7 @@ class MatchInventoryStatement extends Command
         foreach ($csv as $record) {
             $inventoryNumber = trim($record[14] ?? '');
 
-            if ($inventoryNumber === '' || ! ctype_digit($inventoryNumber)) {
+            if ($inventoryNumber === '' || ! ctype_digit($inventoryNumber) || strlen($inventoryNumber) < 6) {
                 continue;
             }
 
