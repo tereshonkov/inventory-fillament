@@ -70,3 +70,7 @@
     border-radius: 0 !important;
     background-color: transparent !important;
 }
+
+.fi-ta-search-field {
+    width: 550px !important;
+}
