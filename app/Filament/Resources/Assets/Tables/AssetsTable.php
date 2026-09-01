@@ -40,13 +40,14 @@ class AssetsTable
                     ->searchable(),
                 TextColumn::make('inventory_number')
                     ->label('Інвентарний номер')
-                    ->searchable(),
-                TextColumn::make('serial_number')
-                    ->label('Серійний номер')
-                    ->width('250px')
-                    ->wrap()
-                    ->lineClamp(2)
-                    ->searchable(),
+                    ->searchable()
+                    ->description(fn ($record) => $record->serial_number),,
+                // TextColumn::make('serial_number')
+                //     ->label('Серійний номер')
+                //     ->width('250px')
+                //     ->wrap()
+                //     ->lineClamp(2)
+                //     ->searchable(),
                 TextColumn::make('year')
                     ->label('Рік надходження')
                     // ->toggleable(isToggledHiddenByDefault: true)
