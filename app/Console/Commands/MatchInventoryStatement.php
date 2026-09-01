@@ -2,10 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Models\Asset;
+use Illuminate\Console\Command;
 use League\Csv\Reader;
-use Carbon\Carbon;
 
 class MatchInventoryStatement extends Command
 {
@@ -16,36 +15,36 @@ class MatchInventoryStatement extends Command
     public function handle(): void
     {
         $csv = Reader::createFromPath($this->argument('file'));
-        $csv->setHeaderOffset(0);
 
         $updated = 0;
         $yearFilled = 0;
         $notFound = [];
 
-        foreach ($csv->getRecords() as $row) {
-            // тут твоя логика:
-            // 1. достать инвентарник из $row, найти Asset
-            $inventoryNumber = trim($row['інвентарний/номенклатурний'] ?? null);
-            $name = trim($row['Найменування, стисла характеристика та призначення об’єкта'] ?? null);
-            $year = trim($row['Рік випуску  (будівництва) чи дата придбання (введення в експлуатацію) та виготовлювач'] ?? null);
+        foreach ($csv as $record) {
+            $inventoryNumber = trim($record[14] ?? '');
+
+            if ($inventoryNumber === '' || ! ctype_digit($inventoryNumber)) {
+                continue;
+            }
+
             $asset = Asset::where('inventory_number', $inventoryNumber)->first();
-            // 2. если не нашли — записать в $notFound, продолжить
+
             if (! $asset) {
                 $notFound[] = $inventoryNumber;
                 continue;
             }
-            // 3. если нашли — обновить name (всегда)
+
+            $name = trim($record[1] ?? '');
             $asset->name = $name;
-            // 4. если year пустой — распарсить дату из $row, заполнить, увеличить $yearFilled
+
             if (empty($asset->year)) {
-                try {
-                    $asset->year = Carbon::parse($year)->year;
+                $yearText = trim($record[10] ?? '');
+                if (preg_match('/\d{4}/', $yearText, $matches)) {
+                    $asset->year = (int) $matches[0];
                     $yearFilled++;
-                } catch (\Exception $e) {
-                    $this->warn("Не вдалося розпізнати дату для {$inventoryNumber}: {$year}");
                 }
             }
-            // 5. сохранить, увеличить $updated
+
             $asset->save();
             $updated++;
         }
