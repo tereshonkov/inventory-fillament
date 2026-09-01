@@ -65,3 +65,8 @@
     background-color: var(--primary-600) !important;
     color: #fff !important;
 }
+
+.fi-tabs-item {
+    border-radius: 0 !important;
+    background-color: transparent !important;
+}
