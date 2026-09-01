@@ -77,7 +77,7 @@ class AssetsTable
                 TextColumn::make('status')
                     ->label('Статус')
                     ->badge()
-                    ->size(TextColumnSize::Medium)
+                    ->size(TextSize::Medium)
                     ->weight(FontWeight::Bold),
                 TextColumn::make('created_at')
                     ->dateTime()
