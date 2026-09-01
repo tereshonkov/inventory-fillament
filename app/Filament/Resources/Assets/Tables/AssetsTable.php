@@ -49,7 +49,7 @@ class AssetsTable
                     ->searchable(),
                 TextColumn::make('year')
                     ->label('Рік надходження')
-                    ->toggleable(isToggledHiddenByDefault: true)
+                    // ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
                 TextColumn::make('location.name')
                     ->label('Місцезнаходження')
