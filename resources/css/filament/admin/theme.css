@@ -94,3 +94,40 @@
     position: absolute;
     left: calc(var(--collapsed-sidebar-width) + 1rem);
 }
+/* Темний фон зі світінням для сторінки логіну */
+.fi-simple-layout {
+    background: #0a0e1a;
+    position: relative;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.fi-simple-layout::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 900px;
+    height: 900px;
+    background: radial-gradient(circle, rgba(29,43,69,0.9) 0%, rgba(10,14,26,0) 70%);
+    pointer-events: none;
+}
+
+.fi-simple-layout::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 20%, #000 40%, transparent 100%);
+    pointer-events: none;
+}
+
+.fi-simple-page {
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 25px 60px -15px rgba(0,0,0,0.5) !important;
+}
