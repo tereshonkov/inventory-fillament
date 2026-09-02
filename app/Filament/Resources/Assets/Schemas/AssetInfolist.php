@@ -20,14 +20,14 @@ class AssetInfolist
                             ->label('Назва'),
                         TextEntry::make('inventory_number')
                             ->label('Інвентарний номер')
-                            ->placeholder('-'),
+                            ->placeholder('Не призначено'),
                         TextEntry::make('serial_number')
                             ->label('Серійний номер')
-                            ->placeholder('-'),
+                            ->placeholder('Не призначено'),
                         TextEntry::make('year')
                             ->label('Рік')
                             ->numeric()
-                            ->placeholder('-'),
+                            ->placeholder('Не призначено'),
                     ]),
 
                 Section::make('Розміщення та відповідальність')
@@ -35,16 +35,16 @@ class AssetInfolist
                     ->schema([
                         TextEntry::make('location.name')
                             ->label('Локація')
-                            ->placeholder('-'),
+                            ->placeholder('Не призначено'),
                         TextEntry::make('type.name')
                             ->label('Тип')
-                            ->placeholder('-'),
+                            ->placeholder('Не призначено'),
                         TextEntry::make('custodian.full_name')
                             ->label('МВО')
-                            ->placeholder('-'),
+                            ->placeholder('Не призначено'),
                         TextEntry::make('holder.full_name')
-                            ->label('Держатель')
-                            ->placeholder('-'),
+                            ->label('Користувач')
+                            ->placeholder('Не призначено'),
                     ]),
 
 
@@ -57,16 +57,16 @@ class AssetInfolist
                             ->badge(),
                         TextEntry::make('notes')
                             ->label('Примітки')
-                            ->placeholder('-')
+                            ->placeholder('Не призначено')
                             ->columnSpanFull(),
                         TextEntry::make('created_at')
                             ->label('Створено')
                             ->dateTime()
-                            ->placeholder('-'),
+                            ->placeholder('Не призначено'),
                         TextEntry::make('updated_at')
                             ->label('Оновлено')
                             ->dateTime()
-                            ->placeholder('-'),
+                            ->placeholder('Не призначено'),
                     ]),
             ]);
     }
