@@ -22,15 +22,6 @@ class AssetTransfersTable
                     ->width('450px')
                     ->description(fn($record) => $record->asset?->inventory_number, position: 'above')
                     ->description(fn($record) => $record->asset?->serial_number, position: 'below')
-                    ->tooltip(function (TextColumn $column): ?string {
-                        $state = $column->getState();
-
-                        if (strlen($state) <= $column->getCharacterLimit()) {
-                            return null;
-                        }
-
-                        return $state;
-                    })
                     ->searchable(),
                 TextColumn::make('department.name')
                     ->label('Підрозділ')
