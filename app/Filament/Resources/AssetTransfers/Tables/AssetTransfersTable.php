@@ -27,6 +27,9 @@ class AssetTransfersTable
                     ->searchable(),
                 TextColumn::make('department.name')
                     ->label('Підрозділ')
+                    ->wrap()
+                    ->lineClamp(4)
+                    ->width('450px')
                     ->searchable(),
                 TextColumn::make('document_number')
                     ->label('Номер документу')
