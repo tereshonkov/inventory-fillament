@@ -8,7 +8,6 @@ use Filament\Actions\EditAction;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-//test
 
 class AssetIncomingsTable
 {
@@ -23,7 +22,8 @@ class AssetIncomingsTable
                     ->wrap()
                     ->lineClamp(4)
                     ->width('450px')
-                    ->description(fn ($record) => $record->asset?->inventory_number)
+                    ->description(fn($record) => $record->asset?->inventory_number, position: 'above')
+                    ->description(fn($record) => $record->asset?->serial_number, position: 'below')
                     ->searchable(),
                 TextColumn::make('incoming_type')
                     ->label('Тип надходження')
@@ -37,7 +37,7 @@ class AssetIncomingsTable
                 TextColumn::make('received_at')
                     ->label('Розпочато отримання')
                     ->date()
-                    ->description(fn ($record) => $record->completed_at?->format('d.m.Y'))
+                    ->description(fn($record) => $record->completed_at?->format('d.m.Y'))
                     ->sortable(),
                 TextColumn::make('completed_at')
                     ->label('Отримано')
