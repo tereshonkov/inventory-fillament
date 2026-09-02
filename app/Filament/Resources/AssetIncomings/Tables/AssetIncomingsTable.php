@@ -22,13 +22,13 @@ class AssetIncomingsTable
                     ->wrap()
                     ->lineClamp(4)
                     ->width('250px')
+                    ->description(fn ($record) => $record->asset?->inventory_number)
                     ->searchable(),
                 TextColumn::make('incoming_type')
                     ->label('Тип надходження')
                     ->badge(),
                 TextColumn::make('source')
                     ->label('Джерело надходження')
-                    ->description(fn ($record) => $record->asset?->inventory_number)
                     ->description(fn ($record) => $record->asset?->serial_number)
                     ->searchable(),
                 TextColumn::make('document_number')
