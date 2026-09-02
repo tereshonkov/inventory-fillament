@@ -29,7 +29,6 @@ class AssetIncomingsTable
                     ->badge(),
                 TextColumn::make('source')
                     ->label('Джерело надходження')
-                    ->description(fn ($record) => $record->asset?->serial_number)
                     ->searchable(),
                 TextColumn::make('document_number')
                     ->label('Номер документу')
