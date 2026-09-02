@@ -32,13 +32,11 @@ class AssetTransfersTable
                     ->searchable(),
                 TextColumn::make('transferred_at')
                     ->label('Розпочату передачу')
-                    ->description(fn($record) => $record->completed_at)
                     ->date()
                     ->sortable(),
                 TextColumn::make('completed_at')
                     ->label('Передано')
                     ->date()
-                    ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
