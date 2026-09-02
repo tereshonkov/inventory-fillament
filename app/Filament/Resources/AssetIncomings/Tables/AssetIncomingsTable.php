@@ -25,7 +25,8 @@ class AssetIncomingsTable
                     ->searchable(),
                 TextColumn::make('incoming_type')
                     ->label('Тип надходження')
-                    ->badge(),
+                    ->badge()
+                    ->description(fn($record) => $record->inventory_number),
                 TextColumn::make('source')
                     ->label('Джерело надходження')
                     ->searchable(),
