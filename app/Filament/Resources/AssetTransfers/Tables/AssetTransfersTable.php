@@ -17,7 +17,7 @@ class AssetTransfersTable
             ->columns([
                 TextColumn::make('asset.name')
                     ->label('Назва')
-                                        ->wrap()
+                    ->wrap()
                     ->lineClamp(4)
                     ->width('450px')
                     ->description(fn($record) => $record->asset?->inventory_number, position: 'above')
