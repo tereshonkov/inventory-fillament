@@ -19,6 +19,15 @@
             background-position: center;
             height: 100vh;
         }
+        
+        .badge-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background-color: #4CAF50;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
     </style>
 </head>
 
