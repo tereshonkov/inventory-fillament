@@ -21,7 +21,7 @@ class AssetIncomingsTable
                     ->label('Назва майна')
                     ->wrap()
                     ->lineClamp(4)
-                    ->width('250px')
+                    ->width('450px')
                     ->description(fn ($record) => $record->asset?->inventory_number)
                     ->searchable(),
                 TextColumn::make('incoming_type')
