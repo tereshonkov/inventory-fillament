@@ -14,7 +14,7 @@
         }
 
         main {
-            background-image: url('{{ asset('background.jpg') }}');
+            background-image: url('{{ asset('background.png') }}');
             background-size: cover;
             background-position: center;
         }
