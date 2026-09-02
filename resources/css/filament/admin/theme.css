@@ -129,5 +129,5 @@
 .fi-simple-page {
     position: relative;
     z-index: 1;
-    box-shadow: 0 25px 60px -15px rgba(0,0,0,0.5) !important;
+    box-shadow: none !important;
 }
