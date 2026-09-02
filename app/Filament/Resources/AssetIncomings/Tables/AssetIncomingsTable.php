@@ -16,6 +16,7 @@ class AssetIncomingsTable
     {
         return $table
             ->defaultSort('created_at', 'desc')
+            ->searchable(['asset.inventory_number'])
             ->columns([
                 TextColumn::make('asset.name')
                     ->label('Назва майна')
@@ -23,7 +24,7 @@ class AssetIncomingsTable
                     ->lineClamp(4)
                     ->width('450px')
                     ->description(fn ($record) => $record->asset?->inventory_number)
-                    ->searchable(['asset.name', 'asset.inventory_number']),
+                    ->searchable(),
                 TextColumn::make('incoming_type')
                     ->label('Тип надходження')
                     ->badge(),
