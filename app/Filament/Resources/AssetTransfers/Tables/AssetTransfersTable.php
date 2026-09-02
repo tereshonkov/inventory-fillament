@@ -17,7 +17,11 @@ class AssetTransfersTable
             ->columns([
                 TextColumn::make('asset.name')
                     ->label('Назва')
-                    ->limit(20)
+                                        ->wrap()
+                    ->lineClamp(4)
+                    ->width('450px')
+                    ->description(fn($record) => $record->asset?->inventory_number, position: 'above')
+                    ->description(fn($record) => $record->asset?->serial_number, position: 'below')
                     ->tooltip(function (TextColumn $column): ?string {
                         $state = $column->getState();
 
@@ -36,11 +40,13 @@ class AssetTransfersTable
                     ->searchable(),
                 TextColumn::make('transferred_at')
                     ->label('Розпочату передачу')
+                    ->description(fn($record) => $record->completed_at?->format('d.m.Y'))
                     ->date()
                     ->sortable(),
                 TextColumn::make('completed_at')
                     ->label('Передано')
                     ->date()
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
