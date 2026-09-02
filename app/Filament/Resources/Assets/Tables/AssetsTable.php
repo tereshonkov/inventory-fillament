@@ -24,21 +24,15 @@ class AssetsTable
     {
         return $table
             ->defaultSort('created_at', 'desc')
+            ->paginationPageOptions([5, 10, 25, 50])
+            ->defaultPaginationPageOption(5)
             ->columns([
                 TextColumn::make('name')
                     ->label('Назва')
                     ->width('600px')
                     ->wrap()
                     ->lineClamp(4)
-                    ->tooltip(function (TextColumn $column): ?string {
-                        $state = $column->getState();
-
-                        if (strlen($state) <= $column->getCharacterLimit()) {
-                            return null;
-                        }
-
-                        return $state;
-                    })
+                    ->tooltip(fn (TextColumn $column): ?string => $column->getState())
                     ->searchable(),
                 TextColumn::make('inventory_number')
                     ->label('Інвентарний номер')
