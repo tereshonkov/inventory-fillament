@@ -27,6 +27,7 @@
             display: flex;
             flex-direction: column;
             gap: 1rem;
+            max-width: 600px;
         }
 
         .text h1 {
