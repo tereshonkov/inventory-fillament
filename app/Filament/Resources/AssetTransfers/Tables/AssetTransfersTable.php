@@ -32,7 +32,7 @@ class AssetTransfersTable
                     ->searchable(),
                 TextColumn::make('transferred_at')
                     ->label('Розпочату передачу')
-                    ->description(fn($record) => $record->completed_at?->format('d.m.Y'))
+                    ->description(fn($record) => $record->completed_at)
                     ->date()
                     ->sortable(),
                 TextColumn::make('completed_at')
