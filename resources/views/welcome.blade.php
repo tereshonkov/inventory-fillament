@@ -18,6 +18,9 @@
             background-size: cover;
             background-position: center;
             height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .text {
