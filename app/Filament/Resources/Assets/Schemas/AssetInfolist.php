@@ -57,7 +57,7 @@ class AssetInfolist
                             ->badge(),
                         TextEntry::make('notes')
                             ->label('Примітки')
-                            ->placeholder('Не призначено')
+                            ->placeholder('Не вказано')
                             ->columnSpanFull(),
                         TextEntry::make('created_at')
                             ->label('Створено')
