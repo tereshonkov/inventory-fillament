@@ -59,8 +59,6 @@
             <a href="mailto:tereshonkov.dima@gmail.com" class="btn btn-secondary">Запросити доступ</a>
         </div>
     </main>
-
-    <footer>&copy; {{ date('Y') }} Облік активів</footer>
 </body>
 
 </html>
