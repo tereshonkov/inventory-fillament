@@ -40,6 +40,16 @@
             color: #fff;
             margin-top: 1rem;
         }
+        
+        .image {
+            max-width: 600px;
+        }
+
+        .image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
     </style>
 </head>
 
