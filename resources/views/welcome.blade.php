@@ -55,9 +55,8 @@
             </p>
         </div>
 
-        <div class="actions">
-            <a href="{{ url('/admin') }}" class="btn btn-primary">Увійти в систему</a>
-            <a href="mailto:tereshonkov.dima@gmail.com" class="btn btn-secondary">Запросити доступ</a>
+        <div class="image">
+            <img src="{{ asset('showcase-surface.png') }}" alt="dashboard showcase">
         </div>
     </main>
 </body>
