@@ -19,31 +19,37 @@
             background-position: center;
             height: 100vh;
         }
-        
-        .badge-dot {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            background-color: #4CAF50;
-            border-radius: 50%;
-            margin-right: 8px;
+
+        .text {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .text h1 {
+            font-size: 3rem;
+            color: #fff;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: #fff;
+            margin-top: 1rem;
         }
     </style>
 </head>
 
 <body>
     <main class="content">
-        <div class="badge">
-            <span class="badge-dot"></span>
-            УІАП ГУНП в Харківській області
+
+        <div class="text">
+            <h1>Система обліку<br><span>активів та майна</span></h1>
+
+            <p class="subtitle">
+                Внутрішня платформа для обліку, переміщення та списання
+                техніки й майна підрозділу.
+            </p>
         </div>
-
-        <h1>Система обліку<br><span>активів та майна</span></h1>
-
-        <p class="subtitle">
-            Внутрішня платформа для обліку, переміщення та списання
-            техніки й майна підрозділу.
-        </p>
 
         <div class="actions">
             <a href="{{ url('/admin') }}" class="btn btn-primary">Увійти в систему</a>
