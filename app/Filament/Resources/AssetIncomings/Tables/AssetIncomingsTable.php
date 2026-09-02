@@ -23,7 +23,7 @@ class AssetIncomingsTable
                     ->lineClamp(4)
                     ->width('450px')
                     ->description(fn ($record) => $record->asset?->inventory_number)
-                    ->searchable(),
+                    ->searchable(['asset.name', 'asset.inventory_number']),
                 TextColumn::make('incoming_type')
                     ->label('Тип надходження')
                     ->badge(),
