@@ -55,7 +55,7 @@ class AssetsTable
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
                 TextColumn::make('year')
-                    ->label('Рік надходження')
+                    ->label('Рік')
                     // ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
                 TextColumn::make('location.name')

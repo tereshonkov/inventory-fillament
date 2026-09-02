@@ -35,7 +35,7 @@ class AssetIncomingsTable
                     ->label('Номер документу')
                     ->searchable(),
                 TextColumn::make('received_at')
-                    ->label('Розпочато отримання')
+                    ->label('Дата отримання')
                     ->date()
                     ->description(fn($record) => $record->completed_at?->format('d.m.Y'))
                     ->sortable(),
