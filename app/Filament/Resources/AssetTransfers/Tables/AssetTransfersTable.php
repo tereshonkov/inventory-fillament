@@ -21,8 +21,7 @@ class AssetTransfersTable
                     ->wrap()
                     ->lineClamp(4)
                     ->width('450px')
-                    ->description(fn($record) => $record->asset?->inventory_number, position: 'above')
-                    ->description(fn($record) => $record->asset?->serial_number, position: 'below')
+                    ->description(fn($record) => $record->asset?->inventory_number)
                     ->tooltip(fn ($record) => $record->asset?->name)
                     ->searchable(),
                 TextColumn::make('department.name')
