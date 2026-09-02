@@ -25,10 +25,10 @@ class AssetIncomingsTable
                     ->searchable(),
                 TextColumn::make('incoming_type')
                     ->label('Тип надходження')
-                    ->badge()
-                    ->description(fn($record) => $record->inventory_number),
+                    ->badge(),
                 TextColumn::make('source')
                     ->label('Джерело надходження')
+                    ->description(fn($record) => $record->inventory_number)
                     ->searchable(),
                 TextColumn::make('document_number')
                     ->label('Номер документу')
