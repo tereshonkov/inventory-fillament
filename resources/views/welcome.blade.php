@@ -27,7 +27,6 @@
             display: flex;
             flex-direction: column;
             gap: 1rem;
-            max-width: 600px;
         }
 
         .text h1 {
@@ -39,16 +38,6 @@
             font-size: 1.5rem;
             color: #fff;
             margin-top: 1rem;
-        }
-        
-        .image {
-            max-width: 600px;
-        }
-
-        .image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
         }
     </style>
 </head>
@@ -62,10 +51,6 @@
             <p class="subtitle">
                 Landing page will be available soon.
             </p>
-        </div>
-
-        <div class="image">
-            <img src="{{ asset('showcase-surface.png') }}" alt="dashboard showcase">
         </div>
     </main>
 </body>
