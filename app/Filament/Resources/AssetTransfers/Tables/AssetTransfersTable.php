@@ -14,6 +14,7 @@ class AssetTransfersTable
     {
         return $table
             ->defaultSort('created_at', 'desc')
+            ->searchable(['asset.inventory_number', 'asset.serial_number'])
             ->columns([
                 TextColumn::make('asset.name')
                     ->label('Назва')
