@@ -18,6 +18,9 @@ class AssetIncomingsTable
             ->columns([
                 TextColumn::make('asset.name')
                     ->label('Назва майна')
+                    ->wrap()
+                    ->lineClamp(4)
+                    ->width('250px')
                     ->limit(20)
                     ->searchable(),
                 TextColumn::make('incoming_type')
