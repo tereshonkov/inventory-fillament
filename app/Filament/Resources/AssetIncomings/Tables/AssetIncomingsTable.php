@@ -28,10 +28,10 @@ class AssetIncomingsTable
                     ->badge(),
                 TextColumn::make('source')
                     ->label('Джерело надходження')
-                    ->description(fn($record) => $record->inventory_number)
                     ->searchable(),
                 TextColumn::make('document_number')
                     ->label('Номер документу')
+                    ->description(fn($record) => $record->inventory_number)
                     ->searchable(),
                 TextColumn::make('received_at')
                     ->label('Розпочато отримання')
