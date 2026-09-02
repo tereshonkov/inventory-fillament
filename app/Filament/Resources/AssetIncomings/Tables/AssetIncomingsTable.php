@@ -8,7 +8,6 @@ use Filament\Actions\EditAction;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-//test
 
 class AssetIncomingsTable
 {
