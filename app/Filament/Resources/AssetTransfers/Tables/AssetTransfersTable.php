@@ -14,6 +14,8 @@ class AssetTransfersTable
     {
         return $table
             ->defaultSort('created_at', 'desc')
+            ->paginationPageOptions([5, 10, 25, 50])
+            ->defaultPaginationPageOption(5)
             ->searchable(['asset.inventory_number', 'asset.serial_number'])
             ->columns([
                 TextColumn::make('asset.name')

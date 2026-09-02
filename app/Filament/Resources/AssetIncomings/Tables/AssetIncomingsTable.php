@@ -16,6 +16,8 @@ class AssetIncomingsTable
         return $table
             ->defaultSort('created_at', 'desc')
             ->searchable(['asset.inventory_number', 'asset.serial_number'])
+            ->paginationPageOptions([5, 10, 25, 50])
+            ->defaultPaginationPageOption(5)
             ->columns([
                 TextColumn::make('asset.name')
                     ->label('Назва майна')
