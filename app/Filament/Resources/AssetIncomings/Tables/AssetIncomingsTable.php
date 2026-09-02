@@ -22,7 +22,6 @@ class AssetIncomingsTable
                     ->wrap()
                     ->lineClamp(4)
                     ->width('250px')
-                    ->limit(20)
                     ->searchable(),
                 TextColumn::make('incoming_type')
                     ->label('Тип надходження')
