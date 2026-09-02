@@ -17,6 +17,7 @@
             background-image: url('{{ asset('background.png') }}');
             background-size: cover;
             background-position: center;
+            height: 100vh;
         }
     </style>
 </head>
