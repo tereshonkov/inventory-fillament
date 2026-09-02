@@ -36,6 +36,8 @@ class AssetIncomingsTable
                 TextColumn::make('received_at')
                     ->label('Розпочато отримання')
                     ->date()
+                    ->description(fn ($record) => $record->completed_at)
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
                 TextColumn::make('completed_at')
                     ->label('Отримано')
