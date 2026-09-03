@@ -113,7 +113,7 @@ class AssetsTable
                     ->options(fn() => Asset::query()->whereNotNull('year')->distinct()->orderByDesc('year')->pluck('year', 'year'))
                     ->searchable()
                     ->multiple(),
-            ], layout: FiltersLayout::Modal)
+            ], layout: FiltersLayout::AboveContentCollapsible)
             ->recordActions([
                 // ViewAction::make(),
                 // EditAction::make(),
