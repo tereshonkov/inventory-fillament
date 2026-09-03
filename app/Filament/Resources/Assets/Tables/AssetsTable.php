@@ -92,16 +92,19 @@ class AssetsTable
                 SelectFilter::make('location')
                     ->label('Місцезнаходження')
                     ->relationship('location', 'name')
+                    ->preload()
                     ->searchable()
                     ->multiple(),
                 SelectFilter::make('type')
                     ->label('Тип майна')
                     ->relationship('type', 'name')
+                    ->preload()
                     ->searchable()
                     ->multiple(),
                 SelectFilter::make('holder')
                     ->label('Користувач')
                     ->relationship('holder', 'full_name')
+                    ->preload()
                     ->searchable()
                     ->multiple(),
                 SelectFilter::make('year')
