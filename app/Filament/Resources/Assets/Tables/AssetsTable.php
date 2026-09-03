@@ -82,14 +82,32 @@ class AssetsTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->filtersFormWidth('2xl')
             ->filters([
-                SelectFilter::make('status')->label('Статус')->options(AssetStatus::class)->multiple(),
-                SelectFilter::make('location')->label('Місцезнаходження')->relationship('location', 'name')->multiple(),
-                SelectFilter::make('type')->label('Тип майна')->relationship('type', 'name')->multiple(),
-                SelectFilter::make('holder')->label('Користувач')->relationship('holder', 'full_name')->multiple(),
+                SelectFilter::make('status')
+                    ->label('Статус')
+                    ->options(AssetStatus::class)
+                    ->searchable()
+                    ->multiple(),
+                SelectFilter::make('location')
+                    ->label('Місцезнаходження')
+                    ->relationship('location', 'name')
+                    ->searchable()
+                    ->multiple(),
+                SelectFilter::make('type')
+                    ->label('Тип майна')
+                    ->relationship('type', 'name')
+                    ->searchable()
+                    ->multiple(),
+                SelectFilter::make('holder')
+                    ->label('Користувач')
+                    ->relationship('holder', 'full_name')
+                    ->searchable()
+                    ->multiple(),
                 SelectFilter::make('year')
                     ->label('Рік надходження')
                     ->options(fn() => Asset::query()->whereNotNull('year')->distinct()->orderByDesc('year')->pluck('year', 'year'))
+                    ->searchable()
                     ->multiple(),
             ])
             ->recordActions([
