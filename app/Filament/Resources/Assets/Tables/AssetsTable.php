@@ -17,6 +17,7 @@ use Filament\Tables\Table;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Support\Enums\TextSize;
 use Filament\Support\Enums\FontWeight;
+use Filament\Tables\Enums\FiltersLayout;
 
 class AssetsTable
 {
