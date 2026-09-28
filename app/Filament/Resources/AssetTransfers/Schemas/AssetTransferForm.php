@@ -25,7 +25,7 @@ class AssetTransferForm
                                 'asset',
                                 'name',
                                 modifyQueryUsing: fn($query, string $operation) => $operation === 'create'
-                                    ? $query->where('status', [
+                                    ? $query->whereIn('status', [
                                         AssetStatus::BALANCE->value,
                                         AssetStatus::NOT_PUT_IN_TO_OPERATION->value,
                                     ])
