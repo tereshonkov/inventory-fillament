@@ -25,7 +25,10 @@ class AssetTransferForm
                                 'asset',
                                 'name',
                                 modifyQueryUsing: fn($query, string $operation) => $operation === 'create'
-                                    ? $query->where('status', AssetStatus::BALANCE->value)
+                                    ? $query->where('status', [
+                                        AssetStatus::BALANCE->value,
+                                        AssetStatus::NOT_PUT_IN_TO_OPERATION->value,
+                                    ])
                                     : $query,
                             )
                             ->searchable(['name', 'inventory_number', 'serial_number'])
