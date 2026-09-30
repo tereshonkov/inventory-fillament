@@ -15,7 +15,7 @@ class AssetActivityChart extends ChartWidget
 
     protected ?string $heading = 'Активність за останні 6 місяців';
 
-    protected ?string $maxHeight = '320px';
+    // protected ?string $maxHeight = '320px';
 
     protected function getData(): array
     {

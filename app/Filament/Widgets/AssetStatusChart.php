@@ -12,7 +12,7 @@ class AssetStatusChart extends ChartWidget
 
     protected ?string $heading = 'Розподіл за статусом';
 
-    protected ?string $maxHeight = '320px';
+    // protected ?string $maxHeight = '320px';
 
     protected function getData(): array
     {
