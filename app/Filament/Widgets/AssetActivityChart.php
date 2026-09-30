@@ -28,7 +28,7 @@ class AssetActivityChart extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'Прихід',
+                    'label' => 'Прийнято',
                     'data' => $incoming,
                     'backgroundColor' => '#22c55e',
                 ],

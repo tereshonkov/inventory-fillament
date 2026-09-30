@@ -13,6 +13,11 @@ class NotIntroducedAssets extends TableWidget
     protected int|string|array $columnSpan = 'full';
     protected static ?int $sort = 2;
 
+    public static function canView(): bool
+    {
+        return false;
+    }
+
     public function table(Table $table): Table
     {
         return $table
