@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Widgets\AssetActivityChart;
+use App\Filament\Widgets\AssetStatusChart;
 use App\Filament\Widgets\NotIntroducedAssets;
 use App\Filament\Widgets\StatsOverview;
 use Filament\Forms\Components\DatePicker;
@@ -82,6 +83,7 @@ class AdminPanelProvider extends PanelProvider
                 StatsOverview::class,
                 // NotIntroducedAssets::class,
                 AssetActivityChart::class,
+                AssetStatusChart::class,
             ])
             ->middleware([
                 EncryptCookies::class,
