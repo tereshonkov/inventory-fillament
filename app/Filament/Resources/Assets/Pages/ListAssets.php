@@ -4,11 +4,16 @@ namespace App\Filament\Resources\Assets\Pages;
 
 use App\Enums\AssetStatus;
 use App\Filament\Resources\Assets\AssetResource;
+use App\Services\AssetActivationImporter;
+use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
+use Filament\Forms\Components\FileUpload;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Support\Enums\Width;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Storage;
 use Filament\Actions\ImportAction;
 use Filament\Actions\ExportAction;
 use App\Enums\UserRole;
@@ -29,10 +34,33 @@ class ListAssets extends ListRecords
                 ->label('Експортувати')
                 ->exporter(AssetExporter::class)
                 ->formats([ExportFormat::Xlsx]),
-            ImportAction::make()
-                ->label('Імпортувати')
-                ->importer(AssetImporter::class)
-                ->visible(fn() => auth()->user()->role === UserRole::ADMIN),
+            // ImportAction::make()
+            //     ->label('Імпортувати')
+            //     ->importer(AssetImporter::class)
+            //     ->visible(fn() => auth()->user()->role === UserRole::ADMIN),
+            Action::make('activateAssets')
+                ->label('Введення в експлуатацію')
+                ->form([
+                    FileUpload::make('file')
+                        ->label('Акт введення в експлуатацію')
+                        ->acceptedFileTypes(['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'])
+                        ->required()
+                        ->disk('local')
+                        ->directory('temp-imports'),
+                ])
+                ->action(function (array $data): void {
+                    $path = Storage::disk('local')->path($data['file']);
+
+                    $result = (new AssetActivationImporter())->activate($path);
+
+                    $skippedCount = count($result['skipped']);
+
+                    Notification::make()
+                        ->title('Введення в експлуатацію завершено')
+                        ->body("Активовано: {$result['activated']}, потребує уваги: {$skippedCount}")
+                        ->success()
+                        ->send();
+                }),
             CreateAction::make(),
         ];
     }
