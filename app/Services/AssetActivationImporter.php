@@ -64,7 +64,7 @@ class AssetActivationImporter
         $sheet = $spreadsheet->getActiveSheet();
 
         $rows = [];
-        $row = $headerRow + 3; // +1 заголовок, +1 рядок-нумерація "1,2,3..."
+        $row = $headerRow + 3; // +1 заголовок, +2 рядок-нумерація "1,2,3..."
 
         while ($row < $totalRow) {
             $rows[] = [
