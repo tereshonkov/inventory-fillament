@@ -46,6 +46,7 @@ class IncomingsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->heading('')
             ->recordTitleAttribute('document_number')
             ->columns([
                 TextColumn::make('incoming_type')
