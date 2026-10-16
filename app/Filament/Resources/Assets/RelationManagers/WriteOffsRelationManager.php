@@ -16,6 +16,7 @@ use Filament\Tables\Table;
 class WriteOffsRelationManager extends RelationManager
 {
     protected static string $relationship = 'writeOffs';
+    protected static ?string $title = 'Списано';
 
     public function form(Schema $schema): Schema
     {
@@ -40,6 +41,7 @@ class WriteOffsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->heading('')
             ->recordTitleAttribute('document_number')
             ->columns([
                 TextColumn::make('document_number')
@@ -56,11 +58,11 @@ class WriteOffsRelationManager extends RelationManager
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->hidden(),
                 TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->hidden(),
             ])
             ->filters([
                 //

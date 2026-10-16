@@ -18,6 +18,7 @@ use Filament\Tables\Table;
 class IncomingsRelationManager extends RelationManager
 {
     protected static string $relationship = 'incomings';
+    protected static ?string $title = 'Отримано';
 
     public function form(Schema $schema): Schema
     {

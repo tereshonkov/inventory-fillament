@@ -18,6 +18,7 @@ use Filament\Tables\Table;
 class TransfersRelationManager extends RelationManager
 {
     protected static string $relationship = 'transfers';
+    protected static ?string $title = 'Передано';
 
     public function form(Schema $schema): Schema
     {
@@ -43,6 +44,7 @@ class TransfersRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->heading('')
             ->recordTitleAttribute('document_number')
             ->columns([
                 TextColumn::make('department.name')
@@ -62,11 +64,11 @@ class TransfersRelationManager extends RelationManager
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->hidden(),
                 TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->hidden(),
             ])
             ->filters([
                 //
