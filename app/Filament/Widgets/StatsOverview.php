@@ -22,6 +22,9 @@ class StatsOverview extends StatsOverviewWidget
 
     protected int|string|array $columnSpan = 'full';
 
+    // Four tiles: 2x2 on phones instead of four tall full-width cards, one row from md.
+    protected int|array|null $columns = ['default' => 2, 'md' => 4];
+
     protected ?string $heading = 'Наявність на складах';
 
     protected function getDescription(): ?string

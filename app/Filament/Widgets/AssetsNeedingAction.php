@@ -60,6 +60,7 @@ class AssetsNeedingAction extends TableWidget
                     ->label('Інв. №')
                     ->fontFamily(FontFamily::Mono)
                     ->copyable()
+                    ->visibleFrom('md')
                     ->placeholder('—'),
                 TextColumn::make('short_name')
                     ->label('Назва')

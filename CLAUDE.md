@@ -100,7 +100,8 @@ They parse real documents by fixed cell coordinates / marker texts, so they are 
 - UI texts, labels and business-logic comments in the application code are in Ukrainian.
 - Asset status changes automatically through page lifecycle hooks (Create/Edit), not manually — do not break this link.
 - Reference data is **not auto-created** during import (avoids duplicates); "dirty" rows are only those with an empty `name` or an unresolvable `status`.
-- Formatting — Pint; tests — PHPUnit in `tests/Feature` and `tests/Unit` (currently only examples — minimal coverage).
+- Formatting — Pint (run it only on the files you changed: a run on a whole folder reformats unrelated old files); tests — PHPUnit in `tests/Feature` and `tests/Unit`, e2e in `tests/e2e`.
+- Dashboard layout: charts are in two equal columns from `xl`; below `md` the queue goes right after the stat tiles and before the charts (CSS `order` in `theme.css`). Keep chart card headers to one description line so the cards stay the same height.
 
 ## Plans
 
@@ -118,10 +119,13 @@ How to work with plans:
 ## Known issues / TODO
 
 - No duplicate protection when re-importing Assets (open question about an empty `serial_number`).
-- PHPUnit coverage is minimal: factory/seeder tests and `ExampleTest` only; no tests for resources, policies or widgets yet (the plan adds some). The frontend is covered by e2e smoke tests.
+- PHPUnit covers factories/seeder, the asset view page, the history relation managers and the dashboard (page + all four widgets); there are still no tests for policies, forms, create/edit pages, imports/exports or the xlsx services. The frontend is covered by Playwright (smoke, asset card, dashboard, queue, layout at 1440/1024/390).
 - ~45 PHP files do not conform to Pint (only changed files are checked in pre-commit).
 - `User::canAccessPanel()` returns `true` for everyone.
 - `DatabaseSeeder` only creates a test user.
+- The year is still formatted with a thousands separator ("2 024") in the `AssetsHolderRelationManager` table on the employee page (fixed only on the asset card).
+- On a phone the dashboard queue hides the inventory number and custodian columns and the "Очікує" column scrolls inside the card; the stat tiles and the queue use the hardcoded warehouses / global numbers by decision.
+- `README.md` is a historical cheat sheet and still mentions the deleted `NotIntroducedAssets` widget.
 
 ## Documentation rules
 
@@ -133,6 +137,7 @@ Entry format: `- YYYY-MM-DD — what changed and why (key files)`. Newest entrie
 
 ## Change log
 
+- 2026-11-11 — Plan step 8 (responsive check and wrap-up): verified the dashboard and the asset card at 1440 / 1024 / 390 px (no page-level horizontal scroll; tables scroll inside their cards). Fixes found by the check: stat tiles 2x2 on phones (`StatsOverview::$columns`), the queue is placed right after the tiles and before the charts below `md` (CSS `order` in `theme.css`), history tabs fit a phone (smaller tab padding), long status labels of the status chart are wrapped into two lines (`AssetStatusChart::wrapLabel`, smaller axis font), the queue hides the inventory number column on phones. Tests: `tests/e2e/layout.spec.js`, `AssetStatusChartTest`. All steps of `docs/plan-design-review.md` are done.
 - 2026-11-11 — Queue ordering: `AssetsNeedingAction` is ordered by urgency group first (`PRIORITY_GROUPS`: 1. transferring + writing off, 2. lost, 3. not put into operation, 4. repair), then by waiting time (oldest `updated_at` first) inside a group. The group rank is a portable `CASE` expression (SQLite and MySQL). Repair was not mentioned by the owner and is placed last. Tests in `AssetsNeedingActionTest` and `needs-attention.spec.js`.
 - 2026-11-11 — Plan step 7 (queue): new widget `AssetsNeedingAction` ("Потребує уваги", full width, last on the dashboard) lists assets in the statuses that need action (`STATUSES`: not put into operation, transferring, writing off, repair, lost). It is the only dashboard widget scoped by role: the query is `AssetResource::getEloquentQuery()`, so an editor sees only their own assets. Columns: monospace copyable inventory number, name via `short_name`, status badge, custodian (from `md`), "Очікує" (`updated_at` relative); urgency group first (transfer/write-off, lost, not introduced, repair), then longest-waiting; 5 rows per page; a row opens the asset card; empty state "Усе в порядку". The dead `NotIntroducedAssets` widget was deleted. E2E global setup now also saves an editor session (`EDITOR_STATE`). Tests: `AssetsNeedingActionTest`, `needs-attention.spec.js`, `DashboardPageTest`.
 - 2026-11-11 — Status chart track = the biggest group instead of the total number of assets (the dominant "на балансі" made the other statuses hairlines): the biggest pill is full, the others are compared to it; the x scale ends at the biggest group; `minBarLength` keeps even one asset visible. Track dataset label is "Найбільша група".

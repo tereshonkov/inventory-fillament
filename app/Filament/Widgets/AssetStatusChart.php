@@ -13,6 +13,9 @@ class AssetStatusChart extends ChartWidget
     public const BAR_THICKNESS = 12;
 
     /** Light track behind every bar (works on light and dark themes). */
+    /** Axis labels longer than this are split into two lines (Chart.js accepts an array as a multi-line label). */
+    public const MAX_LABEL_LENGTH = 22;
+
     /** Minimal visible length of a pill in pixels. */
     public const MIN_BAR_LENGTH = 10;
 
@@ -69,7 +72,7 @@ class AssetStatusChart extends ChartWidget
             }
 
             // The count is part of the label, so the value is readable without hovering.
-            $labels[] = $status->getLabel().' — '.$total;
+            $labels[] = self::wrapLabel($status->getLabel().' — '.$total);
             $data[] = $total;
             $colors[] = $status->getChartColor();
         }
@@ -133,8 +136,42 @@ class AssetStatusChart extends ChartWidget
                 'y' => [
                     'grid' => ['display' => false],
                     'border' => ['display' => false],
+                    // Long statuses ("проводиться списання — 2") must fit on a phone.
+                    'ticks' => ['font' => ['size' => 11], 'padding' => 4],
                 ],
             ],
         ];
+    }
+
+    /**
+     * Splits a long label at the space that gives the most even two lines, so it fits on a phone
+     * instead of being cut off at the left edge of the chart.
+     *
+     * @return string|array<int, string>
+     */
+    public static function wrapLabel(string $label): string|array
+    {
+        if (mb_strlen($label) <= self::MAX_LABEL_LENGTH) {
+            return $label;
+        }
+
+        $best = null;
+        $offset = 0;
+
+        while (($position = mb_strpos($label, ' ', $offset)) !== false) {
+            $difference = abs($position - (mb_strlen($label) - $position - 1));
+
+            if ($best === null || $difference < $best[0]) {
+                $best = [$difference, $position];
+            }
+
+            $offset = $position + 1;
+        }
+
+        if ($best === null) {
+            return $label; // a single long word cannot be wrapped
+        }
+
+        return [mb_substr($label, 0, $best[1]), mb_substr($label, $best[1] + 1)];
     }
 }

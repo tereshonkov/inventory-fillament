@@ -63,6 +63,28 @@
     height: 100%;
 }
 
+/* Телефон: черга «Потребує уваги» одразу після цифр, графіки (вторинна аналітика) — нижче.
+   Порядок у сітці дашборда: цифри (0) → черга (1) → графіки (2). Від md порядок — із getWidgets(). */
+@media (max-width: 767px) {
+    .fi-wi-table {
+        order: 1;
+    }
+
+    .fi-wi-chart {
+        order: 2;
+    }
+
+    /* Вкладки історії на телефоні: три вкладки з лічильниками мають вміститися в ширину картки */
+    .fi-tabs:not(.fi-contained) {
+        padding: 0.5rem 0.75rem !important;
+        gap: 0.25rem;
+    }
+
+    .fi-tabs-item {
+        padding-inline: 0.5rem !important;
+    }
+}
+
 /* Границя справа у сайдбара */
 .fi-sidebar {
     border-right: 1px solid #e5e7eb;

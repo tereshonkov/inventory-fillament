@@ -180,4 +180,30 @@ class AssetStatusChartTest extends TestCase
 
         $this->assertArrayNotHasKey('max', $options['scales']['x']);
     }
+
+    public function test_long_labels_are_split_into_two_lines_and_short_ones_are_left_alone(): void
+    {
+        $this->assertSame('на балансі — 9', AssetStatusChart::wrapLabel('на балансі — 9'));
+        $this->assertSame('поступає на баланс — 2', AssetStatusChart::wrapLabel('поступає на баланс — 2'));
+        $this->assertSame(['проводиться', 'передача — 2'], AssetStatusChart::wrapLabel('проводиться передача — 2'));
+        $this->assertSame(['проводиться', 'списання — 12'], AssetStatusChart::wrapLabel('проводиться списання — 12'));
+    }
+
+    public function test_a_single_long_word_is_not_wrapped(): void
+    {
+        $this->assertSame(str_repeat('Ж', 40), AssetStatusChart::wrapLabel(str_repeat('Ж', 40)));
+    }
+
+    public function test_chart_labels_wrap_the_two_long_statuses(): void
+    {
+        $this->seedStatuses([
+            AssetStatus::TRANSFERRING->value => 3,
+            AssetStatus::BALANCE->value => 9,
+        ]);
+
+        $labels = $this->callWidget('getData')['labels'];
+
+        $this->assertSame('на балансі — 9', $labels[0]);
+        $this->assertSame(['проводиться', 'передача — 3'], $labels[1]);
+    }
 }
