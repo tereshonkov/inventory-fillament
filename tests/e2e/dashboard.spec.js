@@ -68,6 +68,19 @@ test.describe('сторінка «Огляд майна»', () => {
         }
     });
 
+    test('графік активності: лінія з цілими поділками осі та поясненням, що рахуються документи', async ({ page }) => {
+        const widget = page.locator('.fi-wi-chart', { hasText: 'Активність за останні 6 місяців' });
+
+        await expect(widget.getByText('не активів')).toBeVisible();
+        await expect(widget.locator('canvas')).toBeVisible();
+
+        // Конфіг графіка Filament віддає в x-data: тип і опції осі (формат вихідного HTML може змінитися — тоді тест підкаже).
+        const config = await widget.locator('[x-data^="chart("]').getAttribute('x-data');
+        expect(config).toContain("type: 'line'");
+        expect(config).toContain('beginAtZero');
+        expect(config).toContain('precision');
+    });
+
     test('віджети не опитують сервер кожні 5 секунд', async ({ page }) => {
         // За замовчуванням віджети рендерять wire:poll.5s; опитування лишається тільки в сповіщень (30s).
         // Віджети підвантажуються лениво — спершу чекаємо всі три (інакше перевірка порожня).
