@@ -1,0 +1,29 @@
+{
+  "version": 2,
+  "skills": {
+    "filament-pro": {
+      "source": "marcelorodrigo/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/filament-pro/SKILL.md",
+      "computedHash": "b516e590ae05f84ce3a4d6fd47113d0c957aa3d4e0094298963ae842d48204c3"
+    },
+    "laravel-best-practices": {
+      "source": "laravel/boost",
+      "sourceType": "github",
+      "skillPath": ".ai/laravel/skill/laravel-best-practices/SKILL.md",
+      "computedHash": "a92d7c727eaa27cb5153af54203ff6dbf283bf4b6b31aad6f6a12517b471a306"
+    },
+    "laravel-filament-v5-ui-ux": {
+      "source": "jotafurtado/dev-skills",
+      "sourceType": "github",
+      "skillPath": "skills/laravel-filament-v5-ui-ux/SKILL.md",
+      "computedHash": "12426d06d076d6e09d09b72bd3917a71deaf88cd943c9ea7a516bfc0afee9ced"
+    },
+    "ui-craft-dense-dashboard": {
+      "source": "educlopez/ui-craft",
+      "sourceType": "github",
+      "skillPath": "skills/ui-craft-dense-dashboard/SKILL.md",
+      "computedHash": "966301437243347e91c0e74dc9d70638542b304e4c5184883d0a2b1b69b23ad3"
+    }
+  }
+}
