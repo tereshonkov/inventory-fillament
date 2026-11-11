@@ -93,16 +93,49 @@ class AssetsNeedingActionTest extends TestCase
         Livewire::test(AssetsNeedingAction::class)->assertCanSeeTableRecords($queue);
     }
 
-    public function test_assets_waiting_the_longest_come_first(): void
+    public function test_urgent_groups_come_first_transfer_and_write_off_then_lost_then_not_introduced_then_repair(): void
     {
         $this->actingAs(User::factory()->admin()->create());
 
-        $newest = $this->asset(AssetStatus::REPAIR, null, ['updated_at' => now()->subDay()]);
-        $oldest = $this->asset(AssetStatus::LOST, null, ['updated_at' => now()->subDays(30)]);
-        $middle = $this->asset(AssetStatus::WRITING_OFF, null, ['updated_at' => now()->subDays(7)]);
+        // The most urgent statuses are deliberately the newest ones: the group wins over the waiting time.
+        $repair = $this->asset(AssetStatus::REPAIR, null, ['updated_at' => now()->subDays(40)]);
+        $notIntroduced = $this->asset(AssetStatus::NOT_PUT_IN_TO_OPERATION, null, ['updated_at' => now()->subDays(30)]);
+        $lost = $this->asset(AssetStatus::LOST, null, ['updated_at' => now()->subDays(20)]);
+        $writingOff = $this->asset(AssetStatus::WRITING_OFF, null, ['updated_at' => now()->subDays(2)]);
+        $transferring = $this->asset(AssetStatus::TRANSFERRING, null, ['updated_at' => now()->subDay()]);
 
         Livewire::test(AssetsNeedingAction::class)
-            ->assertCanSeeTableRecords([$oldest, $middle, $newest], inOrder: true);
+            ->assertCanSeeTableRecords([$writingOff, $transferring, $lost, $notIntroduced, $repair], inOrder: true);
+    }
+
+    public function test_within_the_most_urgent_group_transfer_and_write_off_are_ordered_by_waiting_time(): void
+    {
+        $this->actingAs(User::factory()->admin()->create());
+
+        $newTransfer = $this->asset(AssetStatus::TRANSFERRING, null, ['updated_at' => now()->subDay()]);
+        $oldWriteOff = $this->asset(AssetStatus::WRITING_OFF, null, ['updated_at' => now()->subDays(20)]);
+        $middleTransfer = $this->asset(AssetStatus::TRANSFERRING, null, ['updated_at' => now()->subDays(5)]);
+
+        Livewire::test(AssetsNeedingAction::class)
+            ->assertCanSeeTableRecords([$oldWriteOff, $middleTransfer, $newTransfer], inOrder: true);
+    }
+
+    public function test_within_any_other_group_the_longest_waiting_comes_first(): void
+    {
+        $this->actingAs(User::factory()->admin()->create());
+
+        $recent = $this->asset(AssetStatus::LOST, null, ['updated_at' => now()->subDay()]);
+        $old = $this->asset(AssetStatus::LOST, null, ['updated_at' => now()->subDays(30)]);
+
+        Livewire::test(AssetsNeedingAction::class)->assertCanSeeTableRecords([$old, $recent], inOrder: true);
+    }
+
+    public function test_the_status_list_follows_the_priority_order(): void
+    {
+        $this->assertSame(
+            array_merge(...AssetsNeedingAction::PRIORITY_GROUPS),
+            AssetsNeedingAction::STATUSES,
+        );
     }
 
     public function test_it_shows_five_rows_per_page_by_default(): void

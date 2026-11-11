@@ -50,6 +50,20 @@ test.describe('«Потребує уваги» — адміністратор', 
         await expect(queue(page).getByText('на балансі')).toHaveCount(0);
     });
 
+    test('порядок: спершу передача і списання, потім втрачено, потім не введено (ремонт — останній)', async ({ page }) => {
+        // 1-ша сторінка (5 рядків): 4 рядки передача/списання (по 2 активи кожного статусу) і одне «втрачено».
+        const badges = (await rows(page).locator('.fi-badge').allInnerTexts()).map((text) => text.trim());
+
+        expect(badges.slice(0, 4).every((b) => ['проводиться передача', 'проводиться списання'].includes(b))).toBe(true);
+        expect(badges[4]).toBe('втрачено');
+
+        // Далі (2-га сторінка): ще одне «втрачено», потім «не введено» ×2 і «ремонт» ×2.
+        await queue(page).getByRole('button', { name: /Наступна|Next/ }).click();
+        await expect(rows(page).first()).toContainText('втрачено');
+        const second = (await rows(page).locator('.fi-badge').allInnerTexts()).map((text) => text.trim());
+        expect(second).toEqual(['втрачено', 'не введено', 'не введено', 'ремонт', 'ремонт']);
+    });
+
     test('клік по рядку відкриває картку активу', async ({ page }) => {
         await rows(page).first().click();
 
@@ -73,6 +87,10 @@ test.describe('«Потребує уваги» — editor', () => {
 
         // E2ESeeder: у editor по одному «своєму» активу на кожен із 5 статусів → одна сторінка.
         await expect(rows(page)).toHaveCount(5);
+
+        // Той самий порядок пріоритету: передача, списання, втрачено, не введено, ремонт.
+        const badges = (await rows(page).locator('.fi-badge').allInnerTexts()).map((b) => b.trim());
+        expect(badges).toEqual(['проводиться передача', 'проводиться списання', 'втрачено', 'не введено', 'ремонт']);
 
         const text = await queue(page).innerText();
         expect(text).toContain('E2E Свій');

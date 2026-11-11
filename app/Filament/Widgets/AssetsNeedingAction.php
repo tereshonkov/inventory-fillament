@@ -19,13 +19,25 @@ use Illuminate\Support\Str;
  */
 class AssetsNeedingAction extends TableWidget
 {
-    /** Statuses that mean "something has to be done with the asset". */
+    /**
+     * Statuses that mean "something has to be done with the asset", grouped by urgency (most urgent group first):
+     * a transfer or write-off in progress, then lost, then not put into operation, then repair.
+     * Statuses of one group are equally urgent and are ordered by how long the asset has been waiting.
+     */
+    public const PRIORITY_GROUPS = [
+        [AssetStatus::TRANSFERRING, AssetStatus::WRITING_OFF],
+        [AssetStatus::LOST],
+        [AssetStatus::NOT_PUT_IN_TO_OPERATION],
+        [AssetStatus::REPAIR],
+    ];
+
+    /** All statuses of the queue, in priority order. */
     public const STATUSES = [
-        AssetStatus::NOT_PUT_IN_TO_OPERATION,
         AssetStatus::TRANSFERRING,
         AssetStatus::WRITING_OFF,
-        AssetStatus::REPAIR,
         AssetStatus::LOST,
+        AssetStatus::NOT_PUT_IN_TO_OPERATION,
+        AssetStatus::REPAIR,
     ];
 
     protected static ?int $sort = 4;
@@ -36,10 +48,11 @@ class AssetsNeedingAction extends TableWidget
     {
         return $table
             ->heading('Потребує уваги')
-            ->description('Не введено в експлуатацію, триває передача чи списання, ремонт або втрачено. Спершу — ті, що чекають найдовше.')
+            ->description('Спершу передача і списання, що тривають, потім втрачені, не введені в експлуатацію та ремонт; у межах групи — ті, що чекають найдовше.')
             ->query(fn (): Builder => AssetResource::getEloquentQuery()
                 ->whereIn('status', self::STATUSES)
                 ->with('custodian')
+                ->tap(fn (Builder $query) => self::orderByPriority($query))
                 ->orderBy('updated_at')
                 ->orderBy('id'))
             ->columns([
@@ -70,5 +83,21 @@ class AssetsNeedingAction extends TableWidget
             ->emptyStateIcon(Heroicon::OutlinedCheckCircle)
             ->emptyStateHeading('Усе в порядку')
             ->emptyStateDescription('Немає активів, які потребують уваги.');
+    }
+
+    /** Most urgent status group first (portable CASE expression, works on SQLite and MySQL). */
+    private static function orderByPriority(Builder $query): void
+    {
+        $sql = 'case status';
+        $bindings = [];
+
+        foreach (self::PRIORITY_GROUPS as $rank => $group) {
+            foreach ($group as $status) {
+                $sql .= ' when ? then '.$rank;
+                $bindings[] = $status->value;
+            }
+        }
+
+        $query->orderByRaw($sql.' else '.count(self::PRIORITY_GROUPS).' end', $bindings);
     }
 }
