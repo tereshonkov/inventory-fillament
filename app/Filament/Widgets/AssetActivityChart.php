@@ -14,7 +14,7 @@ class AssetActivityChart extends ChartWidget
     /** Number of months shown, including the current one. */
     public const MONTHS = 6;
 
-    protected static ?int $sort = 2;
+    protected static ?int $sort = 3;
 
     protected int|string|array $columnSpan = ['md' => 2, 'xl' => 1];
 

@@ -6,6 +6,7 @@ use App\Filament\Pages\Dashboard;
 use App\Filament\Widgets\AssetActivityChart;
 use App\Filament\Widgets\AssetsNeedingAction;
 use App\Filament\Widgets\AssetStatusChart;
+use App\Filament\Widgets\ComponentsStockOverview;
 use App\Filament\Widgets\StatsOverview;
 use App\Models\User;
 use Filament\Widgets\TableWidget;
@@ -43,7 +44,7 @@ class DashboardPageTest extends TestCase
     public function test_widget_order_is_explicit(): void
     {
         $this->assertSame(
-            [StatsOverview::class, AssetActivityChart::class, AssetStatusChart::class, AssetsNeedingAction::class],
+            [StatsOverview::class, ComponentsStockOverview::class, AssetActivityChart::class, AssetStatusChart::class, AssetsNeedingAction::class],
             (new Dashboard)->getWidgets(),
         );
     }
@@ -55,7 +56,7 @@ class DashboardPageTest extends TestCase
             (new Dashboard)->getWidgets(),
         );
 
-        $this->assertSame([1, 2, 3, 4], $sorts);
+        $this->assertSame([1, 2, 3, 4, 5], $sorts);
     }
 
     public function test_columns_are_responsive(): void

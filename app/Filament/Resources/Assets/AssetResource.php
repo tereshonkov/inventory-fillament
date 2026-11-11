@@ -7,6 +7,7 @@ use App\Filament\Resources\Assets\Pages\CreateAsset;
 use App\Filament\Resources\Assets\Pages\EditAsset;
 use App\Filament\Resources\Assets\Pages\ListAssets;
 use App\Filament\Resources\Assets\Pages\ViewAsset;
+use App\Filament\Resources\Assets\RelationManagers\ComponentsRelationManager;
 use App\Filament\Resources\Assets\RelationManagers\IncomingsRelationManager;
 use App\Filament\Resources\Assets\RelationManagers\TransfersRelationManager;
 use App\Filament\Resources\Assets\RelationManagers\WriteOffsRelationManager;
@@ -58,6 +59,7 @@ class AssetResource extends Resource
     public static function getRelations(): array
     {
         return [
+            ComponentsRelationManager::class,
             IncomingsRelationManager::class,
             TransfersRelationManager::class,
             WriteOffsRelationManager::class,

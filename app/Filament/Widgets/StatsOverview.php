@@ -10,7 +10,7 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 class StatsOverview extends StatsOverviewWidget
 {
     /** Asset types shown as tiles, in display order. */
-    public const TYPES = ['ПК', 'Ноутбук', 'Робоча станція', 'Монітор'];
+    public const TYPES = ['ПК', 'Ноутбук', 'Робоча станція', 'Монітор', 'ДБЖ', 'БФП'];
 
     /** Warehouses the stock is counted on. */
     public const WAREHOUSES = ['Склад-327', 'Склад-915'];
@@ -22,8 +22,8 @@ class StatsOverview extends StatsOverviewWidget
 
     protected int|string|array $columnSpan = 'full';
 
-    // Four tiles: 2x2 on phones instead of four tall full-width cards, one row from md.
-    protected int|array|null $columns = ['default' => 2, 'md' => 4];
+    // Six tiles: two per row on phones instead of tall full-width cards, 3x2 from md, one row from xl.
+    protected int|array|null $columns = ['default' => 2, 'md' => 3, 'xl' => 6];
 
     protected ?string $heading = 'Наявність на складах';
 

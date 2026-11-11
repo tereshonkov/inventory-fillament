@@ -3,7 +3,9 @@
 namespace Database\Seeders;
 
 use App\Enums\AssetStatus;
+use App\Enums\ComponentKind;
 use App\Models\Asset;
+use App\Models\AssetComponent;
 use App\Models\AssetIncoming;
 use App\Models\AssetTransfer;
 use App\Models\AssetType;
@@ -32,6 +34,8 @@ class E2ESeeder extends Seeder
     public const PASSWORD = 'password';
 
     public const MAIN_ASSET_NAME = 'E2E Тестовий актив';
+
+    public const WORKSTATION_NAME = 'E2E Робоча станція';
 
     /** Created right after the main asset, so its id is 2 (used by e2e tests). */
     public const LONG_NAME_ASSET_ID = 2;
@@ -62,7 +66,7 @@ class E2ESeeder extends Seeder
         $laptop = AssetType::create(['name' => 'Ноутбук']);
         $pc = AssetType::create(['name' => 'ПК']);
         $monitor = AssetType::create(['name' => 'Монітор']);
-        AssetType::create(['name' => 'Робоча станція']);
+        $workstation = AssetType::create(['name' => AssetType::WORKSTATION_NAME]);
 
         $department = Department::create(['name' => 'E2E Відділ']);
 
@@ -98,6 +102,18 @@ class E2ESeeder extends Seeder
         Asset::factory()->count(3)->custodian($adminEmployee)->create([
             'type_id' => $monitor->getKey(), 'location_id' => $warehouse915->getKey(), 'name' => 'E2E Монітор',
         ]);
+
+        // Workstation: its components are managed on the asset card (admin only in phase 1).
+        $station = Asset::factory()->custodian($adminEmployee)->create([
+            'name' => self::WORKSTATION_NAME,
+            'inventory_number' => '101000777',
+            'type_id' => $workstation->getKey(),
+            'location_id' => $room->getKey(),
+        ]);
+
+        // Components on the warehouses feed the dashboard tiles: 1 monitor (broken counts too), 2 UPS.
+        AssetComponent::factory()->for($station)->kind(ComponentKind::MONITOR)->broken()->create(['location_id' => $warehouse915->getKey()]);
+        AssetComponent::factory()->count(2)->for($station)->kind(ComponentKind::UPS)->create(['location_id' => $warehouse327->getKey()]);
 
         // One asset per status: an "own" one (editor is the custodian) and a "foreign" one.
         foreach (AssetStatus::cases() as $status) {

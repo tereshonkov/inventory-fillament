@@ -11,5 +11,6 @@ class AssetType extends Model
 {
     use HasFactory;
 
-    //
+    /** Категорія, активи якої складаються з окремих комплектуючих. */
+    public const WORKSTATION_NAME = 'Робоча станція';
 }

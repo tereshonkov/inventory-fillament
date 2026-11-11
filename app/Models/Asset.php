@@ -56,6 +56,17 @@ class Asset extends Model
         return $this->belongsTo(Employee::class);
     }
 
+    public function components(): HasMany
+    {
+        return $this->hasMany(AssetComponent::class);
+    }
+
+    /** Чи належить актив до категорії «Робоча станція» (має комплектуючі). */
+    public function isWorkstation(): bool
+    {
+        return $this->type?->name === AssetType::WORKSTATION_NAME;
+    }
+
     public function incomings(): HasMany
     {
         return $this->hasMany(AssetIncoming::class);
