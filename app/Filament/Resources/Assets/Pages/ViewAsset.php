@@ -13,7 +13,8 @@ class ViewAsset extends ViewRecord
 
     public function getHeading(): string|Htmlable
     {
-        return $this->getRecord()->name;
+        // Long names (several paragraphs are possible) are shortened here; the full name is in the infolist.
+        return $this->getRecord()->short_name;
     }
 
     public function getSubheading(): string|Htmlable|null

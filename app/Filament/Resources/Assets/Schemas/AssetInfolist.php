@@ -54,6 +54,12 @@ class AssetInfolist
                     ->inlineLabel()
                     ->columns(['default' => 1, 'lg' => 2])
                     ->schema([
+                        // The page heading shows only a short name, so the full one lives here (clamped, full text in tooltip).
+                        TextEntry::make('name')
+                            ->label('Повна назва')
+                            ->lineClamp(3)
+                            ->tooltip(fn (string $state): string => $state)
+                            ->columnSpanFull(),
                         TextEntry::make('custodian.full_name')
                             ->label('МВО')
                             ->placeholder('Не призначено'),

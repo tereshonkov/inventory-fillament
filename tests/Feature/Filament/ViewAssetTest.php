@@ -37,6 +37,25 @@ class ViewAssetTest extends TestCase
             ->assertSee('№ 101234567');
     }
 
+    public function test_long_multi_paragraph_name_is_shortened_in_heading_but_kept_in_full_on_the_card(): void
+    {
+        $name = "Один Два Три Чотири П'ять Шість\n\nДругий абзац назви\n\nТретій абзац назви";
+        $asset = Asset::factory()->create(['name' => $name]);
+
+        $html = $this->actingAs(User::factory()->admin()->create())
+            ->get($this->viewUrl($asset))
+            ->assertOk()
+            ->getContent();
+
+        preg_match('#<h1[^>]*>(.*?)</h1>#s', $html, $matches);
+        $heading = trim(html_entity_decode(strip_tags($matches[1] ?? '')));
+
+        $this->assertSame('Один Два Три Чотири…', $heading);
+        // The full name is still available in the infolist ("Повна назва").
+        $this->assertStringContainsString('Повна назва', $html);
+        $this->assertStringContainsString('Третій абзац назви', $html);
+    }
+
     public function test_year_is_shown_without_thousands_separator(): void
     {
         $asset = Asset::factory()->create(['year' => 2024]);

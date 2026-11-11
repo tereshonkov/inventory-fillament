@@ -93,6 +93,7 @@ They parse real documents by fixed cell coordinates / marker texts, so they are 
 
 ## Conventions
 
+- Asset names can be very long (several paragraphs). In headings and compact widgets use `$asset->short_name` (max 4 words), never `name`; the full name belongs on the view card.
 - **CLAUDE.md is written exclusively in English, and so are all future edits to it.** Replies to the user are in the language the user writes in.
 - UI texts, labels and business-logic comments in the application code are in Ukrainian.
 - Asset status changes automatically through page lifecycle hooks (Create/Edit), not manually — do not break this link.
@@ -130,6 +131,7 @@ Entry format: `- YYYY-MM-DD — what changed and why (key files)`. Newest entrie
 
 ## Change log
 
+- 2026-11-11 — Long asset names: `Asset::short_name` accessor (whitespace/paragraphs squished, max 4 words, hard cap 60 chars, `…` suffix); the asset view heading uses it, the full name is shown as "Повна назва" in the infolist (3-line clamp + tooltip). `E2ESeeder` got an asset with a long multi-paragraph name (id 2, `LONG_NAME_ASSET_ID`). Tests: `AssetShortNameTest` (unit), `ViewAssetTest`, `asset-card.spec.js`.
 - 2026-11-11 — Step 1 follow-up after review: the "single frame" rule in `resources/css/filament/admin/theme.css` (tabs + table in one bordered container) is now scoped to list pages (`.fi-resource-list-records-page`); on view pages it wrapped all infolist cards into one big card. On view pages only the relation-manager block (tabs + table) is a separate card. The asset header is a single `Section` with two `Group` columns instead of two `Flex` cards of different height. Tests added to `tests/e2e/asset-card.spec.js` (page grid has no border, history block is its own card, list page keeps its single frame).
 - 2026-11-11 — Plan step 1 (asset view card): `ViewAsset` heading = asset name, subheading = `№ <inventory number>`; `AssetInfolist` rebuilt as a single-column schema: two-zone `Flex` header (copyable monospace inventory number + large status badge | location, type, year with inline labels), "Відповідальність та ідентифікація" section (inline labels, 2 columns from `lg`), collapsed "Службова інформація" (relative timestamps with full-date tooltip); year no longer formatted with a thousands separator; placeholders kept only for custodian/holder/serial/notes. Tests: `tests/Feature/Filament/ViewAssetTest.php`, `tests/e2e/asset-card.spec.js`.
 - 2026-11-11 — Plan step 0 (test foundation): `HasFactory` on all domain models; factories for Employee, Location, AssetType, Department, Asset (`status()`, `custodian()`, `heldBy()` states), AssetIncoming, AssetTransfer, AssetWriteOff (`completed()` states) and role states on `UserFactory` (`admin()`, `editor($employee)`, `viewer()`); `E2ESeeder` now seeds admin + editor, the dashboard stat-tile types/warehouses, the main asset with documents and an own/foreign asset for every status; new tests `FactoriesTest`, `E2ESeederTest` (PHPUnit) and `seed-data.spec.js` (editor sees only own assets); `smoke.spec.js` finds the asset through the table search (list is paginated by 5); installed the `laravel-filament-v5` skill.

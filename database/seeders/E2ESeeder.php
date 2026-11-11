@@ -33,6 +33,9 @@ class E2ESeeder extends Seeder
 
     public const MAIN_ASSET_NAME = 'E2E Тестовий актив';
 
+    /** Created right after the main asset, so its id is 2 (used by e2e tests). */
+    public const LONG_NAME_ASSET_ID = 2;
+
     public function run(): void
     {
         $adminEmployee = Employee::factory()->create(['full_name' => 'E2E Адміністратор', 'position' => 'МВО']);
@@ -80,6 +83,13 @@ class E2ESeeder extends Seeder
         AssetIncoming::factory()->for($main)->create(['document_number' => 'E2E-НК-2']);
         AssetTransfer::factory()->for($main)->for($department)->create(['document_number' => 'E2E-АП-1']);
         AssetWriteOff::factory()->for($main)->create(['document_number' => 'E2E-АС-1']);
+
+        // Asset with a very long multi-paragraph name: headings must show it shortened.
+        Asset::factory()->custodian($adminEmployee)->create([
+            'name' => "Системний блок у зборі з монітором та периферією для відділу\n\nДругий абзац із додатковим описом комплектації\n\nТретій абзац з історією використання",
+            'location_id' => $room->getKey(),
+            'type_id' => $pc->getKey(),
+        ]);
 
         // Stat-tile fixtures: balance assets on the two warehouses.
         Asset::factory()->count(2)->custodian($adminEmployee)->create([

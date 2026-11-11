@@ -82,3 +82,19 @@ test.describe('сторінка списку активів', () => {
         await expect(page.locator('.fi-page-content > .fi-grid').first()).toHaveCSS('border-top-width', '1px');
     });
 });
+
+test.describe('картка активу з дуже довгою назвою', () => {
+    test.use({ storageState: ADMIN_STATE });
+
+    test('заголовок показує не більше 4 слів, повна назва — у картці', async ({ page }) => {
+        await page.goto('/admin/assets/2'); // E2ESeeder::LONG_NAME_ASSET_ID
+
+        const heading = page.locator('.fi-header-heading');
+        await expect(heading).toHaveText('Системний блок у зборі…');
+        expect((await heading.innerText()).replace('…', '').trim().split(/\s+/).length).toBeLessThanOrEqual(4);
+
+        // Повна назва доступна в картці (обмежена трьома рядками), а не в заголовку.
+        await expect(page.getByText('Повна назва')).toBeVisible();
+        await expect(page.getByText('Другий абзац із додатковим описом комплектації').first()).toBeAttached();
+    });
+});
