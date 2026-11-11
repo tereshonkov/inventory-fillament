@@ -45,6 +45,23 @@ test.describe('картка активу', () => {
         await expect(label).toBeVisible();
     });
 
+    test('шапка — одна картка з обома зонами (однакова висота за побудовою)', async ({ page }) => {
+        const headerCard = page.locator('.fi-section', { hasText: 'Інвентарний номер' }).filter({ hasText: 'Локація' });
+
+        await expect(headerCard).toHaveCount(1);
+    });
+
+    test('картки інфосписку не вкладені в одну велику рамку, історія — окрема картка', async ({ page }) => {
+        // Загальна сітка сторінки без власної рамки (інакше всі картки опиняються в одній великій).
+        await expect(page.locator('.fi-page-content > .fi-grid').first()).toHaveCSS('border-top-width', '0px');
+
+        // Блок вкладок історії — окрема картка з рамкою, яка не містить карток інфосписку.
+        const history = page.locator('.fi-grid-col', { has: page.locator('.fi-sc-tabs') });
+        await expect(history).toHaveCSS('border-top-width', '1px');
+        await expect(history.getByText('Відповідальність та ідентифікація')).toHaveCount(0);
+        await expect(history.getByText('Службова інформація')).toHaveCount(0);
+    });
+
     test('сторінка відкривається без JS-помилок', async ({ page }) => {
         const errors = [];
         page.on('pageerror', (error) => errors.push(error.message));
@@ -53,5 +70,15 @@ test.describe('картка активу', () => {
         await page.waitForLoadState('networkidle');
 
         expect(errors).toEqual([]);
+    });
+});
+
+test.describe('сторінка списку активів', () => {
+    test.use({ storageState: ADMIN_STATE });
+
+    test('вкладки та таблиця лишаються в одній рамці', async ({ page }) => {
+        await page.goto('/admin/assets');
+
+        await expect(page.locator('.fi-page-content > .fi-grid').first()).toHaveCSS('border-top-width', '1px');
     });
 });

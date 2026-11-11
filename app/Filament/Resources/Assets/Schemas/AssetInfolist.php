@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\Assets\Schemas;
 
 use Filament\Infolists\Components\TextEntry;
-use Filament\Schemas\Components\Flex;
+use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\FontFamily;
@@ -17,34 +17,38 @@ class AssetInfolist
         return $schema
             ->columns(1)
             ->components([
-                // Current state and identifier first (the name is already the page heading), compact facts next to it.
-                Flex::make([
-                    Section::make([
-                        TextEntry::make('inventory_number')
-                            ->label('Інвентарний номер')
-                            ->fontFamily(FontFamily::Mono)
-                            ->copyable()
-                            ->copyMessage('Інвентарний номер скопійовано'),
-                        TextEntry::make('status')
-                            ->hiddenLabel()
-                            ->badge()
-                            ->size(TextSize::Large),
+                // One card with two zones (equal height by construction): current state and identifier
+                // on the left (the name is already the page heading), compact facts on the right.
+                Section::make()
+                    ->columns(['default' => 1, 'md' => 2])
+                    ->schema([
+                        Group::make([
+                            TextEntry::make('inventory_number')
+                                ->label('Інвентарний номер')
+                                ->fontFamily(FontFamily::Mono)
+                                ->copyable()
+                                ->copyMessage('Інвентарний номер скопійовано'),
+                            TextEntry::make('status')
+                                ->hiddenLabel()
+                                ->badge()
+                                ->size(TextSize::Large),
+                        ]),
+                        Group::make([
+                            TextEntry::make('location.name')
+                                ->label('Локація')
+                                ->inlineLabel()
+                                ->icon(Heroicon::MapPin)
+                                ->placeholder('Не призначено'),
+                            TextEntry::make('type.name')
+                                ->label('Тип')
+                                ->inlineLabel()
+                                ->placeholder('Не призначено'),
+                            TextEntry::make('year')
+                                ->label('Рік')
+                                ->inlineLabel()
+                                ->placeholder('Не вказано'),
+                        ]),
                     ]),
-                    Section::make([
-                        TextEntry::make('location.name')
-                            ->label('Локація')
-                            ->icon(Heroicon::MapPin)
-                            ->placeholder('Не призначено'),
-                        TextEntry::make('type.name')
-                            ->label('Тип')
-                            ->placeholder('Не призначено'),
-                        TextEntry::make('year')
-                            ->label('Рік')
-                            ->placeholder('Не вказано'),
-                    ])
-                        ->inlineLabel()
-                        ->grow(false),
-                ])->from('md'),
 
                 Section::make('Відповідальність та ідентифікація')
                     ->inlineLabel()
