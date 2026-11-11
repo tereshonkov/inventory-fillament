@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\AssetComponents;
 
+use App\Enums\UserRole;
 use App\Filament\Resources\AssetComponents\Pages\ListAssetComponents;
 use App\Filament\Resources\AssetComponents\Tables\AssetComponentsTable;
 use App\Models\AssetComponent;
@@ -9,6 +10,7 @@ use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 
 /**
@@ -41,6 +43,18 @@ class AssetComponentResource extends Resource
     public static function canCreate(): bool
     {
         return false;
+    }
+
+    /** Editor бачить лише комплектуючі станцій, де він МВО (як документи руху). */
+    public static function getEloquentQuery(): Builder
+    {
+        $user = auth()->user();
+        $query = parent::getEloquentQuery();
+
+        return match ($user->role) {
+            UserRole::EDITOR => $query->whereHas('asset', fn (Builder $asset) => $asset->where('custodian_id', $user->employee_id)),
+            default => $query,
+        };
     }
 
     public static function getPages(): array

@@ -24,6 +24,7 @@ class E2ESeederTest extends TestCase
         $this->assertSame(UserRole::ADMIN, $admin->role);
         $this->assertSame(UserRole::EDITOR, $editor->role);
         $this->assertNotNull($editor->employee_id);
+        $this->assertSame(UserRole::VIEWER, User::where('email', E2ESeeder::VIEWER_EMAIL)->firstOrFail()->role);
     }
 
     public function test_seeder_creates_an_own_and_a_foreign_asset_for_every_status(): void
@@ -35,7 +36,8 @@ class E2ESeederTest extends TestCase
         foreach (AssetStatus::cases() as $status) {
             $this->assertSame(
                 1,
-                Asset::where('status', $status)->where('custodian_id', $editor->employee_id)->count(),
+                Asset::where('status', $status)->where('custodian_id', $editor->employee_id)
+                    ->where('name', 'like', 'E2E Свій%')->count(),
                 "editor must own exactly one asset in status {$status->value}",
             );
             $this->assertSame(

@@ -115,15 +115,4 @@ class AssetComponentsTest extends TestCase
         $this->get(ViewAsset::getUrl(['record' => $this->workstation()]))->assertSee('Додайте монітори, системний блок');
         $this->get(ViewAsset::getUrl(['record' => Asset::factory()->create()]))->assertDontSee('Додайте монітори, системний блок');
     }
-
-    public function test_non_admin_roles_have_no_access_in_this_phase(): void
-    {
-        $asset = $this->workstation();
-
-        foreach ([User::factory()->editor(Employee::factory()->create())->create(), User::factory()->viewer()->create()] as $user) {
-            $this->actingAs($user);
-
-            $this->assertFalse(ComponentsRelationManager::canViewForRecord($asset, ViewAsset::class));
-        }
-    }
 }

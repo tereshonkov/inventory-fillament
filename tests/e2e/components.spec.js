@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { ADMIN_STATE } from './global-setup.js';
+import { ADMIN_STATE, EDITOR_STATE, VIEWER_STATE } from './global-setup.js';
 import { searchTable } from './helpers.js';
 
 // Знаходить актив через пошук у списку й відкриває його картку.
@@ -109,5 +109,53 @@ test.describe('загальний список комплектуючих', () =
 
         await rows.first().locator('a').first().click();
         await expect(page.locator('.fi-header-heading')).toContainText('E2E Робоча станція');
+    });
+});
+
+test.describe('комплектуючі: ролі', () => {
+    test.describe('editor', () => {
+        test.use({ storageState: EDITOR_STATE });
+
+        test('на картці своєї станції бачить і змінює склад', async ({ page }) => {
+            await openAsset(page, 'E2E Станція редактора');
+
+            await expect(page.getByTestId('asset-composition')).toContainText('E2E-OWN-MON');
+
+            await page.getByRole('tab', { name: /Комплектуючі/ }).click();
+            await expect(page.getByRole('button', { name: 'Додати', exact: true })).toBeVisible();
+            await expect(page.locator('.fi-ta-row', { hasText: 'E2E-OWN-MON' }).getByRole('button', { name: 'Змінити' })).toBeVisible();
+        });
+
+        test('у загальному списку лише комплектуючі своїх станцій', async ({ page }) => {
+            await page.goto('/admin/asset-components');
+
+            await expect(page.locator('.fi-ta-row', { hasText: 'E2E-OWN-MON' })).toHaveCount(1);
+            await expect(page.locator('.fi-ta-row', { hasText: 'E2E-MON-SEED' })).toHaveCount(0);
+            await expect(page.locator('.fi-ta-row', { hasText: 'E2E-KB-SEED' })).toHaveCount(0);
+        });
+    });
+
+    test.describe('viewer', () => {
+        test.use({ storageState: VIEWER_STATE });
+
+        test('бачить комплектуючі, але без кнопок додавання, зміни й видалення', async ({ page }) => {
+            await openAsset(page, 'E2E Робоча станція');
+
+            await expect(page.getByTestId('asset-composition')).toContainText('E2E-MON-SEED');
+
+            // У viewer інших історій немає, тож єдиний блок показується без вкладок.
+            await expect(page.getByRole('tab')).toHaveCount(0);
+            await expect(page.locator('.fi-ta-row', { hasText: 'E2E-MON-SEED' })).toBeVisible();
+            await expect(page.getByRole('button', { name: 'Додати', exact: true })).toHaveCount(0);
+            await expect(page.getByRole('button', { name: 'Змінити' })).toHaveCount(0);
+            await expect(page.getByRole('button', { name: 'Видалити' })).toHaveCount(0);
+        });
+
+        test('у загальному списку бачить усі комплектуючі', async ({ page }) => {
+            await page.goto('/admin/asset-components');
+
+            await expect(page.locator('.fi-ta-row', { hasText: 'E2E-OWN-MON' })).toHaveCount(1);
+            await expect(page.locator('.fi-ta-row', { hasText: 'E2E-MON-SEED' })).toHaveCount(1);
+        });
     });
 });

@@ -31,11 +31,15 @@ class E2ESeeder extends Seeder
 
     public const EDITOR_EMAIL = 'editor@e2e.test';
 
+    public const VIEWER_EMAIL = 'viewer@e2e.test';
+
     public const PASSWORD = 'password';
 
     public const MAIN_ASSET_NAME = 'E2E Тестовий актив';
 
     public const WORKSTATION_NAME = 'E2E Робоча станція';
+
+    public const EDITOR_WORKSTATION_NAME = 'E2E Станція редактора';
 
     /** Created right after the main asset, so its id is 2 (used by e2e tests). */
     public const LONG_NAME_ASSET_ID = 2;
@@ -56,6 +60,12 @@ class E2ESeeder extends Seeder
         User::factory()->editor($editorEmployee)->create([
             'name' => 'E2E Editor',
             'email' => self::EDITOR_EMAIL,
+            'password' => self::PASSWORD,
+        ]);
+
+        User::factory()->viewer()->create([
+            'name' => 'E2E Viewer',
+            'email' => self::VIEWER_EMAIL,
             'password' => self::PASSWORD,
         ]);
 
@@ -120,6 +130,14 @@ class E2ESeeder extends Seeder
         // No location and no holder of its own: the composition shows the station's data.
         AssetComponent::factory()->for($station)->kind(ComponentKind::KEYBOARD)->create(['serial_number' => 'E2E-KB-SEED']);
         AssetComponent::factory()->count(2)->for($station)->kind(ComponentKind::UPS)->create(['location_id' => $warehouse327->getKey()]);
+
+        // Editor's own workstation (phase 4: roles) with one monitor; the admin's station above is "foreign" for the editor.
+        $ownStation = Asset::factory()->custodian($editorEmployee)->create([
+            'name' => self::EDITOR_WORKSTATION_NAME,
+            'type_id' => $workstation->getKey(),
+            'location_id' => $room->getKey(),
+        ]);
+        AssetComponent::factory()->for($ownStation)->kind(ComponentKind::MONITOR)->create(['serial_number' => 'E2E-OWN-MON']);
 
         // One asset per status: an "own" one (editor is the custodian) and a "foreign" one.
         foreach (AssetStatus::cases() as $status) {

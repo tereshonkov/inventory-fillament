@@ -7,6 +7,8 @@ export const ADMIN = { email: 'admin@e2e.test', password: 'password' };
 export const ADMIN_STATE = 'tests/e2e/.auth/admin.json';
 export const EDITOR = { email: 'editor@e2e.test', password: 'password' };
 export const EDITOR_STATE = 'tests/e2e/.auth/editor.json';
+export const VIEWER = { email: 'viewer@e2e.test', password: 'password' };
+export const VIEWER_STATE = 'tests/e2e/.auth/viewer.json';
 
 // Перед прогоном перестворюємо e2e-базу з нуля, наповнюємо мінімальними даними
 // і один раз логінимось адміністратором (стан сесії переживає всі тести).
@@ -26,7 +28,7 @@ export default async function globalSetup() {
 
     const browser = await chromium.launch();
 
-    for (const [user, statePath] of [[ADMIN, ADMIN_STATE], [EDITOR, EDITOR_STATE]]) {
+    for (const [user, statePath] of [[ADMIN, ADMIN_STATE], [EDITOR, EDITOR_STATE], [VIEWER, VIEWER_STATE]]) {
         const context = await browser.newContext({ baseURL: E2E_URL });
         const page = await context.newPage();
 

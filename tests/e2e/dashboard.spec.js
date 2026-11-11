@@ -145,10 +145,10 @@ test.describe('сторінка «Огляд майна»', () => {
         expect(config).toContain('borderRadius');
         expect(config).toContain('grouped');
 
-        // E2ESeeder: «на балансі» — 10 активів (найбільша група), решта статусів по 2.
+        // E2ESeeder: «на балансі» — 11 активів (найбільша група), решта статусів по 2.
         const labels = [...config.matchAll(/на балансі — (\d+)/g)].map((m) => Number(m[1]));
-        expect(labels).toEqual([10]);
-        expect(config.indexOf('на балансі — 10')).toBeLessThan(config.indexOf('ремонт — 2'));
+        expect(labels).toEqual([11]);
+        expect(config.indexOf('на балансі — 11')).toBeLessThan(config.indexOf('ремонт — 2'));
 
         // Колір стовпчика «на балансі» збігається з кольором success-бейджа (зелений).
         expect(config).toContain('#22c55e');
