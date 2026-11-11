@@ -38,6 +38,34 @@ test.describe('комплектуючі робочої станції', () => {
         await expect(composition.locator('[data-kind="ups"]')).not.toContainText('Нотатка E2E монітора');
     });
 
+    test('склад станції читається: заголовки колонок, відступи між колонками, однакова сітка в групах', async ({ page }) => {
+        await openAsset(page, 'E2E Робоча станція');
+
+        const composition = page.getByTestId('asset-composition');
+        await expect(composition.locator('[data-kind="monitor"] thead')).toContainText('Серійний номер');
+
+        const row = composition.locator('[data-kind="monitor"] tbody tr', { hasText: 'E2E-MON-SEED' });
+        const cells = row.locator('td');
+        await expect(cells).toHaveCount(5);
+
+        // Колонки не злипаються: у кожної клітинки є внутрішній відступ, і вони йдуть зліва направо без перекриття.
+        const boxes = [];
+        for (let i = 0; i < 5; i++) {
+            await expect(cells.nth(i)).not.toHaveCSS('padding-right', '0px');
+            boxes.push(await cells.nth(i).boundingBox());
+        }
+        for (let i = 1; i < 5; i++) {
+            expect(boxes[i].x).toBeGreaterThanOrEqual(boxes[i - 1].x + boxes[i - 1].width - 1);
+        }
+
+        // Колонки різних груп вирівняні між собою (однакова фіксована сітка).
+        const upsCell = await composition.locator('[data-kind="ups"] tbody tr').first().locator('td').nth(1).boundingBox();
+        expect(Math.abs(upsCell.x - boxes[1].x)).toBeLessThan(2);
+
+        // Заголовок групи виділений.
+        await expect(composition.locator('[data-kind="monitor"] > div').first()).toHaveCSS('font-weight', '600');
+    });
+
     test('правка однієї одиниці не змінює інші', async ({ page }) => {
         await openAsset(page, 'E2E Робоча станція');
         await page.getByRole('tab', { name: /Комплектуючі/ }).click();
@@ -54,7 +82,7 @@ test.describe('комплектуючі робочої станції', () => {
         const composition = page.getByTestId('asset-composition');
         await expect(composition.locator('[data-kind="keyboard"] tr', { hasText: 'E2E-KB-SEED' })).toContainText('Несправна');
         await expect(composition.locator('[data-kind="monitor"] tr', { hasText: 'E2E-MON-SEED' })).toContainText('Несправна');
-        await expect(composition.locator('[data-kind="ups"] tr').first()).toContainText('Справна');
+        await expect(composition.locator('[data-kind="ups"] tbody tr').first()).toContainText('Справна');
     });
 
     test('admin додає три монітори на картці робочої станції', async ({ page }) => {
