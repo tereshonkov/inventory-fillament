@@ -7,6 +7,11 @@ cd "$(git rev-parse --show-toplevel)" || exit 1
 step() { printf '\n\033[1;36m==> %s\033[0m\n' "$1"; }
 fail() { printf '\n\033[1;31m✖ Pre-commit: %s. Коміт скасовано.\033[0m\n' "$1"; exit 1; }
 
+# Кешований конфіг (bootstrap/cache/config.php) змушує Laravel ігнорувати змінні оточення тестів і брати БД з .env.
+# Тести (RefreshDatabase) і e2e (migrate:fresh) знищили б таку базу, тому кеш скидаємо — як це робить `composer test`.
+step "0/5 Скидання кешу конфігурації"
+node scripts/php.mjs artisan config:clear --quiet || fail "не вдалося виконати config:clear"
+
 step "1/5 Pint (PHP-лінтер) — лише змінені файли"
 STAGED_PHP=$(git diff --cached --name-only --diff-filter=ACM -- '*.php')
 if [ -n "$STAGED_PHP" ]; then

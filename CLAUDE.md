@@ -35,7 +35,9 @@ Exports/imports run through the queue — a running `queue:listen` is needed to 
 
 ## Quality checks (pre-commit)
 
-The git hook `.githooks/pre-commit` (enabled by `npm run hooks:install`, also part of `composer setup`) **blocks the commit** if any step fails:
+**Never run tests against a real database.** If `bootstrap/cache/config.php` exists, Laravel ignores `phpunit.xml` and the e2e environment and uses `.env` — `RefreshDatabase` / `migrate:fresh` would wipe that database. `tests/TestCase.php` and the e2e scripts now abort in that case; fix it with `php artisan config:clear` (the pre-commit hook and `composer test` do it automatically). Do not cache the config on a machine where you run tests.
+
+The git hook `.githooks/pre-commit` (enabled by `npm run hooks:install`, also part of `composer setup`) first clears the config cache and then **blocks the commit** if any step fails:
 
 1. **Pint** `--test` — only on changed (staged) PHP files. The repo has ~45 older files with style violations, so the whole project is not checked; fix them together with `vendor/bin/pint` in a separate commit.
 2. **ESLint** (`eslint.config.js`).
@@ -131,6 +133,7 @@ Entry format: `- YYYY-MM-DD — what changed and why (key files)`. Newest entrie
 
 ## Change log
 
+- 2026-11-11 — Safety: a cached config (`bootstrap/cache/config.php`) makes Laravel ignore environment variables, so PHPUnit (`RefreshDatabase`) and the e2e setup (`migrate:fresh`) ran against the `.env` database (local MySQL `inventory_db`) and wiped it. Added guards: `tests/TestCase.php` refuses to run unless the app uses in-memory SQLite; `assertE2eDatabase()` (`scripts/e2e-env.mjs`) is called by `scripts/e2e-server.mjs` and `tests/e2e/global-setup.js`; the pre-commit hook runs `config:clear` first (step 0).
 - 2026-11-11 — Plan step 3 (dashboard page): new `AppFilamentPagesDashboard` ("Огляд майна" title and menu label) replaces the stock Filament dashboard (registered in `AdminPanelProvider`, panel-level `->widgets([...])` list removed); explicit widget order (`StatsOverview` → `AssetActivityChart` → `AssetStatusChart`), responsive columns (1 / 2 from `md` / 3 from `xl`), unique `$sort` values (1/2/3), chart spans (activity 2 of 3, statuses 1 of 3 on `xl`), `StatsOverview` no longer polls every 5s and spans the full width. Tests: `tests/Feature/Filament/DashboardPageTest.php`, `tests/e2e/dashboard.spec.js`.
 - 2026-11-11 — Plan step 2 (history tabs): relation managers on `Asset` show a record counter in the tab badge (hidden at 0), a Ukrainian empty state (icon + heading + description) instead of the English default, Ukrainian `$modelLabel`/`$pluralModelLabel` (fixes the English `aria-label`), and `$isLazy = false` (a lazy block stayed an empty white area until scrolled into view). Tests: `tests/Feature/Filament/AssetHistoryTabsTest.php`, `asset-card.spec.js`.
 - 2026-11-11 — Asset view card: long full-width entries ("Повна назва", "Примітки") use `inlineLabel(false)` (label above the value); with inline labels Filament gives the label a third of the row, which pushed the value far to the right. Test in `asset-card.spec.js`.
