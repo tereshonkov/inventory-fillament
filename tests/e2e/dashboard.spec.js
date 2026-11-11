@@ -3,9 +3,15 @@ import { ADMIN_STATE } from './global-setup.js';
 
 test.describe('сторінка «Огляд майна»', () => {
     test.use({ storageState: ADMIN_STATE });
+    test.describe.configure({ timeout: 90_000 });
 
     test.beforeEach(async ({ page }) => {
         await page.goto('/admin');
+
+        // Усі три віджети підвантажуються лениво. Однопотоковий PHP-сервер (та завантажена машина) може бути
+        // повільним, тому чекаємо їх з великим запасом — далі кожен тест працює з уже завантаженим дашбордом.
+        await expect(page.locator('.fi-wi-stats-overview').first()).toBeVisible({ timeout: 45_000 });
+        await expect(page.locator('.fi-wi-chart canvas')).toHaveCount(2, { timeout: 45_000 });
     });
 
     test('заголовок, вкладка браузера та пункт меню називаються «Огляд майна»', async ({ page }) => {
@@ -45,6 +51,19 @@ test.describe('сторінка «Огляд майна»', () => {
         expect(a.width / s.width).toBeLessThan(1.1);
         // Статуси — достатньо широкі для підписів на кшталт «проводиться списання — 2» (у третині ширини, ≈280px у вікні Playwright 1280px, вони обрізалися).
         expect(s.width).toBeGreaterThan(400);
+    });
+
+    test('картки двох графіків однакової висоти на будь-якій ширині', async ({ page }) => {
+        const card = (title) => page.locator('.fi-wi-chart', { hasText: title }).locator('.fi-section').first();
+
+        for (const width of [1280, 1440, 1700]) {
+            await page.setViewportSize({ width, height: 900 });
+
+            const a = await card('Активність за останні 6 місяців').boundingBox();
+            const s = await card('Розподіл за статусом').boundingBox();
+
+            expect(Math.abs(a.height - s.height), `ширина ${width}`).toBeLessThan(2);
+        }
     });
 
     test('плитки складу підписані й показують 4 типи у фіксованому порядку', async ({ page }) => {
@@ -91,6 +110,10 @@ test.describe('сторінка «Огляд майна»', () => {
         const config = await widget.locator('[x-data^="chart("]').getAttribute('x-data');
         expect(config).toContain("type: 'bar'");
         expect(config).toContain('indexAxis');
+        // Тонкі заокруглені «таблетки» поверх світлої доріжки на всю ширину (шар «Усього»).
+        expect(config).toContain('Усього');
+        expect(config).toContain('borderRadius');
+        expect(config).toContain('grouped');
 
         // E2ESeeder: «на балансі» — 9 активів (найбільша група), решта статусів по 2.
         const labels = [...config.matchAll(/на балансі — (\d+)/g)].map((m) => Number(m[1]));

@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Livewire\Livewire;
+use ReflectionClass;
 use ReflectionMethod;
 use Tests\TestCase;
 
@@ -103,26 +104,79 @@ class AssetStatusChartTest extends TestCase
         $this->assertSame([], $data['datasets'][0]['data']);
     }
 
-    public function test_loads_the_data_with_one_query(): void
+    public function test_data_and_options_are_built_from_a_single_query(): void
     {
         $this->seedStatuses([AssetStatus::BALANCE->value => 2, AssetStatus::LOST->value => 1]);
-        $widget = Livewire::test(AssetStatusChart::class)->instance();
-        $method = new ReflectionMethod($widget, 'getData');
 
         DB::enableQueryLog();
-        $method->invoke($widget);
+        Livewire::test(AssetStatusChart::class); // renders: getData() + getOptions()
 
-        $this->assertCount(1, DB::getQueryLog());
+        $statusQueries = array_filter(
+            DB::getQueryLog(),
+            fn (array $query): bool => str_contains($query['query'], 'group by') && str_contains($query['query'], 'status'),
+        );
+
+        $this->assertCount(1, $statusQueries);
     }
 
-    public function test_is_a_horizontal_bar_chart_without_legend_and_with_whole_number_ticks(): void
+    public function test_bars_are_thin_and_fully_rounded(): void
     {
+        $this->seedStatuses([AssetStatus::BALANCE->value => 1]);
+
+        $dataset = $this->callWidget('getData')['datasets'][0];
+
+        $this->assertLessThanOrEqual(14, $dataset['barThickness']);
+        $this->assertGreaterThanOrEqual(6, $dataset['borderRadius']);
+        $this->assertFalse($dataset['borderSkipped']);
+        $this->assertFalse($dataset['grouped'], 'pill and track must overlap');
+    }
+
+    public function test_every_bar_has_a_light_track_as_wide_as_the_total(): void
+    {
+        $this->seedStatuses([
+            AssetStatus::BALANCE->value => 7,
+            AssetStatus::REPAIR->value => 2,
+            AssetStatus::LOST->value => 1,
+        ]);
+
+        $datasets = $this->callWidget('getData')['datasets'];
+
+        $this->assertCount(2, $datasets);
+        $this->assertSame([10, 10, 10], $datasets[1]['data']);
+        $this->assertSame(AssetStatusChart::TRACK_COLOR, $datasets[1]['backgroundColor']);
+        $this->assertGreaterThan($datasets[0]['order'], $datasets[1]['order'], 'the track is drawn behind the pill');
+        $this->assertFalse($datasets[1]['grouped']);
+    }
+
+    public function test_description_is_one_short_line_like_the_neighbouring_chart(): void
+    {
+        $statusDescription = (new ReflectionClass(AssetStatusChart::class))->getDefaultProperties()['description'];
+
+        $this->assertNotNull($statusDescription);
+        $this->assertLessThanOrEqual(40, mb_strlen($statusDescription));
+    }
+
+    public function test_is_a_clean_horizontal_chart_whose_scale_ends_at_the_total(): void
+    {
+        $this->seedStatuses([AssetStatus::BALANCE->value => 7, AssetStatus::REPAIR->value => 3]);
+
         $this->assertSame('bar', $this->callWidget('getType'));
 
         $options = $this->callWidget('getOptions');
 
         $this->assertSame('y', $options['indexAxis']);
         $this->assertFalse($options['plugins']['legend']['display']);
-        $this->assertSame(0, $options['scales']['x']['ticks']['precision']);
+        $this->assertFalse($options['plugins']['tooltip']['enabled']);
+        $this->assertFalse($options['scales']['x']['display']);
+        $this->assertSame(0, $options['scales']['x']['min']);
+        $this->assertSame(10, $options['scales']['x']['max']);
+        $this->assertFalse($options['scales']['y']['grid']['display']);
+    }
+
+    public function test_scale_has_no_max_when_there_are_no_assets(): void
+    {
+        $options = $this->callWidget('getOptions');
+
+        $this->assertArrayNotHasKey('max', $options['scales']['x']);
     }
 }

@@ -10,6 +10,8 @@ export default defineConfig({
     retries: process.env.CI ? 1 : 0,
     reporter: [['list'], ['html', { open: 'never' }]],
     timeout: 30_000,
+    // Однопотоковий PHP-сервер на Windows буває повільним, а віджети Filament підвантажуються лениво.
+    expect: { timeout: 10_000 },
     globalSetup: './tests/e2e/global-setup.js',
     use: {
         baseURL: E2E_URL,

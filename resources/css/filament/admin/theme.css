@@ -58,6 +58,11 @@
     box-shadow: none !important;
 }
 
+/* Графіки в одному ряду дашборда — картки однакової висоти (секція заповнює комірку сітки) */
+.fi-wi-chart > .fi-section {
+    height: 100%;
+}
+
 /* Границя справа у сайдбара */
 .fi-sidebar {
     border-right: 1px solid #e5e7eb;

@@ -126,7 +126,7 @@ class AssetActivityChartTest extends TestCase
     {
         Livewire::test(AssetActivityChart::class)
             ->assertSee('Активність за останні 6 місяців')
-            ->assertSee('документів')
+            ->assertSee('Кількість документів')
             ->assertSee('не активів');
     }
 }

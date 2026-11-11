@@ -20,7 +20,7 @@ class AssetActivityChart extends ChartWidget
 
     protected ?string $heading = 'Активність за останні 6 місяців';
 
-    protected ?string $description = 'Кількість оформлених документів надходження та передачі (не активів).';
+    protected ?string $description = 'Кількість документів, а не активів.';
 
     // Widgets poll every 5s by default; this data does not change that fast (and the query runs on every poll).
     protected ?string $pollingInterval = null;
