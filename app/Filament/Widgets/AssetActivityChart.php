@@ -11,7 +11,7 @@ class AssetActivityChart extends ChartWidget
 {
     protected static ?int $sort = 2;
 
-    // protected int|string|array $columnSpan = 'full';
+    protected int|string|array $columnSpan = ['md' => 2, 'xl' => 2];
 
     protected ?string $heading = 'Активність за останні 6 місяців';
 

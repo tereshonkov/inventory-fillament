@@ -11,7 +11,12 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 class StatsOverview extends StatsOverviewWidget
 {
     protected static ?int $sort = 1;
-    
+
+    // Stats Overview polls every 5s by default; the numbers do not need it.
+    protected ?string $pollingInterval = null;
+
+    protected int|string|array $columnSpan = 'full';
+
     protected function getStats(): array
     {
         $stats = [];
@@ -21,8 +26,8 @@ class StatsOverview extends StatsOverviewWidget
                 $type->name,
                 Asset::where('type_id', $type->id)
                     ->where('status', AssetStatus::BALANCE)
-                    ->whereHas('location', fn($q) => $q->whereIn('name', ['Склад-327', 'Склад-915']))
-                    ->count() . ' шт'
+                    ->whereHas('location', fn ($q) => $q->whereIn('name', ['Склад-327', 'Склад-915']))
+                    ->count().' шт'
             );
         }
 

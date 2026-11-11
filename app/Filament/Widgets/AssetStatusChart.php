@@ -8,7 +8,9 @@ use Filament\Widgets\ChartWidget;
 
 class AssetStatusChart extends ChartWidget
 {
-    protected static ?int $sort = 2;
+    protected static ?int $sort = 3;
+
+    protected int|string|array $columnSpan = ['md' => 2, 'xl' => 1];
 
     protected ?string $heading = 'Розподіл за статусом';
 
