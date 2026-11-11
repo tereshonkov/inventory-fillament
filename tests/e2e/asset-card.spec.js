@@ -97,4 +97,17 @@ test.describe('картка активу з дуже довгою назвою',
         await expect(page.getByText('Повна назва')).toBeVisible();
         await expect(page.getByText('Другий абзац із додатковим описом комплектації').first()).toBeAttached();
     });
+
+    test('«Повна назва» і «Примітки»: підпис над значенням, а не на третину рядка збоку', async ({ page }) => {
+        await page.goto('/admin/assets/2');
+
+        for (const label of ['Повна назва', 'Примітки']) {
+            const entry = page.locator('.fi-in-entry', { has: page.getByText(label, { exact: true }) });
+            const labelBox = await entry.getByText(label, { exact: true }).boundingBox();
+            const valueBox = await entry.locator('.fi-in-entry-content, .fi-in-text').first().boundingBox();
+
+            expect(Math.abs(valueBox.x - labelBox.x)).toBeLessThan(8);
+            expect(valueBox.y).toBeGreaterThan(labelBox.y);
+        }
+    });
 });

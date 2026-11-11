@@ -57,6 +57,7 @@ class AssetInfolist
                         // The page heading shows only a short name, so the full one lives here (clamped, full text in tooltip).
                         TextEntry::make('name')
                             ->label('Повна назва')
+                            ->inlineLabel(false) // full-width long text: label above, not a third of the row away
                             ->lineClamp(3)
                             ->tooltip(fn (string $state): string => $state)
                             ->columnSpanFull(),
@@ -74,6 +75,7 @@ class AssetInfolist
                             ->placeholder('Не вказано'),
                         TextEntry::make('notes')
                             ->label('Примітки')
+                            ->inlineLabel(false)
                             ->placeholder('Немає приміток')
                             ->columnSpanFull(),
                     ]),
