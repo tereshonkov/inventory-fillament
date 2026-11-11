@@ -2,10 +2,10 @@
 
 namespace App\Enums;
 
-use Filament\Support\Contracts\HasLabel;
 use Filament\Support\Contracts\HasColor;
+use Filament\Support\Contracts\HasLabel;
 
-enum AssetStatus: string implements HasLabel, HasColor
+enum AssetStatus: string implements HasColor, HasLabel
 {
     case BALANCE = 'balance';
     case TRANSFERRING = 'transferring';
@@ -30,6 +30,25 @@ enum AssetStatus: string implements HasLabel, HasColor
             self::CAPITALIZE => 'поступає на баланс',
             self::REPAIR => 'ремонт',
         };
+    }
+
+    /**
+     * Hex colors for charts, keyed by the Filament color name returned from getColor().
+     * Charts cannot use Filament color names, so the badge color stays the single source of truth
+     * and this table only translates it.
+     */
+    public const CHART_COLORS = [
+        'success' => '#22c55e',
+        'warning' => '#f59e0b',
+        'danger' => '#ef4444',
+        'info' => '#3b82f6',
+        'gray' => '#6b7280',
+    ];
+
+    /** Chart color of the status: always the same semantic color as its badge. */
+    public function getChartColor(): string
+    {
+        return self::CHART_COLORS[$this->getColor()];
     }
 
     public function getColor(): string|array|null

@@ -6,17 +6,34 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class WriteOffsRelationManager extends RelationManager
 {
     protected static string $relationship = 'writeOffs';
+
     protected static ?string $title = 'Списано';
+
+    // Render the table together with the page: a lazy block shows an empty white area until it scrolls into view.
+    protected static bool $isLazy = false;
+
+    protected static ?string $modelLabel = 'списання';
+
+    protected static ?string $pluralModelLabel = 'списання';
+
+    public static function getBadge(Model $ownerRecord, string $pageClass): ?string
+    {
+        $count = $ownerRecord->writeOffs()->count();
+
+        return $count > 0 ? (string) $count : null;
+    }
 
     public function form(Schema $schema): Schema
     {
@@ -42,6 +59,9 @@ class WriteOffsRelationManager extends RelationManager
     {
         return $table
             ->heading('')
+            ->emptyStateIcon(Heroicon::OutlinedTrash)
+            ->emptyStateHeading('Списань ще не було')
+            ->emptyStateDescription('Записи з’являться після оформлення акта списання.')
             ->recordTitleAttribute('document_number')
             ->columns([
                 TextColumn::make('document_number')

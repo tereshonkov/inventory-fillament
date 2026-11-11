@@ -3,8 +3,9 @@
 @source '../../../../app/Filament/**/*';
 @source '../../../../resources/views/filament/**/*';
 
-/* Єдина рамка на зовнішньому контейнері — і вкладки, і таблиця всередині неї */
-.fi-grid.fi-sc.fi-sc-has-gap:has(.fi-sc-tabs) {
+/* Єдина рамка на зовнішньому контейнері — і вкладки, і таблиця всередині неї.
+   Лише для сторінок-списків: на сторінці перегляду цей контейнер охоплював би і картки інфосписку. */
+.fi-resource-list-records-page .fi-grid.fi-sc.fi-sc-has-gap:has(.fi-sc-tabs) {
     gap: 0 !important;
     background-color: #fff;
     border: 1px solid #e5e7eb;
@@ -12,7 +13,7 @@
     overflow: hidden;
 }
 
-.dark .fi-grid.fi-sc.fi-sc-has-gap:has(.fi-sc-tabs) {
+.dark .fi-resource-list-records-page .fi-grid.fi-sc.fi-sc-has-gap:has(.fi-sc-tabs) {
     background-color: rgb(24 24 27);
     border-color: rgb(63 63 70);
 }
@@ -32,10 +33,56 @@
 }
 
 /* Таблиця — повністю без власної рамки, її дає зовнішній контейнер */
-.fi-grid-col:has(.fi-sc-tabs) + .fi-grid-col .fi-ta-ctn {
+.fi-resource-list-records-page .fi-grid-col:has(.fi-sc-tabs) + .fi-grid-col .fi-ta-ctn {
     border: none !important;
     border-radius: 0 !important;
     box-shadow: none !important;
+}
+
+/* Сторінка перегляду: вкладки історії + таблиця — одна окрема картка, окремо від карток інфосписку */
+.fi-resource-view-record-page .fi-grid-col:has(.fi-sc-tabs) {
+    background-color: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    overflow: hidden;
+}
+
+.dark .fi-resource-view-record-page .fi-grid-col:has(.fi-sc-tabs) {
+    background-color: rgb(24 24 27);
+    border-color: rgb(63 63 70);
+}
+
+.fi-resource-view-record-page .fi-sc-tabs .fi-ta-ctn {
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+/* Графіки в одному ряду дашборда — картки однакової висоти (секція заповнює комірку сітки) */
+.fi-wi-chart > .fi-section {
+    height: 100%;
+}
+
+/* Телефон: черга «Потребує уваги» одразу після цифр, графіки (вторинна аналітика) — нижче.
+   Порядок у сітці дашборда: цифри (0) → черга (1) → графіки (2). Від md порядок — із getWidgets(). */
+@media (max-width: 767px) {
+    .fi-wi-table {
+        order: 1;
+    }
+
+    .fi-wi-chart {
+        order: 2;
+    }
+
+    /* Вкладки історії на телефоні: три вкладки з лічильниками мають вміститися в ширину картки */
+    .fi-tabs:not(.fi-contained) {
+        padding: 0.5rem 0.75rem !important;
+        gap: 0.25rem;
+    }
+
+    .fi-tabs-item {
+        padding-inline: 0.5rem !important;
+    }
 }
 
 /* Границя справа у сайдбара */

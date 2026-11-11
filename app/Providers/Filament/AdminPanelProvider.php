@@ -2,20 +2,15 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Widgets\AssetActivityChart;
-use App\Filament\Widgets\AssetStatusChart;
-use App\Filament\Widgets\NotIntroducedAssets;
-use App\Filament\Widgets\StatsOverview;
+use App\Filament\Pages\Dashboard;
 use Filament\Forms\Components\DatePicker;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Resources\Pages\CreateRecord;
-use Filament\Support\Colors\Color;
 use Filament\Support\Facades\FilamentColor;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -56,7 +51,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->brandName('MVO')
             ->favicon(asset('favicon.svg'))
-            ->brandLogo(fn() => view('filament.logo'))
+            ->brandLogo(fn () => view('filament.logo'))
             ->brandLogoHeight('3.5rem')
             ->id('admin')
             ->path('admin')
@@ -77,14 +72,6 @@ class AdminPanelProvider extends PanelProvider
                 Dashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
-            ->widgets([
-                // AccountWidget::class,
-                // FilamentInfoWidget::class,
-                StatsOverview::class,
-                // NotIntroducedAssets::class,
-                AssetActivityChart::class,
-                AssetStatusChart::class,
-            ])
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

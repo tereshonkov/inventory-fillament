@@ -2,71 +2,97 @@
 
 namespace App\Filament\Resources\Assets\Schemas;
 
-use Filament\Forms\Components\Textarea;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Support\Enums\FontFamily;
+use Filament\Support\Enums\TextSize;
+use Filament\Support\Icons\Heroicon;
 
 class AssetInfolist
 {
     public static function configure(Schema $schema): Schema
     {
         return $schema
+            ->columns(1)
             ->components([
-                Section::make('Основна інформація')
-                    ->columns(1)
+                // One card with two zones (equal height by construction): current state and identifier
+                // on the left (the name is already the page heading), compact facts on the right.
+                Section::make()
+                    ->columns(['default' => 1, 'md' => 2])
                     ->schema([
-                        TextEntry::make('name')
-                            ->label('Назва'),
-                        TextEntry::make('inventory_number')
-                            ->label('Інвентарний номер')
-                            ->placeholder('Не призначено'),
-                        TextEntry::make('serial_number')
-                            ->label('Серійний номер')
-                            ->placeholder('Не призначено'),
-                        TextEntry::make('year')
-                            ->label('Рік')
-                            ->numeric()
-                            ->placeholder('Не призначено'),
+                        Group::make([
+                            TextEntry::make('inventory_number')
+                                ->label('Інвентарний номер')
+                                ->fontFamily(FontFamily::Mono)
+                                ->copyable()
+                                ->copyMessage('Інвентарний номер скопійовано'),
+                            TextEntry::make('status')
+                                ->hiddenLabel()
+                                ->badge()
+                                ->size(TextSize::Large),
+                        ]),
+                        Group::make([
+                            TextEntry::make('location.name')
+                                ->label('Локація')
+                                ->inlineLabel()
+                                ->icon(Heroicon::MapPin)
+                                ->placeholder('Не призначено'),
+                            TextEntry::make('type.name')
+                                ->label('Тип')
+                                ->inlineLabel()
+                                ->placeholder('Не призначено'),
+                            TextEntry::make('year')
+                                ->label('Рік')
+                                ->inlineLabel()
+                                ->placeholder('Не вказано'),
+                        ]),
                     ]),
 
-                Section::make('Розміщення та відповідальність')
-                    ->columns(1)
+                Section::make('Відповідальність та ідентифікація')
+                    ->inlineLabel()
+                    ->columns(['default' => 1, 'lg' => 2])
                     ->schema([
-                        TextEntry::make('location.name')
-                            ->label('Локація')
-                            ->placeholder('Не призначено'),
-                        TextEntry::make('type.name')
-                            ->label('Тип')
-                            ->placeholder('Не призначено'),
+                        // The page heading shows only a short name, so the full one lives here (clamped, full text in tooltip).
+                        TextEntry::make('name')
+                            ->label('Повна назва')
+                            ->inlineLabel(false) // full-width long text: label above, not a third of the row away
+                            ->lineClamp(3)
+                            ->tooltip(fn (string $state): string => $state)
+                            ->columnSpanFull(),
                         TextEntry::make('custodian.full_name')
                             ->label('МВО')
                             ->placeholder('Не призначено'),
                         TextEntry::make('holder.full_name')
                             ->label('Користувач')
                             ->placeholder('Не призначено'),
-                    ]),
-
-
-                Section::make('Статус та примітки')
-                    ->columns(3)
-                    ->columnSpanFull()
-                    ->schema([
-                        TextEntry::make('status')
-                            ->label('Статус')
-                            ->badge(),
+                        TextEntry::make('serial_number')
+                            ->label('Серійний номер')
+                            ->fontFamily(FontFamily::Mono)
+                            ->copyable()
+                            ->copyMessage('Серійний номер скопійовано')
+                            ->placeholder('Не вказано'),
                         TextEntry::make('notes')
                             ->label('Примітки')
-                            ->placeholder('Не вказано')
+                            ->inlineLabel(false)
+                            ->placeholder('Немає приміток')
                             ->columnSpanFull(),
+                    ]),
+
+                Section::make('Службова інформація')
+                    ->inlineLabel()
+                    ->columns(2)
+                    ->collapsed()
+                    ->schema([
                         TextEntry::make('created_at')
                             ->label('Створено')
-                            ->dateTime()
-                            ->placeholder('Не призначено'),
+                            ->since()
+                            ->dateTimeTooltip(),
                         TextEntry::make('updated_at')
                             ->label('Оновлено')
-                            ->dateTime()
-                            ->placeholder('Не призначено'),
+                            ->since()
+                            ->dateTimeTooltip(),
                     ]),
             ]);
     }

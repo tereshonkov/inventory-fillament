@@ -5,51 +5,104 @@ namespace App\Filament\Widgets;
 use App\Enums\AssetStatus;
 use App\Models\Asset;
 use Filament\Widgets\ChartWidget;
+use Illuminate\Support\Collection;
 
 class AssetStatusChart extends ChartWidget
 {
-    protected static ?int $sort = 2;
+    /** Thin pill-shaped bars; the radius is capped by Chart.js at half of the thickness. */
+    public const BAR_THICKNESS = 12;
+
+    /** Light track behind every bar (works on light and dark themes). */
+    /** Axis labels longer than this are split into two lines (Chart.js accepts an array as a multi-line label). */
+    public const MAX_LABEL_LENGTH = 22;
+
+    /** Minimal visible length of a pill in pixels. */
+    public const MIN_BAR_LENGTH = 10;
+
+    public const TRACK_COLOR = 'rgba(107, 114, 128, 0.15)';
+
+    protected static ?int $sort = 3;
+
+    protected int|string|array $columnSpan = ['md' => 2, 'xl' => 1];
 
     protected ?string $heading = 'Розподіл за статусом';
 
-    // protected ?string $maxHeight = '320px';
+    // One short line, like the neighbouring chart, so both card headers have the same height.
+    protected ?string $description = 'Кількість активів у кожному статусі.';
 
+    // Widgets poll every 5s by default; this data does not change that fast (and the query runs on every poll).
+    protected ?string $pollingInterval = null;
+
+    /** @var Collection<string, int>|null status value => number of assets, loaded once per request */
+    private ?Collection $counts = null;
+
+    /**
+     * One query (shared by data and options). Statuses without assets are not listed; the biggest group is first.
+     *
+     * @return Collection<string, int>
+     */
+    private function counts(): Collection
+    {
+        return $this->counts ??= Asset::query()
+            ->selectRaw('status, count(*) as total')
+            ->groupBy('status')
+            ->orderByDesc('total')
+            ->orderBy('status')
+            ->pluck('total', 'status')
+            ->map(fn ($total): int => (int) $total);
+    }
+
+    /**
+     * Each status is a coloured pill laid over a light track that spans the whole width.
+     * The track is as long as the biggest group, so the biggest pill is full and the others are compared to it;
+     * with the total as the track the smaller statuses would be hairlines next to a dominant "balance".
+     * Colors come from the enum, so a status looks the same here as in its badge.
+     */
     protected function getData(): array
     {
-        $counts = Asset::query()
-            ->selectRaw('status, count(*) as count')
-            ->groupBy('status')
-            ->pluck('count', 'status');
-
         $labels = [];
         $data = [];
         $colors = [];
 
-        $colorMap = [
-            AssetStatus::BALANCE->value => '#22c55e',
-            AssetStatus::NOT_PUT_IN_TO_OPERATION->value => '#f97316',
-            AssetStatus::CAPITALIZE->value => '#3b82f6',
-            AssetStatus::TRANSFERRING->value => '#a855f7',
-            AssetStatus::TRANSFERRED->value => '#64748b',
-            AssetStatus::WRITTEN_OFF->value => '#ef4444',
-            AssetStatus::WRITING_OFF->value => '#eab308',
-            AssetStatus::LOST->value => '#991b1b',
-            AssetStatus::REPAIR->value => '#06b6d4',
-        ];
+        foreach ($this->counts() as $value => $total) {
+            $status = AssetStatus::tryFrom($value);
 
-        foreach ($counts as $status => $count) {
-            $enum = AssetStatus::from($status);
-            $labels[] = $enum->getLabel();
-            $data[] = $count;
-            $colors[] = $colorMap[$status] ?? '#9ca3af';
+            if (! $status) {
+                continue;
+            }
+
+            // The count is part of the label, so the value is readable without hovering.
+            $labels[] = self::wrapLabel($status->getLabel().' — '.$total);
+            $data[] = $total;
+            $colors[] = $status->getChartColor();
         }
+
+        $longest = $data === [] ? 0 : max($data);
+
+        $pill = [
+            'borderRadius' => 999,
+            'borderSkipped' => false,
+            'barThickness' => self::BAR_THICKNESS,
+            // Draw the bars on top of each other instead of side by side.
+            'grouped' => false,
+            // Even a single asset next to hundreds stays visible (in pixels).
+            'minBarLength' => self::MIN_BAR_LENGTH,
+        ];
 
         return [
             'datasets' => [
                 [
+                    'label' => 'Активів',
                     'data' => $data,
                     'backgroundColor' => $colors,
-                ],
+                    'order' => 1, // drawn above the track
+                ] + $pill,
+                [
+                    'label' => 'Найбільша група',
+                    'data' => array_fill(0, count($data), $longest),
+                    'backgroundColor' => self::TRACK_COLOR,
+                    'order' => 2, // drawn first (behind)
+                ] + $pill,
             ],
             'labels' => $labels,
         ];
@@ -57,6 +110,68 @@ class AssetStatusChart extends ChartWidget
 
     protected function getType(): string
     {
-        return 'doughnut';
+        return 'bar';
+    }
+
+    protected function getOptions(): array
+    {
+        $longest = $this->counts()->max() ?? 0;
+
+        return [
+            // Horizontal bars: readable for any number of statuses, unlike a doughnut with one dominant slice.
+            'indexAxis' => 'y',
+            'plugins' => [
+                'legend' => ['display' => false],
+                // The counts are in the labels; the track would only add a confusing tooltip.
+                'tooltip' => ['enabled' => false],
+            ],
+            'scales' => [
+                'x' => array_filter([
+                    // The scale ends exactly at the biggest group, so the track reaches the right edge.
+                    'min' => 0,
+                    'max' => $longest > 0 ? $longest : null,
+                    'display' => false,
+                    'grid' => ['display' => false],
+                ], fn ($value) => $value !== null),
+                'y' => [
+                    'grid' => ['display' => false],
+                    'border' => ['display' => false],
+                    // Long statuses ("проводиться списання — 2") must fit on a phone.
+                    'ticks' => ['font' => ['size' => 11], 'padding' => 4],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Splits a long label at the space that gives the most even two lines, so it fits on a phone
+     * instead of being cut off at the left edge of the chart.
+     *
+     * @return string|array<int, string>
+     */
+    public static function wrapLabel(string $label): string|array
+    {
+        if (mb_strlen($label) <= self::MAX_LABEL_LENGTH) {
+            return $label;
+        }
+
+        $best = null;
+        $offset = 0;
+
+        while (($position = mb_strpos($label, ' ', $offset)) !== false) {
+            $difference = abs($position - (mb_strlen($label) - $position - 1));
+
+            if ($best === null || $difference < $best[0]) {
+                $best = [$difference, $position];
+            }
+
+            $offset = $position + 1;
+        }
+
+        if ($best === null) {
+            return $label; // a single long word cannot be wrapped
+        }
+
+        return [mb_substr($label, 0, $best[1]), mb_substr($label, $best[1] + 1)];
     }
 }

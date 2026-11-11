@@ -4,11 +4,21 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "dev": "vite"
+        "dev": "vite",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
+        "test:e2e": "playwright test",
+        "test:e2e:ui": "playwright test --ui",
+        "hooks:install": "node scripts/hooks-install.mjs",
+        "e2e:install": "playwright install chromium"
     },
     "devDependencies": {
+        "@eslint/js": "^10.0.1",
+        "@playwright/test": "^1.65.0",
         "@tailwindcss/vite": "^4.3.3",
         "concurrently": "^9.0.1",
+        "eslint": "^10.14.0",
+        "globals": "^17.14.0",
         "laravel-vite-plugin": "^3.1",
         "tailwindcss": "^4.3.3",
         "vite": "^8.0.0"

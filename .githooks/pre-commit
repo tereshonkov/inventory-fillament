@@ -1,0 +1,36 @@
+#!/bin/sh
+# Pre-commit: лінтери -> PHP-тести -> збірка фронта -> Playwright e2e.
+# Будь-яка помилка блокує коміт. Обхід (лише в крайньому разі): git commit --no-verify
+
+cd "$(git rev-parse --show-toplevel)" || exit 1
+
+step() { printf '\n\033[1;36m==> %s\033[0m\n' "$1"; }
+fail() { printf '\n\033[1;31m✖ Pre-commit: %s. Коміт скасовано.\033[0m\n' "$1"; exit 1; }
+
+# Кешований конфіг (bootstrap/cache/config.php) змушує Laravel ігнорувати змінні оточення тестів і брати БД з .env.
+# Тести (RefreshDatabase) і e2e (migrate:fresh) знищили б таку базу, тому кеш скидаємо — як це робить `composer test`.
+step "0/5 Скидання кешу конфігурації"
+node scripts/php.mjs artisan config:clear --quiet || fail "не вдалося виконати config:clear"
+
+step "1/5 Pint (PHP-лінтер) — лише змінені файли"
+STAGED_PHP=$(git diff --cached --name-only --diff-filter=ACM -- '*.php')
+if [ -n "$STAGED_PHP" ]; then
+    # shellcheck disable=SC2086
+    node scripts/php.mjs vendor/bin/pint --test $STAGED_PHP || fail "Pint знайшов порушення стилю (виправити: vendor/bin/pint <файли>)"
+else
+    echo "Немає змінених PHP-файлів — пропуск."
+fi
+
+step "2/5 ESLint (JS-лінтер)"
+npm run --silent lint || fail "ESLint знайшов помилки (виправити: npm run lint:fix)"
+
+step "3/5 PHPUnit"
+node scripts/php.mjs artisan test --compact || fail "PHP-тести не пройшли"
+
+step "4/5 Збірка фронта (vite build)"
+npm run --silent build || fail "Збірка фронта впала"
+
+step "5/5 Playwright e2e"
+npm run --silent test:e2e || fail "Playwright-тести не пройшли (звіт: npx playwright show-report)"
+
+printf '\n\033[1;32m✔ Усі перевірки пройдено.\033[0m\n'
