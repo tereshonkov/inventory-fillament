@@ -17,43 +17,43 @@ class AssetStatusChart extends ChartWidget
     // Widgets poll every 5s by default; this data does not change that fast (and the query runs on every poll).
     protected ?string $pollingInterval = null;
 
-    // protected ?string $maxHeight = '320px';
-
+    /**
+     * One query. Statuses without assets are not listed; the biggest group comes first.
+     * Colors come from the enum, so a status looks the same here as in its badge.
+     */
     protected function getData(): array
     {
         $counts = Asset::query()
-            ->selectRaw('status, count(*) as count')
+            ->selectRaw('status, count(*) as total')
             ->groupBy('status')
-            ->pluck('count', 'status');
+            ->orderByDesc('total')
+            ->orderBy('status')
+            ->pluck('total', 'status');
 
         $labels = [];
         $data = [];
         $colors = [];
 
-        $colorMap = [
-            AssetStatus::BALANCE->value => '#22c55e',
-            AssetStatus::NOT_PUT_IN_TO_OPERATION->value => '#f97316',
-            AssetStatus::CAPITALIZE->value => '#3b82f6',
-            AssetStatus::TRANSFERRING->value => '#a855f7',
-            AssetStatus::TRANSFERRED->value => '#64748b',
-            AssetStatus::WRITTEN_OFF->value => '#ef4444',
-            AssetStatus::WRITING_OFF->value => '#eab308',
-            AssetStatus::LOST->value => '#991b1b',
-            AssetStatus::REPAIR->value => '#06b6d4',
-        ];
+        foreach ($counts as $value => $total) {
+            $status = AssetStatus::tryFrom($value);
 
-        foreach ($counts as $status => $count) {
-            $enum = AssetStatus::from($status);
-            $labels[] = $enum->getLabel();
-            $data[] = $count;
-            $colors[] = $colorMap[$status] ?? '#9ca3af';
+            if (! $status) {
+                continue;
+            }
+
+            // The count is part of the label, so the value is readable without hovering.
+            $labels[] = $status->getLabel().' — '.$total;
+            $data[] = (int) $total;
+            $colors[] = $status->getChartColor();
         }
 
         return [
             'datasets' => [
                 [
+                    'label' => 'Активів',
                     'data' => $data,
                     'backgroundColor' => $colors,
+                    'borderRadius' => 4,
                 ],
             ],
             'labels' => $labels,
@@ -62,6 +62,26 @@ class AssetStatusChart extends ChartWidget
 
     protected function getType(): string
     {
-        return 'doughnut';
+        return 'bar';
+    }
+
+    protected function getOptions(): array
+    {
+        return [
+            // Horizontal bars: readable for any number of statuses, unlike a doughnut with one dominant slice.
+            'indexAxis' => 'y',
+            'plugins' => [
+                'legend' => ['display' => false],
+            ],
+            'scales' => [
+                'x' => [
+                    'beginAtZero' => true,
+                    'ticks' => ['precision' => 0],
+                ],
+                'y' => [
+                    'grid' => ['display' => false],
+                ],
+            ],
+        ];
     }
 }

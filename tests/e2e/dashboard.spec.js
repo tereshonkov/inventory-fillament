@@ -34,15 +34,17 @@ test.describe('сторінка «Огляд майна»', () => {
         expect(activityBox.x).toBeLessThan(statusesBox.x);
     });
 
-    test('на широкому екрані графік активності вдвічі ширший за графік статусів', async ({ page }) => {
+    test('на широкому екрані два графіки займають порівну ширини (підписи статусів не обрізаються)', async ({ page }) => {
         const activity = page.locator('.fi-wi-chart', { hasText: 'Активність за останні 6 місяців' });
         const statuses = page.locator('.fi-wi-chart', { hasText: 'Розподіл за статусом' });
 
         const a = await activity.boundingBox();
         const s = await statuses.boundingBox();
 
-        expect(a.width / s.width).toBeGreaterThan(1.6);
-        expect(a.width / s.width).toBeLessThan(2.4);
+        expect(a.width / s.width).toBeGreaterThan(0.9);
+        expect(a.width / s.width).toBeLessThan(1.1);
+        // Статуси — достатньо широкі для підписів на кшталт «проводиться списання — 2» (у третині ширини, ≈280px у вікні Playwright 1280px, вони обрізалися).
+        expect(s.width).toBeGreaterThan(400);
     });
 
     test('плитки складу підписані й показують 4 типи у фіксованому порядку', async ({ page }) => {
@@ -79,6 +81,26 @@ test.describe('сторінка «Огляд майна»', () => {
         expect(config).toContain("type: 'line'");
         expect(config).toContain('beginAtZero');
         expect(config).toContain('precision');
+    });
+
+    test('розподіл за статусом: горизонтальні бари з кількістю в підписі, від найбільшої групи', async ({ page }) => {
+        const widget = page.locator('.fi-wi-chart', { hasText: 'Розподіл за статусом' });
+
+        await expect(widget.locator('canvas')).toBeVisible();
+
+        const config = await widget.locator('[x-data^="chart("]').getAttribute('x-data');
+        expect(config).toContain("type: 'bar'");
+        expect(config).toContain('indexAxis');
+
+        // E2ESeeder: «на балансі» — 9 активів (найбільша група), решта статусів по 2.
+        const labels = [...config.matchAll(/на балансі — (\d+)/g)].map((m) => Number(m[1]));
+        expect(labels).toEqual([9]);
+        expect(config.indexOf('на балансі — 9')).toBeLessThan(config.indexOf('ремонт — 2'));
+
+        // Колір стовпчика «на балансі» збігається з кольором success-бейджа (зелений).
+        expect(config).toContain('#22c55e');
+        // Легенди немає (підписи — на осі).
+        await expect(widget.locator('.fi-wi-chart-legend, [class*="legend"]')).toHaveCount(0);
     });
 
     test('віджети не опитують сервер кожні 5 секунд', async ({ page }) => {

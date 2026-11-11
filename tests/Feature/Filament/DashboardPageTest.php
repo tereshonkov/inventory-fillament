@@ -59,7 +59,7 @@ class DashboardPageTest extends TestCase
     public function test_columns_are_responsive(): void
     {
         $this->assertSame(
-            ['default' => 1, 'md' => 2, 'xl' => 3],
+            ['default' => 1, 'md' => 2, 'xl' => 2],
             (new Dashboard)->getColumns(),
         );
     }
