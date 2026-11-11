@@ -129,7 +129,6 @@ How to work with plans:
 - `DatabaseSeeder` only creates a test user.
 - The year is still formatted with a thousands separator ("2 024") in the `AssetsHolderRelationManager` table on the employee page (fixed only on the asset card).
 - On a phone the dashboard queue hides the inventory number and custodian columns and the "Очікує" column scrolls inside the card; the stat tiles and the queue use the hardcoded warehouses / global numbers by decision.
-- `README.md` is a historical cheat sheet and still mentions the deleted `NotIntroducedAssets` widget.
 
 ## Documentation rules
 
@@ -141,6 +140,7 @@ Entry format: `- YYYY-MM-DD — what changed and why (key files)`. Newest entrie
 
 ## Change log
 
+- 2026-11-11 — `README.md` brought in line with the project: added the project overview, quick start, checks/tests and documentation map; new cheat-sheet patterns 10-16 (short asset name, dashboard page, role-scoped queue widget, charts, history tabs, theme CSS scoping, tests and the DB-safety lesson); the status section, the dashboard sections and the known issues were rewritten to the current state; the xlsx document imports (`IncomingDocumentImporter`, `AssetActivationImporter`) are documented; the removed `NotIntroducedAssets` widget is no longer described as current.
 - 2026-11-11 — `to-plan` skill: testing after every phase is mandatory — each phase has a "Тесты" block (Playwright when the frontend is touched, PHPUnit when logic is touched, both when both), new tests must fail without the change, and a phase is done only when the whole pre-commit check passes.
 - 2026-11-11 — Added the project skill `to-plan` (`.agents/skills/to-plan/SKILL.md`, `/to-plan [feature]`): turns an unfinished `docs/prd-{slug}.md` into `docs/plan-{slug}.md` — phases (the first is a Tracer Bullet, at most 5 tasks each, each phase stoppable and with a verifiable "done when"), every PRD acceptance criterion covered (numbered C1..Cn, coverage table), nothing added that the PRD does not ask for; asks clarifying questions first when the PRD is ambiguous.
 - 2026-11-11 — Added the project skill `prd` (`.agents/skills/prd/SKILL.md`, available as `/prd <feature>` through the `.claude/skills` junction): writes a short PRD to `docs/prd-{slug}.md` (title, date, goal, user scenarios, scope, out of scope, technical constraints, verifiable acceptance criteria) before a feature is implemented, and asks clarifying questions first when the description is short.
