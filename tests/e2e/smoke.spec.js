@@ -9,6 +9,7 @@ const PAGES = [
     ['Надходження', '/admin/asset-incomings'],
     ['Передачі', '/admin/asset-transfers'],
     ['Списання', '/admin/asset-write-offs'],
+    ['Комплектуючі', '/admin/asset-components'],
     ['Типи техніки', '/admin/asset-types'],
     ['Локації', '/admin/locations'],
     ['Підрозділи', '/admin/departments'],

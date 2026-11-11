@@ -66,14 +66,14 @@ test.describe('сторінка «Огляд майна»', () => {
         }
     });
 
-    test('плитки складу підписані й показують 4 типи у фіксованому порядку', async ({ page }) => {
+    test('плитки складу підписані й показують 6 типів у фіксованому порядку', async ({ page }) => {
         const stats = page.locator('.fi-wi-stats-overview').first();
 
         await expect(stats.getByText('Наявність на складах')).toBeVisible();
         await expect(stats.getByText('Склад-327')).toBeVisible();
 
         const tiles = stats.locator('.fi-wi-stats-overview-stat');
-        await expect(tiles).toHaveCount(4);
+        await expect(tiles).toHaveCount(6);
 
         // Дані E2ESeeder: 2 ПК на Склад-327, 3 монітори на Склад-915; ноутбуків і робочих станцій на складах немає.
         const expected = [
@@ -81,12 +81,41 @@ test.describe('сторінка «Огляд майна»', () => {
             ['Ноутбук', '0 шт'],
             ['Робоча станція', '0 шт'],
             ['Монітор', '3 шт'],
+            ['ДБЖ', '0 шт'],
+            ['БФП', '0 шт'],
         ];
 
         for (const [index, [label, value]] of expected.entries()) {
             await expect(tiles.nth(index)).toContainText(label);
             await expect(tiles.nth(index)).toContainText(value);
         }
+    });
+
+    test('плитки комплектуючих на складах окремо від плиток активів', async ({ page }) => {
+        const block = page.locator('.fi-wi-stats-overview', { hasText: 'Комплектуючі на складах' });
+
+        await expect(block.getByText('Склад-327')).toBeVisible();
+
+        const tiles = block.locator('.fi-wi-stats-overview-stat');
+        await expect(tiles).toHaveCount(5);
+
+        // Дані E2ESeeder: 1 несправний монітор на Склад-915, 2 ДБЖ на Склад-327.
+        const expected = [
+            ['ПК (комплектуючі)', '0 шт'],
+            ['Монітор (комплектуючі)', '1 шт'],
+            ['Ноутбук (комплектуючі)', '0 шт'],
+            ['ДБЖ (комплектуючі)', '2 шт'],
+            ['Принтер (комплектуючі)', '0 шт'],
+        ];
+
+        for (const [index, [label, value]] of expected.entries()) {
+            await expect(tiles.nth(index)).toContainText(label);
+            await expect(tiles.nth(index)).toContainText(value);
+        }
+
+        // Плитки активів не змінилися: монітор-комплектуюча в них не потрапляє.
+        const assets = page.locator('.fi-wi-stats-overview', { hasText: 'Наявність на складах' });
+        await expect(assets.locator('.fi-wi-stats-overview-stat').nth(3)).toContainText('3 шт');
     });
 
     test('графік активності: лінія з цілими поділками осі та поясненням, що рахуються документи', async ({ page }) => {
@@ -116,10 +145,10 @@ test.describe('сторінка «Огляд майна»', () => {
         expect(config).toContain('borderRadius');
         expect(config).toContain('grouped');
 
-        // E2ESeeder: «на балансі» — 9 активів (найбільша група), решта статусів по 2.
+        // E2ESeeder: «на балансі» — 11 активів (найбільша група), решта статусів по 2.
         const labels = [...config.matchAll(/на балансі — (\d+)/g)].map((m) => Number(m[1]));
-        expect(labels).toEqual([9]);
-        expect(config.indexOf('на балансі — 9')).toBeLessThan(config.indexOf('ремонт — 2'));
+        expect(labels).toEqual([11]);
+        expect(config.indexOf('на балансі — 11')).toBeLessThan(config.indexOf('ремонт — 2'));
 
         // Колір стовпчика «на балансі» збігається з кольором success-бейджа (зелений).
         expect(config).toContain('#22c55e');

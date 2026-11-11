@@ -3,7 +3,9 @@
 namespace Database\Seeders;
 
 use App\Enums\AssetStatus;
+use App\Enums\ComponentKind;
 use App\Models\Asset;
+use App\Models\AssetComponent;
 use App\Models\AssetIncoming;
 use App\Models\AssetTransfer;
 use App\Models\AssetType;
@@ -29,9 +31,15 @@ class E2ESeeder extends Seeder
 
     public const EDITOR_EMAIL = 'editor@e2e.test';
 
+    public const VIEWER_EMAIL = 'viewer@e2e.test';
+
     public const PASSWORD = 'password';
 
     public const MAIN_ASSET_NAME = 'E2E Тестовий актив';
+
+    public const WORKSTATION_NAME = 'E2E Робоча станція';
+
+    public const EDITOR_WORKSTATION_NAME = 'E2E Станція редактора';
 
     /** Created right after the main asset, so its id is 2 (used by e2e tests). */
     public const LONG_NAME_ASSET_ID = 2;
@@ -55,6 +63,12 @@ class E2ESeeder extends Seeder
             'password' => self::PASSWORD,
         ]);
 
+        User::factory()->viewer()->create([
+            'name' => 'E2E Viewer',
+            'email' => self::VIEWER_EMAIL,
+            'password' => self::PASSWORD,
+        ]);
+
         $room = Location::create(['name' => 'E2E Склад']);
         $warehouse327 = Location::create(['name' => 'Склад-327']);
         $warehouse915 = Location::create(['name' => 'Склад-915']);
@@ -62,7 +76,7 @@ class E2ESeeder extends Seeder
         $laptop = AssetType::create(['name' => 'Ноутбук']);
         $pc = AssetType::create(['name' => 'ПК']);
         $monitor = AssetType::create(['name' => 'Монітор']);
-        AssetType::create(['name' => 'Робоча станція']);
+        $workstation = AssetType::create(['name' => AssetType::WORKSTATION_NAME]);
 
         $department = Department::create(['name' => 'E2E Відділ']);
 
@@ -98,6 +112,32 @@ class E2ESeeder extends Seeder
         Asset::factory()->count(3)->custodian($adminEmployee)->create([
             'type_id' => $monitor->getKey(), 'location_id' => $warehouse915->getKey(), 'name' => 'E2E Монітор',
         ]);
+
+        // Workstation: its components are managed on the asset card (admin only in phase 1).
+        $station = Asset::factory()->custodian($adminEmployee)->create([
+            'name' => self::WORKSTATION_NAME,
+            'inventory_number' => '101000777',
+            'type_id' => $workstation->getKey(),
+            'location_id' => $room->getKey(),
+        ]);
+
+        // Components on the warehouses feed the dashboard tiles: 1 monitor (broken counts too), 2 UPS.
+        AssetComponent::factory()->for($station)->kind(ComponentKind::MONITOR)->broken()->create([
+            'location_id' => $warehouse915->getKey(),
+            'serial_number' => 'E2E-MON-SEED',
+            'description' => 'Нотатка E2E монітора',
+        ]);
+        // No location and no holder of its own: the composition shows the station's data.
+        AssetComponent::factory()->for($station)->kind(ComponentKind::KEYBOARD)->create(['serial_number' => 'E2E-KB-SEED']);
+        AssetComponent::factory()->count(2)->for($station)->kind(ComponentKind::UPS)->create(['location_id' => $warehouse327->getKey()]);
+
+        // Editor's own workstation (phase 4: roles) with one monitor; the admin's station above is "foreign" for the editor.
+        $ownStation = Asset::factory()->custodian($editorEmployee)->create([
+            'name' => self::EDITOR_WORKSTATION_NAME,
+            'type_id' => $workstation->getKey(),
+            'location_id' => $room->getKey(),
+        ]);
+        AssetComponent::factory()->for($ownStation)->kind(ComponentKind::MONITOR)->create(['serial_number' => 'E2E-OWN-MON']);
 
         // One asset per status: an "own" one (editor is the custodian) and a "foreign" one.
         foreach (AssetStatus::cases() as $status) {

@@ -21,7 +21,7 @@ class AssetStatusChart extends ChartWidget
 
     public const TRACK_COLOR = 'rgba(107, 114, 128, 0.15)';
 
-    protected static ?int $sort = 3;
+    protected static ?int $sort = 4;
 
     protected int|string|array $columnSpan = ['md' => 2, 'xl' => 1];
 

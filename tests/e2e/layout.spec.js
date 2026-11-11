@@ -56,8 +56,8 @@ test.describe('адаптив: «Огляд майна»', () => {
         await page.goto('/admin');
         await widgetsLoaded(page);
 
-        const tiles = page.locator('.fi-wi-stats-overview .fi-wi-stats-overview-stat');
-        await expect(tiles).toHaveCount(4);
+        const tiles = page.locator('.fi-wi-stats-overview').first().locator('.fi-wi-stats-overview-stat');
+        await expect(tiles).toHaveCount(6);
 
         const first = await tiles.nth(0).boundingBox();
         const second = await tiles.nth(1).boundingBox();

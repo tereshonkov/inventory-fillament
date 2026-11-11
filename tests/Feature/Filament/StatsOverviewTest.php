@@ -70,12 +70,16 @@ class StatsOverviewTest extends TestCase
         $this->makeAssets(5, 'ПК', 'Склад-327', AssetStatus::REPAIR);       // not on balance
         $this->makeAssets(1, 'Ноутбук', 'Склад-915');
         $this->makeAssets(7, 'Принтер', 'Склад-327');                        // type is not listed
+        $this->makeAssets(2, 'ДБЖ', 'Склад-915');
+        $this->makeAssets(1, 'БФП', 'Склад-327');
 
         $this->assertSame([
             'ПК' => '3 шт',
             'Ноутбук' => '1 шт',
             'Робоча станція' => '0 шт',
             'Монітор' => '0 шт',
+            'ДБЖ' => '2 шт',
+            'БФП' => '1 шт',
         ], $this->tiles());
     }
 
@@ -88,6 +92,8 @@ class StatsOverviewTest extends TestCase
             'Ноутбук' => '0 шт',
             'Робоча станція' => '0 шт',
             'Монітор' => '0 шт',
+            'ДБЖ' => '0 шт',
+            'БФП' => '0 шт',
         ], $this->tiles());
     }
 
@@ -97,7 +103,7 @@ class StatsOverviewTest extends TestCase
         $this->makeAssets(1, 'Монітор', 'Склад-327');
         $this->makeAssets(1, 'ПК', 'Склад-327');
 
-        $this->assertSame(['ПК', 'Ноутбук', 'Робоча станція', 'Монітор'], array_keys($this->tiles()));
+        $this->assertSame(['ПК', 'Ноутбук', 'Робоча станція', 'Монітор', 'ДБЖ', 'БФП'], array_keys($this->tiles()));
     }
 
     public function test_numbers_are_global_and_not_scoped_by_role(): void
