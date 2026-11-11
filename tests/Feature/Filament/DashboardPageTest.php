@@ -64,15 +64,17 @@ class DashboardPageTest extends TestCase
         );
     }
 
-    public function test_stats_widget_does_not_poll_the_server(): void
+    public function test_dashboard_widgets_do_not_poll_the_server(): void
     {
         $this->actingAs(User::factory()->admin()->create());
 
-        $widget = Livewire::test(StatsOverview::class)->instance();
+        foreach ((new Dashboard)->getWidgets() as $class) {
+            $widget = Livewire::test($class)->instance();
 
-        $method = new ReflectionMethod($widget, 'getPollingInterval');
+            $method = new ReflectionMethod($widget, 'getPollingInterval');
 
-        $this->assertNull($method->invoke($widget));
+            $this->assertNull($method->invoke($widget), "{$class} must not poll");
+        }
     }
 
     public function test_every_dashboard_widget_is_visible_to_all_roles(): void

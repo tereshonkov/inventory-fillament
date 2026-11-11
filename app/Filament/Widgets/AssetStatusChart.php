@@ -14,6 +14,9 @@ class AssetStatusChart extends ChartWidget
 
     protected ?string $heading = 'Розподіл за статусом';
 
+    // Widgets poll every 5s by default; this data does not change that fast (and the query runs on every poll).
+    protected ?string $pollingInterval = null;
+
     // protected ?string $maxHeight = '320px';
 
     protected function getData(): array

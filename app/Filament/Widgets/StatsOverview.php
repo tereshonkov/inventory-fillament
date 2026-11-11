@@ -4,12 +4,17 @@ namespace App\Filament\Widgets;
 
 use App\Enums\AssetStatus;
 use App\Models\Asset;
-use App\Models\AssetType;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class StatsOverview extends StatsOverviewWidget
 {
+    /** Asset types shown as tiles, in display order. */
+    public const TYPES = ['ПК', 'Ноутбук', 'Робоча станція', 'Монітор'];
+
+    /** Warehouses the stock is counted on. */
+    public const WAREHOUSES = ['Склад-327', 'Склад-915'];
+
     protected static ?int $sort = 1;
 
     // Stats Overview polls every 5s by default; the numbers do not need it.
@@ -17,20 +22,33 @@ class StatsOverview extends StatsOverviewWidget
 
     protected int|string|array $columnSpan = 'full';
 
+    protected ?string $heading = 'Наявність на складах';
+
+    protected function getDescription(): ?string
+    {
+        return 'Активи зі статусом «'.AssetStatus::BALANCE->getLabel().'» на складах '
+            .implode(' та ', self::WAREHOUSES).'.';
+    }
+
+    /**
+     * One tile per type, always in the same order. Counts are global (not scoped by role).
+     * A single grouped query instead of two queries per tile; types without assets show "0 шт".
+     */
     protected function getStats(): array
     {
-        $stats = [];
+        $counts = Asset::query()
+            ->join('asset_types', 'asset_types.id', '=', 'assets.type_id')
+            ->join('locations', 'locations.id', '=', 'assets.location_id')
+            ->where('assets.status', AssetStatus::BALANCE)
+            ->whereIn('asset_types.name', self::TYPES)
+            ->whereIn('locations.name', self::WAREHOUSES)
+            ->groupBy('asset_types.name')
+            ->selectRaw('asset_types.name as type_name, count(*) as total')
+            ->pluck('total', 'type_name');
 
-        foreach (AssetType::whereIn('name', ['ПК', 'Ноутбук', 'Робоча станція', 'Монітор'])->get() as $type) {
-            $stats[] = Stat::make(
-                $type->name,
-                Asset::where('type_id', $type->id)
-                    ->where('status', AssetStatus::BALANCE)
-                    ->whereHas('location', fn ($q) => $q->whereIn('name', ['Склад-327', 'Склад-915']))
-                    ->count().' шт'
-            );
-        }
-
-        return $stats;
+        return array_map(
+            fn (string $type): Stat => Stat::make($type, ((int) ($counts[$type] ?? 0)).' шт'),
+            self::TYPES,
+        );
     }
 }

@@ -45,10 +45,34 @@ test.describe('сторінка «Огляд майна»', () => {
         expect(a.width / s.width).toBeLessThan(2.4);
     });
 
-    test('віджет цифр не опитує сервер кожні 5 секунд', async ({ page }) => {
-        // За замовчуванням Stats Overview рендерить wire:poll.5s; опитування лишається тільки в сповіщень (30s).
-        // Виджети підвантажуються лениво — спершу чекаємо, поки віджет цифр з'явиться (інакше перевірка порожня).
+    test('плитки складу підписані й показують 4 типи у фіксованому порядку', async ({ page }) => {
+        const stats = page.locator('.fi-wi-stats-overview').first();
+
+        await expect(stats.getByText('Наявність на складах')).toBeVisible();
+        await expect(stats.getByText('Склад-327')).toBeVisible();
+
+        const tiles = stats.locator('.fi-wi-stats-overview-stat');
+        await expect(tiles).toHaveCount(4);
+
+        // Дані E2ESeeder: 2 ПК на Склад-327, 3 монітори на Склад-915; ноутбуків і робочих станцій на складах немає.
+        const expected = [
+            ['ПК', '2 шт'],
+            ['Ноутбук', '0 шт'],
+            ['Робоча станція', '0 шт'],
+            ['Монітор', '3 шт'],
+        ];
+
+        for (const [index, [label, value]] of expected.entries()) {
+            await expect(tiles.nth(index)).toContainText(label);
+            await expect(tiles.nth(index)).toContainText(value);
+        }
+    });
+
+    test('віджети не опитують сервер кожні 5 секунд', async ({ page }) => {
+        // За замовчуванням віджети рендерять wire:poll.5s; опитування лишається тільки в сповіщень (30s).
+        // Віджети підвантажуються лениво — спершу чекаємо всі три (інакше перевірка порожня).
         await expect(page.locator('.fi-wi-stats-overview').first()).toBeVisible();
+        await expect(page.locator('.fi-wi-chart canvas')).toHaveCount(2);
         await expect(page.locator('[wire\\:poll\\.5s]')).toHaveCount(0);
         await expect(page.locator('[wire\\:poll\\.30s]')).toHaveCount(1);
     });
