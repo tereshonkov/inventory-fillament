@@ -129,9 +129,10 @@ class AssetStatusChartTest extends TestCase
         $this->assertGreaterThanOrEqual(6, $dataset['borderRadius']);
         $this->assertFalse($dataset['borderSkipped']);
         $this->assertFalse($dataset['grouped'], 'pill and track must overlap');
+        $this->assertGreaterThanOrEqual(8, $dataset['minBarLength'], 'a tiny group must stay visible');
     }
 
-    public function test_every_bar_has_a_light_track_as_wide_as_the_total(): void
+    public function test_every_bar_has_a_light_track_as_long_as_the_biggest_group(): void
     {
         $this->seedStatuses([
             AssetStatus::BALANCE->value => 7,
@@ -142,7 +143,7 @@ class AssetStatusChartTest extends TestCase
         $datasets = $this->callWidget('getData')['datasets'];
 
         $this->assertCount(2, $datasets);
-        $this->assertSame([10, 10, 10], $datasets[1]['data']);
+        $this->assertSame([7, 7, 7], $datasets[1]['data']);
         $this->assertSame(AssetStatusChart::TRACK_COLOR, $datasets[1]['backgroundColor']);
         $this->assertGreaterThan($datasets[0]['order'], $datasets[1]['order'], 'the track is drawn behind the pill');
         $this->assertFalse($datasets[1]['grouped']);
@@ -156,7 +157,7 @@ class AssetStatusChartTest extends TestCase
         $this->assertLessThanOrEqual(40, mb_strlen($statusDescription));
     }
 
-    public function test_is_a_clean_horizontal_chart_whose_scale_ends_at_the_total(): void
+    public function test_is_a_clean_horizontal_chart_whose_scale_ends_at_the_biggest_group(): void
     {
         $this->seedStatuses([AssetStatus::BALANCE->value => 7, AssetStatus::REPAIR->value => 3]);
 
@@ -169,7 +170,7 @@ class AssetStatusChartTest extends TestCase
         $this->assertFalse($options['plugins']['tooltip']['enabled']);
         $this->assertFalse($options['scales']['x']['display']);
         $this->assertSame(0, $options['scales']['x']['min']);
-        $this->assertSame(10, $options['scales']['x']['max']);
+        $this->assertSame(7, $options['scales']['x']['max']);
         $this->assertFalse($options['scales']['y']['grid']['display']);
     }
 

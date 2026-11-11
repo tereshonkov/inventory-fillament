@@ -13,6 +13,9 @@ class AssetStatusChart extends ChartWidget
     public const BAR_THICKNESS = 12;
 
     /** Light track behind every bar (works on light and dark themes). */
+    /** Minimal visible length of a pill in pixels. */
+    public const MIN_BAR_LENGTH = 10;
+
     public const TRACK_COLOR = 'rgba(107, 114, 128, 0.15)';
 
     protected static ?int $sort = 3;
@@ -47,8 +50,9 @@ class AssetStatusChart extends ChartWidget
     }
 
     /**
-     * Each status is a coloured pill laid over a light track that spans the whole width:
-     * the track is the total number of assets, the pill is the share of the status.
+     * Each status is a coloured pill laid over a light track that spans the whole width.
+     * The track is as long as the biggest group, so the biggest pill is full and the others are compared to it;
+     * with the total as the track the smaller statuses would be hairlines next to a dominant "balance".
      * Colors come from the enum, so a status looks the same here as in its badge.
      */
     protected function getData(): array
@@ -70,7 +74,7 @@ class AssetStatusChart extends ChartWidget
             $colors[] = $status->getChartColor();
         }
 
-        $overall = array_sum($data);
+        $longest = $data === [] ? 0 : max($data);
 
         $pill = [
             'borderRadius' => 999,
@@ -78,6 +82,8 @@ class AssetStatusChart extends ChartWidget
             'barThickness' => self::BAR_THICKNESS,
             // Draw the bars on top of each other instead of side by side.
             'grouped' => false,
+            // Even a single asset next to hundreds stays visible (in pixels).
+            'minBarLength' => self::MIN_BAR_LENGTH,
         ];
 
         return [
@@ -89,8 +95,8 @@ class AssetStatusChart extends ChartWidget
                     'order' => 1, // drawn above the track
                 ] + $pill,
                 [
-                    'label' => 'Усього',
-                    'data' => array_fill(0, count($data), $overall),
+                    'label' => 'Найбільша група',
+                    'data' => array_fill(0, count($data), $longest),
                     'backgroundColor' => self::TRACK_COLOR,
                     'order' => 2, // drawn first (behind)
                 ] + $pill,
@@ -106,21 +112,21 @@ class AssetStatusChart extends ChartWidget
 
     protected function getOptions(): array
     {
-        $overall = $this->counts()->sum();
+        $longest = $this->counts()->max() ?? 0;
 
         return [
             // Horizontal bars: readable for any number of statuses, unlike a doughnut with one dominant slice.
             'indexAxis' => 'y',
             'plugins' => [
                 'legend' => ['display' => false],
-                // The counts are in the labels; the track would only add a confusing "Усього" tooltip.
+                // The counts are in the labels; the track would only add a confusing tooltip.
                 'tooltip' => ['enabled' => false],
             ],
             'scales' => [
                 'x' => array_filter([
-                    // The scale ends exactly at the total, so the track reaches the right edge.
+                    // The scale ends exactly at the biggest group, so the track reaches the right edge.
                     'min' => 0,
-                    'max' => $overall > 0 ? $overall : null,
+                    'max' => $longest > 0 ? $longest : null,
                     'display' => false,
                     'grid' => ['display' => false],
                 ], fn ($value) => $value !== null),

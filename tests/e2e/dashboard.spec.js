@@ -110,8 +110,9 @@ test.describe('сторінка «Огляд майна»', () => {
         const config = await widget.locator('[x-data^="chart("]').getAttribute('x-data');
         expect(config).toContain("type: 'bar'");
         expect(config).toContain('indexAxis');
-        // Тонкі заокруглені «таблетки» поверх світлої доріжки на всю ширину (шар «Усього»).
-        expect(config).toContain('Усього');
+        // Тонкі заокруглені «таблетки» поверх світлої доріжки на всю ширину (довжина доріжки = найбільша група).
+        expect(config).toContain('Найбільша група');
+        expect(config).toContain('minBarLength');
         expect(config).toContain('borderRadius');
         expect(config).toContain('grouped');
 
