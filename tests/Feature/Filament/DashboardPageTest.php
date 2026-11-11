@@ -4,9 +4,11 @@ namespace Tests\Feature\Filament;
 
 use App\Filament\Pages\Dashboard;
 use App\Filament\Widgets\AssetActivityChart;
+use App\Filament\Widgets\AssetsNeedingAction;
 use App\Filament\Widgets\AssetStatusChart;
 use App\Filament\Widgets\StatsOverview;
 use App\Models\User;
+use Filament\Widgets\TableWidget;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use ReflectionMethod;
@@ -41,7 +43,7 @@ class DashboardPageTest extends TestCase
     public function test_widget_order_is_explicit(): void
     {
         $this->assertSame(
-            [StatsOverview::class, AssetActivityChart::class, AssetStatusChart::class],
+            [StatsOverview::class, AssetActivityChart::class, AssetStatusChart::class, AssetsNeedingAction::class],
             (new Dashboard)->getWidgets(),
         );
     }
@@ -53,7 +55,7 @@ class DashboardPageTest extends TestCase
             (new Dashboard)->getWidgets(),
         );
 
-        $this->assertSame([1, 2, 3], $sorts);
+        $this->assertSame([1, 2, 3, 4], $sorts);
     }
 
     public function test_columns_are_responsive(): void
@@ -71,9 +73,12 @@ class DashboardPageTest extends TestCase
         foreach ((new Dashboard)->getWidgets() as $class) {
             $widget = Livewire::test($class)->instance();
 
-            $method = new ReflectionMethod($widget, 'getPollingInterval');
+            // Stats and chart widgets poll through the widget itself, table widgets through their table.
+            $interval = $widget instanceof TableWidget
+                ? $widget->getTable()->getPollingInterval()
+                : (new ReflectionMethod($widget, 'getPollingInterval'))->invoke($widget);
 
-            $this->assertNull($method->invoke($widget), "{$class} must not poll");
+            $this->assertNull($interval, "{$class} must not poll");
         }
     }
 
