@@ -8,17 +8,34 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class IncomingsRelationManager extends RelationManager
 {
     protected static string $relationship = 'incomings';
+
     protected static ?string $title = 'Отримано';
+
+    // Render the table together with the page: a lazy block shows an empty white area until it scrolls into view.
+    protected static bool $isLazy = false;
+
+    protected static ?string $modelLabel = 'надходження';
+
+    protected static ?string $pluralModelLabel = 'надходження';
+
+    public static function getBadge(Model $ownerRecord, string $pageClass): ?string
+    {
+        $count = $ownerRecord->incomings()->count();
+
+        return $count > 0 ? (string) $count : null;
+    }
 
     public function form(Schema $schema): Schema
     {
@@ -48,6 +65,9 @@ class IncomingsRelationManager extends RelationManager
     {
         return $table
             ->heading('')
+            ->emptyStateIcon(Heroicon::OutlinedInboxArrowDown)
+            ->emptyStateHeading('Надходжень ще не було')
+            ->emptyStateDescription('Записи з’являться після оформлення документа надходження.')
             ->recordTitleAttribute('document_number')
             ->columns([
                 TextColumn::make('incoming_type')

@@ -111,3 +111,34 @@ test.describe('картка активу з дуже довгою назвою',
         }
     });
 });
+
+test.describe('вкладки історії активу', () => {
+    test.use({ storageState: ADMIN_STATE });
+
+    const tab = (page, name) => page.locator('.fi-tabs-item', { hasText: name });
+
+    test('на вкладках видно лічильники записів', async ({ page }) => {
+        await page.goto('/admin/assets/1'); // у головного активу 2 надходження, 1 передача, 1 списання
+
+        await expect(tab(page, 'Отримано').locator('.fi-badge')).toHaveText('2');
+        await expect(tab(page, 'Передано').locator('.fi-badge')).toHaveText('1');
+        await expect(tab(page, 'Списано').locator('.fi-badge')).toHaveText('1');
+    });
+
+    test('порожні вкладки без лічильника, з зрозумілим повідомленням українською', async ({ page }) => {
+        await page.goto('/admin/assets/2'); // актив без документів
+
+        // Таблиця історії рендериться разом зі сторінкою (не lazy): без прокрутки та порожньої білої області.
+
+        await expect(tab(page, 'Отримано').locator('.fi-badge')).toHaveCount(0);
+        await expect(page.getByText('Надходжень ще не було')).toBeVisible();
+
+        await tab(page, 'Передано').click();
+        await expect(page.getByText('Передач ще не було')).toBeVisible();
+
+        await tab(page, 'Списано').click();
+        await expect(page.getByText('Списань ще не було')).toBeVisible();
+
+        await expect(page.locator('main')).not.toContainText('asset incomings');
+    });
+});
