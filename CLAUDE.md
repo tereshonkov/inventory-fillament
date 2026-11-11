@@ -98,6 +98,19 @@ They parse real documents by fixed cell coordinates / marker texts, so they are 
 - Reference data is **not auto-created** during import (avoids duplicates); "dirty" rows are only those with an empty `name` or an unresolvable `status`.
 - Formatting — Pint; tests — PHPUnit in `tests/Feature` and `tests/Unit` (currently only examples — minimal coverage).
 
+## Plans
+
+Implementation plans live in `docs/` as `plan-{name}.md`. Current plans:
+
+- [docs/plan-design-review.md](docs/plan-design-review.md) — redesign of the "Огляд майна" dashboard and the asset view card (steps 0–8).
+
+How to work with plans:
+
+- Look into `docs/` for `plan-*.md` files. A plan or step is implemented only if it is marked `[x]`; anything marked `[ ]` is not done yet.
+- **Do not start an unimplemented plan on your own.** Execute it only when the user commands it (e.g. "do step 1", "continue the plan"). Execute exactly the requested step(s), one step = one commit.
+- After finishing a step, mark it in the plan file: tick it in the "Progress" list and update the step's `Статус` line (`[x]`, date, commit hash). Add a change log entry here as usual.
+- If a step turns out to be wrong or needs changes, update the plan file first and tell the user.
+
 ## Known issues / TODO
 
 - No duplicate protection when re-importing Assets (open question about an empty `serial_number`).
@@ -116,6 +129,8 @@ Entry format: `- YYYY-MM-DD — what changed and why (key files)`. Newest entrie
 
 ## Change log
 
+- 2026-11-11 — Added `docs/plan-design-review.md` (dashboard + asset card redesign plan, steps 0–8, none implemented yet) and a "Plans" section here describing how plans are tracked and executed on command.
+- 2026-11-11 — Installed the third-party skill `laravel:code-review-requests` (from `jpcaparas/superpowers-laravel`, via `npx skills add`) into `.agents/skills/laravel-code-review-requests`; it is available through the `.claude/skills` junction and recorded in `skills-lock.json`.
 - 2026-11-11 — Translated CLAUDE.md into English and made English the mandatory language for this file and all future edits (replies to the user stay in the user's language).
 - 2026-11-11 — Added Playwright (`@playwright/test`, chromium) with e2e smoke tests of the panel (`tests/e2e`, `playwright.config.js`, `E2ESeeder`, separate DB `database/e2e.sqlite`); ESLint (`eslint.config.js`); pre-commit hook `.githooks/pre-commit` (Pint on staged files → ESLint → PHPUnit → vite build → Playwright), enabled via `npm run hooks:install` (also in `composer setup`); `scripts/php.mjs` wrapper to locate PHP (Laragon, not on PATH).
 - 2026-11-11 — Project skills live in `.agents/skills` (`filament-pro`, `laravel-best-practices`, `laravel-filament-v5-ui-ux`, `ui-craft-dense-dashboard`); a directory junction `.claude/skills` → `.agents/skills` was added for Claude Code (a real symlink could not be created on Windows without admin rights; on a new machine recreate with `New-Item -ItemType Junction -Path .claude\skills -Target <abs>\.agents\skills`).

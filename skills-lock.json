@@ -19,6 +19,12 @@
       "skillPath": "skills/laravel-filament-v5-ui-ux/SKILL.md",
       "computedHash": "12426d06d076d6e09d09b72bd3917a71deaf88cd943c9ea7a516bfc0afee9ced"
     },
+    "laravel:code-review-requests": {
+      "source": "jpcaparas/superpowers-laravel",
+      "sourceType": "github",
+      "skillPath": "skills/code-review-requests/SKILL.md",
+      "computedHash": "ccfc25e97ff6d75a6427ac324280dd1767d4002fe49b452307bb11a5deb9c1a9"
+    },
     "ui-craft-dense-dashboard": {
       "source": "educlopez/ui-craft",
       "sourceType": "github",
