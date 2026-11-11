@@ -112,7 +112,13 @@ class E2ESeeder extends Seeder
         ]);
 
         // Components on the warehouses feed the dashboard tiles: 1 monitor (broken counts too), 2 UPS.
-        AssetComponent::factory()->for($station)->kind(ComponentKind::MONITOR)->broken()->create(['location_id' => $warehouse915->getKey()]);
+        AssetComponent::factory()->for($station)->kind(ComponentKind::MONITOR)->broken()->create([
+            'location_id' => $warehouse915->getKey(),
+            'serial_number' => 'E2E-MON-SEED',
+            'description' => 'Нотатка E2E монітора',
+        ]);
+        // No location and no holder of its own: the composition shows the station's data.
+        AssetComponent::factory()->for($station)->kind(ComponentKind::KEYBOARD)->create(['serial_number' => 'E2E-KB-SEED']);
         AssetComponent::factory()->count(2)->for($station)->kind(ComponentKind::UPS)->create(['location_id' => $warehouse327->getKey()]);
 
         // One asset per status: an "own" one (editor is the custodian) and a "foreign" one.

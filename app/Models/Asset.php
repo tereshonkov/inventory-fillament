@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use App\Enums\AssetStatus;
+use App\Enums\ComponentKind;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 #[Fillable(['name', 'inventory_number', 'serial_number', 'notes', 'year', 'location_id', 'type_id', 'custodian_id', 'holder_id', 'status'])]
@@ -59,6 +61,31 @@ class Asset extends Model
     public function components(): HasMany
     {
         return $this->hasMany(AssetComponent::class);
+    }
+
+    /**
+     * Склад станції: комплектуючі, згруповані за видом у порядку `ComponentKind`; порожні види пропускаються.
+     *
+     * @return Collection<string, Collection<int, AssetComponent>>
+     */
+    public function compositionByKind(): Collection
+    {
+        $components = $this->components()->with(['location', 'holder'])->orderBy('id')->get();
+
+        // Station data is needed for the "same as the station" fallback; avoid an extra query per component.
+        $components->each(fn (AssetComponent $component) => $component->setRelation('asset', $this));
+
+        $groups = collect();
+
+        foreach (ComponentKind::cases() as $kind) {
+            $ofKind = $components->where('kind', $kind)->values();
+
+            if ($ofKind->isNotEmpty()) {
+                $groups->put($kind->value, $ofKind);
+            }
+        }
+
+        return $groups;
     }
 
     /** Чи належить актив до категорії «Робоча станція» (має комплектуючі). */

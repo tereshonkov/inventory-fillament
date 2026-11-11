@@ -2,9 +2,11 @@
 
 namespace App\Filament\Resources\Assets\Schemas;
 
+use App\Models\Asset;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\View;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\FontFamily;
 use Filament\Support\Enums\TextSize;
@@ -78,6 +80,14 @@ class AssetInfolist
                             ->inlineLabel(false)
                             ->placeholder('Немає приміток')
                             ->columnSpanFull(),
+                    ]),
+
+                // Composition of a workstation by kind (monitors, PC, printer, ...); other categories have no such block.
+                Section::make('Склад станції')
+                    ->visible(fn (Asset $record): bool => $record->isWorkstation())
+                    ->schema([
+                        View::make('filament.assets.composition')
+                            ->viewData(fn (Asset $record): array => ['groups' => $record->compositionByKind()]),
                     ]),
 
                 Section::make('Службова інформація')

@@ -112,8 +112,8 @@ class AssetComponentsTest extends TestCase
     {
         $this->actingAs(User::factory()->admin()->create());
 
-        $this->get(ViewAsset::getUrl(['record' => $this->workstation()]))->assertSee('Комплектуючі');
-        $this->get(ViewAsset::getUrl(['record' => Asset::factory()->create()]))->assertDontSee('Комплектуючі');
+        $this->get(ViewAsset::getUrl(['record' => $this->workstation()]))->assertSee('Додайте монітори, системний блок');
+        $this->get(ViewAsset::getUrl(['record' => Asset::factory()->create()]))->assertDontSee('Додайте монітори, системний блок');
     }
 
     public function test_non_admin_roles_have_no_access_in_this_phase(): void

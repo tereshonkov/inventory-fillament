@@ -22,6 +22,28 @@ class AssetComponent extends Model
         ];
     }
 
+    /** Локація: власна, а якщо не вказана — локація станції. */
+    public function effectiveLocationName(): ?string
+    {
+        return $this->location?->name ?? $this->asset?->location?->name;
+    }
+
+    public function usesStationLocation(): bool
+    {
+        return $this->location_id === null;
+    }
+
+    /** Користувач: власний, а якщо не вказаний — користувач станції. */
+    public function effectiveHolderName(): ?string
+    {
+        return $this->holder?->full_name ?? $this->asset?->holder?->full_name;
+    }
+
+    public function usesStationHolder(): bool
+    {
+        return $this->holder_id === null;
+    }
+
     public function asset(): BelongsTo
     {
         return $this->belongsTo(Asset::class);
