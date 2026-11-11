@@ -13,6 +13,12 @@
       "skillPath": ".ai/laravel/skill/laravel-best-practices/SKILL.md",
       "computedHash": "a92d7c727eaa27cb5153af54203ff6dbf283bf4b6b31aad6f6a12517b471a306"
     },
+    "laravel-filament-v5": {
+      "source": "jotafurtado/dev-skills",
+      "sourceType": "github",
+      "skillPath": "skills/laravel-filament-v5/SKILL.md",
+      "computedHash": "13a9cf2e6ffbbf83ce6768b7401fb4410b3064568367bfd51928d6a539f5061c"
+    },
     "laravel-filament-v5-ui-ux": {
       "source": "jotafurtado/dev-skills",
       "sourceType": "github",

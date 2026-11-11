@@ -3,12 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 #[Fillable(['asset_id', 'department_id', 'document_number', 'transferred_at', 'completed_at', 'notes'])]
 class AssetTransfer extends Model
 {
+    use HasFactory;
+
     public function department(): BelongsTo
     {
         return $this->belongsTo(Department::class);

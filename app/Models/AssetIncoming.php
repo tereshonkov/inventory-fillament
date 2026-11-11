@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\IncomingType;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -14,10 +15,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'document_number',
     'received_at',
     'completed_at',
-    'notes'
+    'notes',
 ])]
 class AssetIncoming extends Model
 {
+    use HasFactory;
+
     protected function casts(): array
     {
         return [

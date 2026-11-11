@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Enums\UserRole;
+use App\Models\Employee;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -31,6 +33,27 @@ class UserFactory extends Factory
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
         ];
+    }
+
+    public function admin(): static
+    {
+        return $this->state(['role' => UserRole::ADMIN]);
+    }
+
+    public function viewer(): static
+    {
+        return $this->state(['role' => UserRole::VIEWER]);
+    }
+
+    /**
+     * Editor works only with assets whose custodian is the linked employee.
+     */
+    public function editor(?Employee $employee = null): static
+    {
+        return $this->state(fn () => [
+            'role' => UserRole::EDITOR,
+            'employee_id' => ($employee ?? Employee::factory()->create())->getKey(),
+        ]);
     }
 
     /**

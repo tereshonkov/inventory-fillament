@@ -48,7 +48,7 @@ Bypass only as a last resort: `git commit --no-verify`.
 ### Playwright e2e
 
 - Config: `playwright.config.js`; tests: `tests/e2e/*.spec.js` (currently smoke tests: login page, wrong password, every `/admin/*` section opens without 5xx or JS errors, the seeded asset is listed).
-- A separate SQLite database `database/e2e.sqlite` (git-ignored) is recreated from scratch on every run (`migrate:fresh --seeder=E2ESeeder`), so working data is never touched. Data comes from `database/seeders/E2ESeeder.php` (admin `admin@e2e.test` / `password`).
+- A separate SQLite database `database/e2e.sqlite` (git-ignored) is recreated from scratch on every run (`migrate:fresh --seeder=E2ESeeder`), so working data is never touched. Data comes from `database/seeders/E2ESeeder.php`: admin `admin@e2e.test` and editor `editor@e2e.test` (password `password` for both), the main asset `E2E Тестовий актив` with documents, and an "own" (`E2E Свій <status>`) and a "foreign" (`E2E Чужий <status>`) asset for every status. The assets list is paginated by 5 and sorted by creation date, so find rows with `searchTable()` from `tests/e2e/helpers.js`.
 - Server: built-in `php -S` via `scripts/e2e-server.mjs` on port 8001 (`E2E_PORT`); it is single-threaded, hence `workers: 1`. Login happens once in `tests/e2e/global-setup.js` (storageState).
 - Requires a built frontend (`public/build`) and the browser: `npm run e2e:install`. `.npmrc` has `ignore-scripts=true`, so nothing runs automatically on `npm install`.
 - New panel page/resource → add it to `PAGES` in `smoke.spec.js`; new scenarios that need data → extend `E2ESeeder`.
@@ -108,13 +108,13 @@ How to work with plans:
 
 - Look into `docs/` for `plan-*.md` files. A plan or step is implemented only if it is marked `[x]`; anything marked `[ ]` is not done yet.
 - **Do not start an unimplemented plan on your own.** Execute it only when the user commands it (e.g. "do step 1", "continue the plan"). Execute exactly the requested step(s), one step = one commit.
-- After finishing a step, mark it in the plan file: tick it in the "Progress" list and update the step's `Статус` line (`[x]`, date, commit hash). Add a change log entry here as usual.
+- After finishing a step, mark it in the plan file: tick it in the "Progress" list and update the step's `Статус` line (`[x]`, date, commit subject — not the hash, which is unknown before the commit). Add a change log entry here as usual.
 - If a step turns out to be wrong or needs changes, update the plan file first and tell the user.
 
 ## Known issues / TODO
 
 - No duplicate protection when re-importing Assets (open question about an empty `serial_number`).
-- Practically no PHPUnit tests (only `ExampleTest`); the frontend is covered only by e2e smoke tests.
+- PHPUnit coverage is minimal: factory/seeder tests and `ExampleTest` only; no tests for resources, policies or widgets yet (the plan adds some). The frontend is covered by e2e smoke tests.
 - ~45 PHP files do not conform to Pint (only changed files are checked in pre-commit).
 - `User::canAccessPanel()` returns `true` for everyone.
 - `DatabaseSeeder` only creates a test user.
@@ -129,6 +129,7 @@ Entry format: `- YYYY-MM-DD — what changed and why (key files)`. Newest entrie
 
 ## Change log
 
+- 2026-11-11 — Plan step 0 (test foundation): `HasFactory` on all domain models; factories for Employee, Location, AssetType, Department, Asset (`status()`, `custodian()`, `heldBy()` states), AssetIncoming, AssetTransfer, AssetWriteOff (`completed()` states) and role states on `UserFactory` (`admin()`, `editor($employee)`, `viewer()`); `E2ESeeder` now seeds admin + editor, the dashboard stat-tile types/warehouses, the main asset with documents and an own/foreign asset for every status; new tests `FactoriesTest`, `E2ESeederTest` (PHPUnit) and `seed-data.spec.js` (editor sees only own assets); `smoke.spec.js` finds the asset through the table search (list is paginated by 5); installed the `laravel-filament-v5` skill.
 - 2026-11-11 — Added `docs/plan-design-review.md` (dashboard + asset card redesign plan, steps 0–8, none implemented yet) and a "Plans" section here describing how plans are tracked and executed on command.
 - 2026-11-11 — Installed the third-party skill `laravel:code-review-requests` (from `jpcaparas/superpowers-laravel`, via `npx skills add`) into `.agents/skills/laravel-code-review-requests`; it is available through the `.claude/skills` junction and recorded in `skills-lock.json`.
 - 2026-11-11 — Translated CLAUDE.md into English and made English the mandatory language for this file and all future edits (replies to the user stay in the user's language).

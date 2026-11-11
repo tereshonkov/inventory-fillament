@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { ADMIN, ADMIN_STATE } from './global-setup.js';
+import { searchTable } from './helpers.js';
 
 // Усі розділи панелі, які мають відкриватися без помилок.
 const PAGES = [
@@ -65,6 +66,9 @@ test.describe('панель під адміністратором', () => {
 
     test('тестовий актив видно у списку активів', async ({ page }) => {
         await page.goto('/admin/assets');
+
+        // У списку пагінація по 5 і сортування за датою створення — шукаємо через пошук таблиці.
+        await searchTable(page, 'E2E Тестовий');
 
         await expect(page.getByText('E2E Тестовий актив').first()).toBeVisible();
     });
